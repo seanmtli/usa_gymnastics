@@ -1,0 +1,68 @@
+```{r}
+#| label: load-libraries
+
+library(readr)
+library(tidyverse)
+```
+
+```{r}
+#| label: load-data
+data_2022_2023 <- read_csv("Data/data_2022_2023.csv")
+data_2017_2021 <- read_csv("Data/data_2017_2021.csv")
+
+```
+
+```{r}
+#| label: usa-filter-data
+
+usa_data_2022_2023 <- data_2022_2023 |>
+  filter(`Country` == "USA")
+
+usa_data_2017_2021 <- data_2017_2021 |>
+  filter(`Country` == "USA")
+
+data_2017_2021 |>
+  summarise(mean = mean(Score, na.rm = TRUE))
+
+data_2022_2023 |>
+  summarise(mean = mean(Score))
+
+usa_data_2022_2023_f <-  usa_data_2022_2023 |>
+  filter(Gender == "w")
+
+usa_data_2022_2023_m <- usa_data_2022_2023 |>
+  filter(Gender == "m")
+
+mean_usa_app <- usa_data_2022_2023_f |>
+  group_by(LastName, FirstName, Apparatus) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score))
+
+usa_data_2022_2023_f_BB <- mean_usa_app |>
+  filter(Apparatus == "BB") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_UB <- mean_usa_app |>
+  filter(Apparatus == "UB") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_FX <- mean_usa_app |>
+  filter(Apparatus == "FX") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_VT <- mean_usa_app |>
+  filter(Apparatus == "VT") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_BB
+usa_data_2022_2023_f_UB
+usa_data_2022_2023_f_FX
+usa_data_2022_2023_f_VT
+
+mean_usa_app |>
+  group_by(LastName, FirstName) |>
+  filter(Apparatus != "VT1",
+         Apparatus != "VT2") |>
+  summarise(sum = sum(mean_score)) |>
+  arrange(desc(sum))
+```
