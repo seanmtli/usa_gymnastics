@@ -13,6 +13,85 @@ library(lubridate)
 data_2022_2023 <- read_csv("Data/data_2022_2023.csv")
 data_2017_2021 <- read_csv("Data/data_2017_2021.csv")
 
+#DO NOT CHANGE ORDER
+
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+
+data_2022_2023$Penalty[is.na(data_2022_2023$Penalty)] <- 0
+
+#Girls filtering for middle name
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Joscelyn Michelle"] <- "Joscelyn"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Nola Rhianne"] <- "Nola"
+
+#Guys filtering for middle name
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Taylor Troy"] <- "Taylor"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Joshua Andrew"] <- "Joshua"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yul Kyung Tae"] <- "Yul"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Curran Michael"] <- "Curran"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Frederick Nathaniel"] <- "Frederick"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Ian Hunter"] <- "Ian"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Shane Michael"] <- "Shane"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Khoi Alexander"] <- "Khoi"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yunus Emre"] <- "Yunus"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yuan-Hsi"] <- "Yuan Hsi"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yu-Jan"] <- "Yu Jan"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "VILLAVERDE MEDEROS"] <- "VILLAVERDE"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "VALENZUELA ASTUDILLO"] <- "VALENZUELA"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yiseth Eliana"] <- "Yiseth"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yi-Chen"] <- "Yi Chen"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yi-Chun"] <- "Yi Chun"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yefferson Gregorio"] <- "Yefferson"
+data_2022_2023$LastName[data_2022_2023$LastName == "ANTON YEGUEZ"] <- "ANTON"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ANTON YEGUEZ"] <- "ANTON"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wout Johan Alexander"] <- "Wout"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wilfry Manuel"] <- "Wilfry"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wei-Sheng"] <- "Wei Sheng"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "BIRMINGHAM 2022 Commonwealth Games") & (is.na(data_2022_2023$LastName))] <- "Kate"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "BIRMINGHAM 2022 Commonwealth Games") & (is.na(data_2022_2023$LastName))] <- "MCDONALD"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "SOUZA BITENCOU"] <- "Lucas"
+data_2022_2023$LastName[data_2022_2023$LastName == "SOUZA BITENCOU"] <- "BITENCOURT"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "DE JESUS DOS SANTOS"] <- "JESUS SANTOS"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "JESUS SANT"] <- "Melanie"
+data_2022_2023$LastName[data_2022_2023$LastName == "JESUS SANT"] <- "JESUS SANTOS"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ELPITIYA BADALGE DONA"] <- "GEHANI"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Milka Gehani"] <- "Milka"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "ELPITIYA BADALG D"] <- "Milka"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ELPITIYA BADALG D"] <- "GEHANI"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "2022 51st FIG Artistic Gymnastics World Championship") & (is.na(data_2022_2023$LastName))] <- "Kate"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "2022 51st FIG Artistic Gymnastics World Championship") & (is.na(data_2022_2023$LastName))] <- "MCDONALD"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "2023 Varna World Challenge Cup") & (is.na(data_2022_2023$LastName))] <- "Daria"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "2023 Varna World Challenge Cup") & (is.na(data_2022_2023$LastName))] <- "HARTMANN"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "ABIYURAFI"] <- "Abiyu"
+data_2022_2023$LastName[data_2022_2023$LastName == "ABIYURAFI"] <- "Rafi"
+
+
+#Konnor McClain should not be considered, she has hand surgery
+
 ```
 
 ```{r}
@@ -36,13 +115,17 @@ usa_data_2022_2023_f <-  usa_data_2022_2023 |>
 usa_data_2022_2023_m <- usa_data_2022_2023 |>
   filter(Gender == "m")
 
-usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT2"] <- "VT"
-usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT1"] <- "VT"
+ggplot(aes(x= Score), data = usa_data_2022_2023_f) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)
 
-data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
-data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+ggplot(aes(x= Score), data = usa_data_2022_2023_m) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)
+
 
 mean_usa_app <- usa_data_2022_2023_f |>
+  group_by(LastName, FirstName, Apparatus) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score))
+
+mean_usa_app_men <- usa_data_2022_2023_m |>
   group_by(LastName, FirstName, Apparatus) |>
   summarise(mean_score = mean(Score),
             sd_score = sd(Score))
@@ -62,6 +145,10 @@ usa_data_2022_2023_f_FX <- mean_usa_app |>
 usa_data_2022_2023_f_VT <- mean_usa_app |>
   filter(Apparatus == "VT") |>
   arrange(desc(mean_score))
+
+mean_usa_app
+
+mean_usa_app_men
 
 usa_data_2022_2023_f_BB
 usa_data_2022_2023_f_UB
