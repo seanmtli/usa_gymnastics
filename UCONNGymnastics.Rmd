@@ -33,6 +33,9 @@ usa_data_2022_2023_f <-  usa_data_2022_2023 |>
 usa_data_2022_2023_m <- usa_data_2022_2023 |>
   filter(Gender == "m")
 
+usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT2"] <- "VT"
+usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT1"] <- "VT"
+
 mean_usa_app <- usa_data_2022_2023_f |>
   group_by(LastName, FirstName, Apparatus) |>
   summarise(mean_score = mean(Score),
@@ -65,4 +68,48 @@ mean_usa_app |>
          Apparatus != "VT2") |>
   summarise(sum = sum(mean_score)) |>
   arrange(desc(sum))
+```
+
+```{r}
+#breakdown of teams qualifying rank
+
+tb_2016_f <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "CHN", "RUS", "GBR", "BRA", "GER", "JPN", "NED", "CAN", "ITA", "FRA", "BEL"),
+                      all_around = c(3, 2, 3, 2, 3, 2, 3, 3, 2, 2, 3, 2))
+
+tb_2016_f <- tb_2016_f |>
+  mutate(year = "2016",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "F")
+
+tb_2016_m <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("CHN", "USA", "RUS", "JPN", "GBR", "BRA", "UKR", "GER", "SUI", "NED", "KOR", "FRA"),
+                      all_around = c(2, 2, 3, 2, 3, 3, 2, 2, 3, 3, 1, 2))
+
+tb_2016_m <- tb_2016_m |>
+  mutate(year = "2016",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "M")
+
+tb_2012_f <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "RUS", "CHN", "ROU", "GBR", "JPN", "ITA", "CAN", "GER", "AUS", "FRA", "BRA"),
+                      all_around = c(3, 3, 3, 2, 3, 2, 3, 2, 2, 2, 2, 3))
+
+tb_2012_f <- tb_2012_f |>
+  mutate(year = "2012",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "F")
+
+tb_2012_m <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "RUS", "GBR", "GER", "JPN", "CHN", "UKR", "FRA", "ESP", "ROU", "ITA", "KOR"),
+                      all_around = c(2, 2, 2, 3, 3, 1, 3, 1, 3, 1, 3, 1))
+
+tb_2012_m <- tb_2012_m |>
+  mutate(year = "2012",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "M")
+```
+
+```{r}
+
 ```
