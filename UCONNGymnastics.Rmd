@@ -3,6 +3,9 @@
 
 library(readr)
 library(tidyverse)
+library(dplyr)
+library(stringr)
+library(lubridate)
 ```
 
 ```{r}
@@ -35,6 +38,9 @@ usa_data_2022_2023_m <- usa_data_2022_2023 |>
 
 usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT2"] <- "VT"
 usa_data_2022_2023_f$Apparatus[usa_data_2022_2023_f$Apparatus == "VT1"] <- "VT"
+
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
 
 mean_usa_app <- usa_data_2022_2023_f |>
   group_by(LastName, FirstName, Apparatus) |>
@@ -110,6 +116,51 @@ tb_2012_m <- tb_2012_m |>
          gender = "M")
 ```
 
-```{r}
+```{r date_things}
+
+# Assuming your dataframe is called data_2022_2023 and the column with dates is "Date"
+
+# Step 1: Create a function to extract the second date from each string
+extract_second_date <- function(date_string) {
+  parts <- str_extract_all(date_string, "\\d{1,2}\\s[A-Za-z]+\\s\\d{4}")[[1]]
+  if (length(parts) == 2) {
+    # If there are two dates, return the second one
+    return(parts[2])
+  } else if (length(parts) == 1) {
+    # If there is only one date, return it
+    return(parts[1])
+  } else {
+    return(NA)
+  }
+}
+
+# Step 2: Apply the function to the Date column and convert to Date objects
+data_2022_2023 <- data_2022_2023 %>%
+  mutate(
+    SecondDateStr = sapply(Date, extract_second_date),
+    SecondDate = dmy(SecondDateStr)
+  )
+
+# Define the end date
+end_date <- dmy("27-07-2024")
+
+# Calculate the number of days from the SecondDate to the end date
+data_2022_2023 <- data_2022_2023 %>%
+  mutate(
+    DaysUntilOlympics = as.integer(end_date - SecondDate)
+  )
+
+# Inspect the changes
+head(data_2022_2023)
 
 ```
+
+```{r standardize_scores}
+data_2022_2023 <- data_2022_2023 %>%
+  group_by(Apparatus, Gender) %>%
+  mutate(
+    StandardizedScore = (Score - mean(Score, na.rm = TRUE)) / sd(Score, na.rm = TRUE)
+  ) %>%
+  ungroup()
+```
+
