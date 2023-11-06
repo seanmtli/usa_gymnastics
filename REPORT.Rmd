@@ -23,6 +23,10 @@ This study aims to overcome these limitations by collecting and analyzing extens
 
 ## Methodology
 
+### A Two Tier Approach
+
+Historically, we've seen that the USA along with most countries send a combination of all-round gymnasts and event specialists in a 5 person lineup. Specifically, the USA Olympic Team Selection Procedure outlines that the top 2 overall all-round gymnasts will qualify and then the committee will select the other 3 to complement them. This led us to choose a 2 tiered approach, first predicting the top 2 overall all-round gymnasts and then predicting the 3 to compliment the top 2 to maximize medal count. 
+
 ## Results 
 
 ## Discussion
