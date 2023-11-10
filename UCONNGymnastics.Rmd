@@ -201,6 +201,15 @@ tb_2012_m <- tb_2012_m |>
   mutate(year = "2012",
          made_final = ifelse(rank <= 8, "yes", "no"),
          gender = "M")
+
+tb_f <- rbind(tb_2016_f, tb_2012_f) |>
+  mutate(all_around = as.character(all_around))
+
+ggplot(data = tb_f, aes(x = all_around, fill = made_final)) +
+  geom_bar()
+
+ggplot(data = tb_f, aes(y = all_around, x = rank)) +
+  geom_line()
 ```
 
 ```{r date_things}
@@ -250,4 +259,3 @@ data_2022_2023 <- data_2022_2023 %>%
   ) %>%
   ungroup()
 ```
-
