@@ -30,10 +30,30 @@ For the all-round gymnasts, we choose the two best candidates that have the high
 
 For the remaining spots, we choose the three gymnasts based on a weighted score distribution of the events, translating the weighted average score into a probability for medaling. We calculate this weight of an apparatus result by taking into account the "stage" of an apparatus (qualifier or finals) and also when the competition itself occurred.
 
+### Using a Weighted Average for Gymnastics Data
+
+\begin{equation}
+    \text{{Weighted Average}} = \frac{{\sum_{i=1}^{n} w_i \cdot s_i}}{{\sum_{i=1}^{n} w_i}}
+\end{equation}
+
+where:
+\begin{itemize}
+    \item $n$ is the total number of scores,
+    \item $w_i$ is the weight assigned to the $i$-th score, and
+    \item $s_i$ is the actual score of the gymnast for the $i$-th competition.
+\end{itemize}
+
+In this case, you can set the weights based on whether the score is from a final round(1.5) or not(1), plus the recency of the score, where very recent (< 6 months), somewhat recent (6 - 18 months), not recent (18+ months), are weighted by a multiplier of 2, 1.5, and 1, respectively. The explanation of these weights are offered in the paragraph below. For example, if $w_i = 3.5$ for a final round score that is very recent, and $w_i = 2$ for a non-final round score that is not recent, the formula becomes:
+
+\begin{equation}
+    \text{{Weighted Average}} = \frac{{\sum_{i=1}^{n} (w_i \cdot s_i)}}{{\sum_{i=1}^{n} w_i}}
+\end{equation}
+
+This will give more importance to the scores from the final round, and scores that are more recent, in the calculation of the average.
+
 ### Weighted Average Score Distributions
 
-For a final round performance, we multiply the score earned by 1.5. The reasoning behind this weighting is that we believe a heavier weight should be placed on athletes with a history of performing better under pressure in the final rounds, since the goal of this study is to achieve the most medals, which are only awarded to the top three performers in each event on an individual level. We then classify a performance by how recent the competition was into 3 categories: very recent (< 6 months), somewhat recent (6 - 18 months), not recent (18+ months). These three groups are weighted by a multiplier of 2, 1.5, and 1, respectively. It's important to take into account if a gymnast is at a peak performance era and simultaneously look out for younger gymnasts on the rise, which is why we incorporated this step into our selection process. We then generate each USA gymnast's distribution assuming a normal distribution of performances. This assumption is justified, as when we look at the top 10 gymnasts regardless of country across apparatuses, we see they individually have a performance score distribution that is approximately normally distributed. To obtain a probability of medaling, we find a threshold of a weighted average score that it usually takes to medal on that apparatus from compiling past results. This threshold is adjusted higher or lower based on who we predict other top countries might send.  
-
+For a final round performance, we multiply the score earned by 1.5. The reasoning behind this weighting is that we believe a heavier weight should be placed on athletes with a history of performing better under pressure in the final rounds, since the goal of this study is to achieve the most medals, which are only awarded to the top three performers in each event on an individual level. We then classify a performance by how recent the competition was, compared toJanuary 1st, 2024, into 3 categories: very recent (< 6 months), somewhat recent (6 - 18 months), not recent (18+ months). These three groups are weighted by a multiplier of 2, 1.5, and 1, respectively. It's important to take into account if a gymnast is at a peak performance era and simultaneously look out for younger gymnasts on the rise, which is why we incorporated this step into our selection process. We then generate each USA gymnast's distribution assuming a normal distribution of performances. This assumption is justified, as when we look at the top 10 gymnasts regardless of country across apparatuses, we see they individually have a performance score distribution that is approximately normally distributed. To obtain a probability of medaling, we find a threshold of a weighted average score that it usually takes to medal on that apparatus from compiling past results. This threshold is adjusted higher or lower based on who we predict other top countries might send. 
 
 
 ## Results 
