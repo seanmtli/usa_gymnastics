@@ -103,6 +103,13 @@ usa_data_2022_2023 <- data_2022_2023 |>
 usa_data_2017_2021 <- data_2017_2021 |>
   filter(`Country` == "USA")
 
+data_2022_2023 <- rbind(data_2022_2023, data_2017_2021)
+
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+
+usa_data_2022_2023 <- rbind(usa_data_2022_2023, usa_data_2017_2021)
+
 data_2017_2021 |>
   summarise(mean = mean(Score, na.rm = TRUE))
 
@@ -113,6 +120,12 @@ usa_data_2022_2023_f <-  usa_data_2022_2023 |>
   filter(Gender == "w")
 
 usa_data_2022_2023_m <- usa_data_2022_2023 |>
+  filter(Gender == "m")
+
+data_2022_2023_f <- data_2022_2023 |>
+  filter(Gender == "w")
+
+data_2022_2023_m <- data_2022_2023 |>
   filter(Gender == "m")
 
 ggplot(aes(x= Score), data = usa_data_2022_2023_f) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)
@@ -161,6 +174,44 @@ mean_usa_app |>
          Apparatus != "VT2") |>
   summarise(sum = sum(mean_score)) |>
   arrange(desc(sum))
+
+VT_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+BB_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "BB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+UB_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "UB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+VT_ranks
+BB_ranks
+UB_ranks
+FX_ranks
+
 ```
 
 ```{r}
