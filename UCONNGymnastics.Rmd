@@ -175,7 +175,7 @@ sampling_usa_data_2022_2023_m <-  sampling_data_2022_2023 |>
 
 ```{r}
 #Number of simulations
-nsimulation <- 1000
+nsimulation <- 100
 ```
 
 ```{r overall simulation women, eval = FALSE}
@@ -342,6 +342,7 @@ n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
 final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+overall_women <- final_average_df
 print(final_average_df)
 ```
 
@@ -451,6 +452,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_BB_women <- final_average_df
 ```
 
 ```{r FX simulation women, eval = FALSE}
@@ -557,6 +559,7 @@ n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
 final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+overall_FX_women <- final_average_df
 print(final_average_df)
 ```
 
@@ -665,6 +668,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_VT_women <- final_average_df
 ```
 
 ```{r UB simulation women, eval = FALSE}
@@ -772,6 +776,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_UB_women <- final_average_df
 ```
 
 ```{r overall simulation men, eval = FALSE}
@@ -977,6 +982,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_men <- final_average_df
 ```
 
 ```{r HB simulation men, eval = FALSE}
@@ -1084,6 +1090,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_HB_men <- final_average_df
 ```
 
 ```{r PB simulation men, eval = FALSE}
@@ -1191,6 +1198,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_PB_men <- final_average_df
 ```
 
 ```{r PH simulation men, eval = FALSE}
@@ -1298,6 +1306,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_PH_men <- final_average_df
 ```
 
 ```{r FX simulation men, eval = FALSE}
@@ -1405,6 +1414,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_FX_men <- final_average_df
 ```
 
 ```{r VT simulation men, eval = FALSE}
@@ -1512,6 +1522,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_VT_men <- final_average_df
 ```
 
 ```{r SR simulation men, eval = FALSE}
@@ -1619,6 +1630,7 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
+overall_SR_men <- final_average_df
 ```
 
 ```{r}
