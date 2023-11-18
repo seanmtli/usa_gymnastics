@@ -173,10 +173,12 @@ sampling_usa_data_2022_2023_m <-  sampling_data_2022_2023 |>
   filter(Gender == "m")
 ```
 
-```{r simulation}
-# Assuming your dataset is named gymnast_data
+```{r}
+#Number of simulations
+nsimulation <- 1000
+```
 
-# Set a seed for reproducibility
+```{r overall simulation women, eval = FALSE}
 set.seed(123)
 
 # Identify unique gymnasts
@@ -194,7 +196,7 @@ n_iterations_data <- data.frame(
   LastName = character(),
   Score_1 = numeric()
 )
-
+# First iteration
 # Loop through each unique gymnast
 for (i in 1:nrow(unique_gymnasts)) {
   # Extract the current gymnast's information
@@ -258,12 +260,12 @@ for (i in 1:nrow(unique_gymnasts)) {
 }
 
 n_iterations_data = sampled_scores_data
-sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
 
 # View the dataframe with sampled scores and overall scores
-print(sampled_scores_data)
+#print(sampled_scores_data)
 
-for(n in 2:1000){
+for(n in 2:nsimulation){
   sampled_scores_data <- data.frame(
   FirstName = character(),
   LastName = character(),
@@ -341,9 +343,1283 @@ final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
 
 final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 print(final_average_df)
-
 ```
 
+```{r BB simulation women, eval = FALSE}
+
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_f[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  BB_subset_data <- subset_data[subset_data$Apparatus == "BB",]
+  if (nrow(BB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_BB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_BB_score <- sample(BB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_BB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    BB_subset_data <- subset_data[subset_data$Apparatus == "BB",]
+    if (nrow(BB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_BB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_BB_score <- sample(BB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_BB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r FX simulation women, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_f[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_FX_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_FX_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r VT simulation women, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_f[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_VT_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_VT_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r UB simulation women, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_f[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  UB_subset_data <- subset_data[subset_data$Apparatus == "UB",]
+  if (nrow(UB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_UB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_UB_score <- sample(UB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_UB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    UB_subset_data <- subset_data[subset_data$Apparatus == "UB",]
+    if (nrow(UB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_UB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_UB_score <- sample(UB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_UB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r overall simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  HB_subset_data <- subset_data[subset_data$Apparatus == "HB",]
+  if (nrow(HB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_HB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_HB_score <- sample(HB_subset_data$Score, size = 1)
+  }
+  PB_subset_data <- subset_data[subset_data$Apparatus == "PB",]
+  if (nrow(PB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_PB_score <- sample(PB_subset_data$Score, size = 1)
+  }
+  FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+  }
+  VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+  }
+  PH_subset_data <- subset_data[subset_data$Apparatus == "PH",]
+  if (nrow(PH_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PH_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_PH_score <- sample(PH_subset_data$Score, size = 1)
+  }
+  
+  SR_subset_data <- subset_data[subset_data$Apparatus == "SR",]
+  if (nrow(SR_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_SR_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_SR_score <- sample(SR_subset_data$Score, size = 1)
+  }
+  
+  # Calculate overall score
+  overall_score <- sampled_HB_score +  sampled_PB_score + sampled_FX_score + sampled_VT_score + sampled_PH_score +  sampled_SR_score
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = overall_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    HB_subset_data <- subset_data[subset_data$Apparatus == "HB",]
+    if (nrow(HB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_HB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_HB_score <- sample(HB_subset_data$Score, size = 1)
+    }
+    PB_subset_data <- subset_data[subset_data$Apparatus == "PB",]
+    if (nrow(PB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_PB_score <- sample(PB_subset_data$Score, size = 1)
+    }
+    FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+    }
+    VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+    }
+    PH_subset_data <- subset_data[subset_data$Apparatus == "PH",]
+    if (nrow(PH_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PH_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_PH_score <- sample(PH_subset_data$Score, size = 1)
+    }
+    
+    SR_subset_data <- subset_data[subset_data$Apparatus == "SR",]
+    if (nrow(SR_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_SR_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_SR_score <- sample(SR_subset_data$Score, size = 1)
+    }
+    
+    # Calculate overall score
+    overall_score <- sampled_HB_score +  sampled_PB_score + sampled_FX_score + sampled_VT_score + sampled_PH_score +  sampled_SR_score
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = overall_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r HB simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  HB_subset_data <- subset_data[subset_data$Apparatus == "HB",]
+  if (nrow(HB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_HB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_HB_score <- sample(HB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_HB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    HB_subset_data <- subset_data[subset_data$Apparatus == "HB",]
+    if (nrow(HB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_HB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_HB_score <- sample(HB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_HB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r PB simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  PB_subset_data <- subset_data[subset_data$Apparatus == "PB",]
+  if (nrow(PB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PB_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_PB_score <- sample(PB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_PB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    PB_subset_data <- subset_data[subset_data$Apparatus == "PB",]
+    if (nrow(PB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PB_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_PB_score <- sample(PB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_PB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r PH simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  PH_subset_data <- subset_data[subset_data$Apparatus == "PH",]
+  if (nrow(PH_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PH_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_PH_score <- sample(PH_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_PH_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    PH_subset_data <- subset_data[subset_data$Apparatus == "PH",]
+    if (nrow(PH_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PH_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_PH_score <- sample(PH_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_PH_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r FX simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_FX_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    FX_subset_data <- subset_data[subset_data$Apparatus == "FX",]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_FX_score <- sample(FX_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_FX_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r VT simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_VT_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    VT_subset_data <- subset_data[subset_data$Apparatus == "VT",]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_VT_score <- sample(VT_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_VT_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
+```{r SR simulation men, eval = FALSE}
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_m[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast's information
+  current_gymnast <- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  SR_subset_data <- subset_data[subset_data$Apparatus == "SR",]
+  if (nrow(SR_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_SR_score <- 0
+  } 
+  else {
+    # If the subset is not empty, sample the "Score" column
+    sampled_SR_score <- sample(SR_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast's sampled scores and overall score
+  current_data <- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_SR_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data <- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    SR_subset_data <- subset_data[subset_data$Apparatus == "SR",]
+    if (nrow(SR_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_SR_score <- 0
+    } 
+    else {
+      # If the subset is not empty, sample the "Score" column
+      sampled_SR_score <- sample(SR_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast's sampled scores and overall score
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_SR_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == "sampled_scores_data$Score"] <- paste("Score_", n, sep = "")
+}
+
+columns_to_average <- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
 
 ```{r}
 usa_data_2022_2023 <- rbind(usa_data_2022_2023, usa_data_2017_2021)
