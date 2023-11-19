@@ -536,6 +536,1426 @@ sampling_usa_data_2022_2023_f &lt;-  sampling_data_2022_2023 |&gt;
 sampling_usa_data_2022_2023_m &lt;-  sampling_data_2022_2023 |&gt;
   filter(`Country` == &quot;USA&quot;) |&gt;
   filter(Gender == &quot;m&quot;)</code></pre>
+<pre class="r"><code>#Number of simulations
+nsimulation &lt;- 1000</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_f[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  BB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;BB&quot;,]
+  if (nrow(BB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_BB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_BB_score &lt;- sample(BB_subset_data$Score, size = 1)
+  }
+  FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+  }
+  VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+  }
+  UB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;UB&quot;,]
+  if (nrow(UB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_UB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_UB_score &lt;- sample(UB_subset_data$Score, size = 1)
+  }
+  
+  # Calculate overall score
+  overall_score &lt;- sampled_BB_score + sampled_FX_score + sampled_VT_score + sampled_UB_score
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = overall_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    BB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;BB&quot;,]
+    if (nrow(BB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_BB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_BB_score &lt;- sample(BB_subset_data$Score, size = 1)
+    }
+    FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+    }
+    VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+    }
+    UB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;UB&quot;,]
+    if (nrow(UB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_UB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_UB_score &lt;- sample(UB_subset_data$Score, size = 1)
+    }
+    
+    # Calculate overall score
+    overall_score &lt;- sampled_BB_score + sampled_FX_score + sampled_VT_score + sampled_UB_score
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = overall_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+overall_women &lt;- final_average_df
+print(final_average_df)</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_f[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  BB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;BB&quot;,]
+  if (nrow(BB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_BB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_BB_score &lt;- sample(BB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_BB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    BB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;BB&quot;,]
+    if (nrow(BB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_BB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_BB_score &lt;- sample(BB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_BB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_BB_women &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_f[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_FX_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_FX_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+overall_FX_women &lt;- final_average_df
+print(final_average_df)</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_f[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_VT_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_VT_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_VT_women &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_f[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  UB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;UB&quot;,]
+  if (nrow(UB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_UB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_UB_score &lt;- sample(UB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_UB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName &amp; 
+                                  sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    UB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;UB&quot;,]
+    if (nrow(UB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_UB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_UB_score &lt;- sample(UB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_UB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_UB_women &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  HB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;HB&quot;,]
+  if (nrow(HB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_HB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_HB_score &lt;- sample(HB_subset_data$Score, size = 1)
+  }
+  PB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PB&quot;,]
+  if (nrow(PB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_PB_score &lt;- sample(PB_subset_data$Score, size = 1)
+  }
+  FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+  }
+  VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+  }
+  PH_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PH&quot;,]
+  if (nrow(PH_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PH_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_PH_score &lt;- sample(PH_subset_data$Score, size = 1)
+  }
+  
+  SR_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;SR&quot;,]
+  if (nrow(SR_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_SR_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_SR_score &lt;- sample(SR_subset_data$Score, size = 1)
+  }
+  
+  # Calculate overall score
+  overall_score &lt;- sampled_HB_score +  sampled_PB_score + sampled_FX_score + sampled_VT_score + sampled_PH_score +  sampled_SR_score
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = overall_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    HB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;HB&quot;,]
+    if (nrow(HB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_HB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_HB_score &lt;- sample(HB_subset_data$Score, size = 1)
+    }
+    PB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PB&quot;,]
+    if (nrow(PB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_PB_score &lt;- sample(PB_subset_data$Score, size = 1)
+    }
+    FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+    }
+    VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+    }
+    PH_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PH&quot;,]
+    if (nrow(PH_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PH_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_PH_score &lt;- sample(PH_subset_data$Score, size = 1)
+    }
+    
+    SR_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;SR&quot;,]
+    if (nrow(SR_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_SR_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_SR_score &lt;- sample(SR_subset_data$Score, size = 1)
+    }
+    
+    # Calculate overall score
+    overall_score &lt;- sampled_HB_score +  sampled_PB_score + sampled_FX_score + sampled_VT_score + sampled_PH_score +  sampled_SR_score
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = overall_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  HB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;HB&quot;,]
+  if (nrow(HB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_HB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_HB_score &lt;- sample(HB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_HB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    HB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;HB&quot;,]
+    if (nrow(HB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_HB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_HB_score &lt;- sample(HB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_HB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_HB_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  PB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PB&quot;,]
+  if (nrow(PB_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PB_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_PB_score &lt;- sample(PB_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_PB_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    PB_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PB&quot;,]
+    if (nrow(PB_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PB_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_PB_score &lt;- sample(PB_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_PB_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_PB_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  PH_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PH&quot;,]
+  if (nrow(PH_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_PH_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_PH_score &lt;- sample(PH_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_PH_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    PH_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;PH&quot;,]
+    if (nrow(PH_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_PH_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_PH_score &lt;- sample(PH_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_PH_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_PH_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+  if (nrow(FX_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_FX_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_FX_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    FX_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;FX&quot;,]
+    if (nrow(FX_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_FX_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_FX_score &lt;- sample(FX_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_FX_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_FX_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+  if (nrow(VT_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_VT_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_VT_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    VT_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;VT&quot;,]
+    if (nrow(VT_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_VT_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_VT_score &lt;- sample(VT_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_VT_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_VT_men &lt;- final_average_df</code></pre>
+<pre class="r"><code>set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts &lt;- unique(sampling_usa_data_2022_2023_m[, c(&quot;FirstName&quot;, &quot;LastName&quot;)])
+
+# Create a new dataframe to store sampled scores and overall scores
+sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric()
+)
+
+n_iterations_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+# First iteration
+# Loop through each unique gymnast
+for (i in 1:nrow(unique_gymnasts)) {
+  # Extract the current gymnast&#39;s information
+  current_gymnast &lt;- unique_gymnasts[i, ]
+  
+  # Subset the data for the current gymnast
+  subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+  
+  # Sample scores for each apparatus
+  SR_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;SR&quot;,]
+  if (nrow(SR_subset_data) == 0) {
+  # If the subset is empty, set the sampled value to 0
+    sampled_SR_score &lt;- 0
+  } 
+  else {
+    # If the subset is not empty, sample the &quot;Score&quot; column
+    sampled_SR_score &lt;- sample(SR_subset_data$Score, size = 1)
+  }
+  
+  # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+  current_data &lt;- data.frame(
+    FirstName = current_gymnast$FirstName,
+    LastName = current_gymnast$LastName,
+    Score_1 = sampled_SR_score,
+    stringsAsFactors = FALSE
+  )
+  
+  # Append the current data to the overall sampled_scores_data dataframe
+  sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+}
+
+n_iterations_data = sampled_scores_data
+#sampled_scores_data = sampled_scores_data[order(-sampled_scores_data$Score), ]
+
+# View the dataframe with sampled scores and overall scores
+#print(sampled_scores_data)
+
+for(n in 2:nsimulation){
+  sampled_scores_data &lt;- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score = numeric())
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast&#39;s information
+    current_gymnast &lt;- unique_gymnasts[i, ]
+    
+    # Subset the data for the current gymnast
+    subset_data &lt;- sampling_usa_data_2022_2023_m[sampling_usa_data_2022_2023_m$FirstName == current_gymnast$FirstName &amp; 
+                                sampling_usa_data_2022_2023_m$LastName == current_gymnast$LastName, ]
+    
+    # Sample scores for each apparatus
+    SR_subset_data &lt;- subset_data[subset_data$Apparatus == &quot;SR&quot;,]
+    if (nrow(SR_subset_data) == 0) {
+    # If the subset is empty, set the sampled value to 0
+      sampled_SR_score &lt;- 0
+    } 
+    else {
+      # If the subset is not empty, sample the &quot;Score&quot; column
+      sampled_SR_score &lt;- sample(SR_subset_data$Score, size = 1)
+    }
+    
+    # Create a data frame for the current gymnast&#39;s sampled scores and overall score
+    current_data &lt;- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_SR_score,
+      stringsAsFactors = FALSE
+    )
+    
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data &lt;- rbind(sampled_scores_data, current_data)
+  }
+  n_iterations_data &lt;- cbind(n_iterations_data, sampled_scores_data$Score)
+  colnames(n_iterations_data)[colnames(n_iterations_data) == &quot;sampled_scores_data$Score&quot;] &lt;- paste(&quot;Score_&quot;, n, sep = &quot;&quot;)
+}
+
+columns_to_average &lt;- n_iterations_data[, -(1:2)]
+
+# Calculate the row-wise mean for the selected columns
+n_iterations_data$AverageScore &lt;- rowMeans(columns_to_average, na.rm = TRUE)
+
+final_average_df &lt;- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+overall_SR_men &lt;- final_average_df</code></pre>
 <pre class="r"><code>usa_data_2022_2023 &lt;- rbind(usa_data_2022_2023, usa_data_2017_2021)
 
 data_2017_2021 |&gt;
@@ -815,6 +2235,44 @@ mean_usa_app</code></pre>
 ##  9 WU        Ran       CHN     FX              13.8   0.0940
 ## 10 LISTUNOVA Viktoriia ROC     FX              13.7   0.738 
 ## # ℹ 14 more rows</code></pre>
+<pre class="r"><code>calculatePodiumPercentages &lt;- function(df) {
+  # Number of gymnasts
+  num_gymnasts &lt;- nrow(df)
+  
+  # Initialize an empty dataframe for the results
+  results &lt;- data.frame(
+    firstName = df[, 1],
+    lastName = df[, 2],
+    thirdPlace = numeric(num_gymnasts),
+    secondPlace = numeric(num_gymnasts),
+    firstPlace = numeric(num_gymnasts),
+    stringsAsFactors = FALSE
+  )
+  
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample
+    sample_scores &lt;- df[, i + 2]
+    
+    # Rank the scores
+    ranks &lt;- rank(-sample_scores, ties.method = &quot;min&quot;)
+    
+    # Update the count for first, second, and third places
+    results$firstPlace &lt;- results$firstPlace + (ranks == 1)
+    results$secondPlace &lt;- results$secondPlace + (ranks == 2)
+    results$thirdPlace &lt;- results$thirdPlace + (ranks == 3)
+  }
+
+  # Convert counts to percentages
+  results$firstPlace &lt;- (results$firstPlace / 1000) * 100
+  results$secondPlace &lt;- (results$secondPlace / 1000) * 100
+  results$thirdPlace &lt;- (results$thirdPlace / 1000) * 100
+
+  # Sort the dataframe by firstPlace in descending order
+  results &lt;- results[order(-results$firstPlace), ]
+  
+  return(results)
+}</code></pre>
 <pre class="r"><code>#breakdown of teams qualifying rank
 
 tb_2016_f &lt;- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
@@ -862,6 +2320,7 @@ ggplot(data = tb_f, aes(x = all_around, fill = made_final)) +
 <pre class="r"><code>ggplot(data = tb_f, aes(y = all_around, x = rank)) +
   geom_line()</code></pre>
 <p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABUAAAAPACAMAAADDuCPrAAACtVBMVEUAAAABAQECAgIDAwMEBAQFBQUGBgYHBwcJCQkKCgoLCwsMDAwNDQ0ODg4QEBARERESEhITExMUFBQVFRUWFhYXFxcYGBgcHBwdHR0eHh4fHx8gICAjIyMkJCQlJSUmJiYnJycoKCgpKSkqKiorKyssLCwzMzM1NTU2NjY3Nzc7Ozs8PDw9PT0+Pj4/Pz9AQEBBQUFDQ0NERERGRkZISEhJSUlKSkpLS0tMTExNTU1OTk5PT09QUFBRUVFSUlJTU1NUVFRVVVVWVlZXV1dYWFhZWVlaWlpbW1tcXFxdXV1eXl5fX19gYGBhYWFiYmJjY2NkZGRlZWVmZmZoaGhpaWlqampra2tsbGxtbW1ubm5vb29wcHBxcXFycnJzc3N0dHR1dXV2dnZ3d3d4eHh5eXl6enp7e3t8fHx9fX1+fn5/f3+AgICBgYGCgoKDg4OEhISFhYWGhoaHh4eIiIiJiYmKioqLi4uMjIyNjY2Ojo6Pj4+QkJCRkZGSkpKTk5OUlJSVlZWWlpaXl5eYmJiZmZmampqbm5ucnJydnZ2enp6fn5+goKChoaGioqKjo6OkpKSlpaWmpqanp6eoqKiqqqqrq6usrKytra2urq6vr6+wsLCxsbGysrKzs7O0tLS2tra3t7e4uLi5ubm6urq7u7u8vLy9vb2/v7/AwMDBwcHCwsLDw8PExMTFxcXGxsbHx8fIyMjJycnKysrLy8vMzMzNzc3Ozs7Pz8/Q0NDR0dHS0tLT09PU1NTV1dXW1tbX19fY2NjZ2dna2trb29vc3Nzd3d3e3t7f39/g4ODh4eHi4uLj4+Pk5OTl5eXn5+fo6Ojp6enq6urr6+vs7Ozt7e3u7u7v7+/w8PDx8fHy8vLz8/P09PT19fX29vb39/f4+Pj5+fn6+vr7+/v8/Pz9/f3+/v7////0tLB2AAAACXBIWXMAAB2HAAAdhwGP5fFlAAAgAElEQVR4nO3djZ9ddWHn8V+QRIMREGO7rIi1boNr6+paH/aEYMBQiGDl0ajgwgIFLPhEhVIeit0iLWJ5kDZCWlS0KyBUMREQkQISQHlcKiSRCAnJkPt37M3MzeTO5E7IfHfmnpw778/rlXvPA5n53Xt+eecy59yb0pIkRZW6ByBJTQ2gkhQGUEkKA6gkhQFUksIAKklhAJWkMIBKUhhAJSkMoJIUBlBJCgOoJIUBVJLCACpJYVMM6HO/nupeeXHKv+SkeqHVqnkE66fhWZ1Um6fjuE6qoQ31fv/ftFov1T2C5+sdwKZW7SPYWO/3X9tqbR0BQCcXQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIBOKaD3/8OZxyxefNzFDwO0DwEUoAAdKEA/V1XV4oVVtXA5QKc/gAIUoAMF6I3/8shvW5sfOquqHgDotAdQgAJ0oADt9PLHqisAOu0BFKAAHURAW+dWlwF02gMoQAE6iIC2X4F+F6DTHkABCtDBA3T9fWdWpw51Vl58YKTn1mY9d+tErfrRhLv60r/ddVftI7it3gGsuuuuegdw66o76/3+t9c+Ce646wf1DmDlXbWPYEonwYOTNqr9Uurl9t3UAHpf1W7p8pe3rd+zYKR12Zdr/aZIUr/6bCjV+EJAHzrm44ur6uT7t60DVFJzqhnQrT11SbVom6CPnT7Smo1ZaxdP1GGHTrirPx1W9wgOPaze799+BmofwYyfBIvrPgSH1j4JDp3SQ3DNpI1q/+/2UPtu6gBttS6uThu3xUmkqc9JJCeRnEQavJNI7VZVi7cAdLoDKEABOpCA/rBaBNBpD6AABeggArrl89Vnxm0C6NQHUIACdJAAXX3uHetaraEHv1BVdwB02gMoQAE6SIA+tPXDmA4/uKoW3TB+F0CnPoACFKCDBOjG2y5edsTBS07++yd32AXQqQ+gAAXoIAG6kwA69QEUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoAAFaBhAAQpQgAI0DKAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtAwgAIUoABtCKB79Q6gNQZQgAK0IYCW3gG0xgAKUIA2BNCDO72zreb+7/nQe/5T+/6/HnwwQGsMoAAFaEMA7XTLfq/59KPDS6uXvWb+7bvsJ0CnIYACFKCNAvSxvWetGF1ZPuuNTwK0xgAKUIA2CtBPlSO71j5STgFojQEUoABtFKAHluu61r5efg+gNQZQgAK0UYC+rtzYtfZPZS5AawygAAVoowDdp/x519qflX0BWmMABShAGwXofytv+r+jK0+/sbwXoDUGUIACtFGAXlPK21Z2lu98aynXArTGAApQgDYK0NYHt14/f8YV115x+tYr6qtd9hOg0xBAAQrQZgG64fCu93EeuRGgdQZQgAK0WYC2Wt/9wJ7Des7+4L/uOp8AnY4AClCANg3Q9oz58Y3X3PjjDZPhE6DTEUABCtDmARoF0KkPoAAFKEDDAApQgAIUoGEABShAAdo8QIfWPjMaQGsMoAAFaMMA/cVJv7+HT6TfGkABClCATg7QK+b4Jz06ARSgAAXopAD9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KEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQLaAAK4AAApsSURBVAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgAA0DKEABClCAhgEUoAAFKEDDAApQgAIUoGEABShAAQrQMIACFKAABWgYQAEKUIACNAygAAUoQAEaBlCAAhSgMwTQNc9NdUMvTvmXnFTPr1u3tt4RrN/yfL0DWLtuXc0j2PxSvd+/PQmmfmZPqt9sqXkA7UlQ7wCee3ljvd9/zcgkmF5AB6+bFyy4ou4x1NyfLFjwct1jqLcfLVhwYd1jqLkTFiz4j7rHUG//vmDBZ3fcCtBXCaAABShAARoGUIACFKAADQMoQAEKUICGARSgAAUoQMMAClCAAhSgYQAFKEABCtCw51aufLruMdTcfStXvlL3GOpt3cqVv6p7DDX34MqVM/xv0d+uXPnIjlsBKklhAJWkMIBKUhhAJSkMoJIUBtAdevbGc45atOQz168fs3V51enimobVxyZ6rI9ecNQhf3rJU/UMqq/9phrtyK7NM2ISrLv1704/rDp4+4beh32AJ8O4Z2CnIAB0fE8tbD8ti9u/jvpl9+bl1SFHDHd5XQPrXxM81jsWVYedsLha/NOahtXHXjii08Lq3K7NM2IS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" width="672" /></p>
+<pre class="r"><code># write.csv(overall_women, &#39;/Users/christophertsai/Downloads/Competition Dataframes/overall_women.csv&#39;, row.names=FALSE)</code></pre>
 
 
 

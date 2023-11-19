@@ -1740,6 +1740,48 @@ FX_ranks
 
 ```
 
+```{r get-model-probs-func}
+calculatePodiumPercentages <- function(df) {
+  # Number of gymnasts
+  num_gymnasts <- nrow(df)
+  
+  # Initialize an empty dataframe for the results
+  results <- data.frame(
+    firstName = df[, 1],
+    lastName = df[, 2],
+    thirdPlace = numeric(num_gymnasts),
+    secondPlace = numeric(num_gymnasts),
+    firstPlace = numeric(num_gymnasts),
+    stringsAsFactors = FALSE
+  )
+  
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample
+    sample_scores <- df[, i + 2]
+    
+    # Rank the scores
+    ranks <- rank(-sample_scores, ties.method = "min")
+    
+    # Update the count for first, second, and third places
+    results$firstPlace <- results$firstPlace + (ranks == 1)
+    results$secondPlace <- results$secondPlace + (ranks == 2)
+    results$thirdPlace <- results$thirdPlace + (ranks == 3)
+  }
+
+  # Convert counts to percentages
+  results$firstPlace <- (results$firstPlace / 1000) * 100
+  results$secondPlace <- (results$secondPlace / 1000) * 100
+  results$thirdPlace <- (results$thirdPlace / 1000) * 100
+
+  # Sort the dataframe by firstPlace in descending order
+  results <- results[order(-results$firstPlace), ]
+  
+  return(results)
+}
+```
+
+
 ```{r}
 #breakdown of teams qualifying rank
 
@@ -1790,6 +1832,6 @@ ggplot(data = tb_f, aes(y = all_around, x = rank)) +
 ```
 
 ```{r}
-write.csv(overall_women, '/Users/christophertsai/Downloads/Competition Dataframes/overall_women.csv', row.names=FALSE)
+# write.csv(overall_women, '/Users/christophertsai/Downloads/Competition Dataframes/overall_women.csv', row.names=FALSE)
 ```
 
