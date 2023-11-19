@@ -175,7 +175,7 @@ sampling_usa_data_2022_2023_m <-  sampling_data_2022_2023 |>
 
 ```{r}
 #Number of simulations
-nsimulation <- 100
+nsimulation <- 1000
 ```
 
 ```{r overall simulation women, eval = FALSE}
@@ -1787,5 +1787,9 @@ ggplot(data = tb_f, aes(x = all_around, fill = made_final)) +
 
 ggplot(data = tb_f, aes(y = all_around, x = rank)) +
   geom_line()
+```
+
+```{r}
+write.csv(overall_women, '/Users/christophertsai/Downloads/Competition Dataframes/overall_women.csv', row.names=FALSE)
 ```
 
