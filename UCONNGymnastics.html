@@ -2336,46 +2336,60 @@ getmedalcutoffs &lt;- function(eventranks, num_simulations = 1000) {
   names(cutoffs_df) &lt;- paste0(&quot;Simulation_&quot;, 1:num_simulations)
 
   return(cutoffs_df)
-}</code></pre>
+}
+
+BB_medal_cutoffs &lt;- getmedalcutoffs(BB_ranks)</code></pre>
 <pre class="r"><code># vaultcutoffs &lt;- getmedalcutoffs(VT_ranks)</code></pre>
-<pre class="r"><code>calculatePodiumPercentages &lt;- function(usa, thresholds) {
-  # Number of USA gymnasts
-  num_USAgymnasts &lt;- nrow(usa)
+<pre class="r"><code>calculatePodiumPercentages &lt;- function(df, thresholds) {
+  # Number of gymnasts
+  num_gymnasts &lt;- nrow(df)
   
   # Initialize an empty dataframe for the results
   results &lt;- data.frame(
-    firstName = usa[, 1],
-    lastName = usa[, 2],
-    thirdPlace = numeric(num_USAgymnasts),
-    secondPlace = numeric(num_USAgymnasts),
-    firstPlace = numeric(num_USAgymnasts),
+    firstName = df[, 1],
+    lastName = df[, 2],
+    bronze_percentage = numeric(num_gymnasts),
+    silver_percentage = numeric(num_gymnasts),
+    gold_percentage = numeric(num_gymnasts),
     stringsAsFactors = FALSE
   )
   
-  # Iterating over each set of scores to give medals
-  for (i in 1:1000) { ## THIS IS NOT A SIM
-    # Extract the scores for the ith sample
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample and the thresholds
     sample_scores &lt;- df[, i + 2]
-    
-    # Rank the scores
-    ranks &lt;- rank(-sample_scores, ties.method = &quot;min&quot;)
-    
-    # Update the count for first, second, and third places
-    results$firstPlace &lt;- results$firstPlace + (ranks == 1)
-    results$secondPlace &lt;- results$secondPlace + (ranks == 2)
-    results$thirdPlace &lt;- results$thirdPlace + (ranks == 3)
+    gold_threshold &lt;- thresholds[1, i]
+    silver_threshold &lt;- thresholds[2, i]
+    bronze_threshold &lt;- thresholds[3, i]
+
+    # Count placements based on thresholds
+    results$gold_percentage &lt;- results$gold_percentage + (sample_scores &gt;= gold_threshold)
+    results$silver_percentage &lt;- results$silver_percentage + (sample_scores &gt;= silver_threshold &amp; sample_scores &lt; gold_threshold)
+    results$bronze_percentage &lt;- results$bronze_percentage + (sample_scores &gt;= bronze_threshold &amp; sample_scores &lt; silver_threshold)
   }
 
   # Convert counts to percentages
-  results$firstPlace &lt;- (results$firstPlace / 1000) * 100
-  results$secondPlace &lt;- (results$secondPlace / 1000) * 100
-  results$thirdPlace &lt;- (results$thirdPlace / 1000) * 100
+  results$gold_percentage &lt;- (results$gold_percentage / 1000)
+  results$silver_percentage &lt;- (results$silver_percentage / 1000)
+  results$bronze_percentage &lt;- (results$bronze_percentage / 1000)
 
-  # Sort the dataframe by firstPlace in descending order
-  results &lt;- results[order(-results$firstPlace), ]
+  # Sort the dataframe by gold_percentage in descending order
+  results &lt;- results[order(-results$gold_percentage), ]
   
   return(results)
-}</code></pre>
+}
+
+
+BB_sims_data &lt;- read_csv(&quot;Data/BB_usa_womens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 38 Columns: 1003
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr    (2): FirstName, LastName
+## dbl (1001): Score, Score_2, Score_3, Score_4, Score_5, Score_6, Score_7, Sco...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>BB_percs &lt;- calculatePodiumPercentages(BB_sims_data, BB_medal_cutoffs)</code></pre>
 <pre class="r"><code>#breakdown of teams qualifying rank
 
 tb_2016_f &lt;- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),

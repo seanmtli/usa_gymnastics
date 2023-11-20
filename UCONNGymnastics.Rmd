@@ -1902,6 +1902,7 @@ getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
   return(cutoffs_df)
 }
 
+BB_medal_cutoffs <- getmedalcutoffs(BB_ranks)
 ```
 
 ```{r cutoffexample}
@@ -1912,44 +1913,48 @@ getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
 
 
 ```{r get-model-probs-func}
-calculatePodiumPercentages <- function(usa, thresholds) {
-  # Number of USA gymnasts
-  num_USAgymnasts <- nrow(usa)
+calculatePodiumPercentages <- function(df, thresholds) {
+  # Number of gymnasts
+  num_gymnasts <- nrow(df)
   
   # Initialize an empty dataframe for the results
   results <- data.frame(
-    firstName = usa[, 1],
-    lastName = usa[, 2],
-    thirdPlace = numeric(num_USAgymnasts),
-    secondPlace = numeric(num_USAgymnasts),
-    firstPlace = numeric(num_USAgymnasts),
+    firstName = df[, 1],
+    lastName = df[, 2],
+    bronze_percentage = numeric(num_gymnasts),
+    silver_percentage = numeric(num_gymnasts),
+    gold_percentage = numeric(num_gymnasts),
     stringsAsFactors = FALSE
   )
   
-  # Iterating over each set of scores to give medals
-  for (i in 1:1000) { ## THIS IS NOT A SIM
-    # Extract the scores for the ith sample
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample and the thresholds
     sample_scores <- df[, i + 2]
-    
-    # Rank the scores
-    ranks <- rank(-sample_scores, ties.method = "min")
-    
-    # Update the count for first, second, and third places
-    results$firstPlace <- results$firstPlace + (ranks == 1)
-    results$secondPlace <- results$secondPlace + (ranks == 2)
-    results$thirdPlace <- results$thirdPlace + (ranks == 3)
+    gold_threshold <- thresholds[1, i]
+    silver_threshold <- thresholds[2, i]
+    bronze_threshold <- thresholds[3, i]
+
+    # Count placements based on thresholds
+    results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+    results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+    results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
   }
 
   # Convert counts to percentages
-  results$firstPlace <- (results$firstPlace / 1000) * 100
-  results$secondPlace <- (results$secondPlace / 1000) * 100
-  results$thirdPlace <- (results$thirdPlace / 1000) * 100
+  results$gold_percentage <- (results$gold_percentage / 1000)
+  results$silver_percentage <- (results$silver_percentage / 1000)
+  results$bronze_percentage <- (results$bronze_percentage / 1000)
 
-  # Sort the dataframe by firstPlace in descending order
-  results <- results[order(-results$firstPlace), ]
+  # Sort the dataframe by gold_percentage in descending order
+  results <- results[order(-results$gold_percentage), ]
   
   return(results)
 }
+
+
+BB_sims_data <- read_csv("Data/BB_usa_womens_sims.csv")
+BB_percs <- calculatePodiumPercentages(BB_sims_data, BB_medal_cutoffs)
 ```
 
 
