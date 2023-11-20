@@ -1740,23 +1740,61 @@ FX_ranks
 
 ```
 
+```{r medal-cutoffs}
+## sample 24 times from top 24 athletes mean scores in each apparatus to simulate one "olympics"
+## take top 3 scores and those are cutoffs for gold/silver/bronze respectively
+# Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
+getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
+  set.seed(123)
+  distribution <- eventranks$mean_score
+  cutoffs <- matrix(NA, nrow = 3, ncol = num_simulations)
+
+  for (i in 1:num_simulations) {
+    top_three_scores = numeric(0)
+    while (length(unique(top_three_scores))<3){
+    # Sample 24 times from the distribution
+    simulated_scores <- sample(distribution, size = 24, replace = TRUE)
+
+    # Take the top 3 scores
+    top_three_scores <- head(sort(simulated_scores, decreasing = TRUE), 3)
+    }
+    # Set the cutoffs for gold, silver, and bronze in the matrix
+    cutoffs[, i] <- top_three_scores
+  }
+
+  # Convert the matrix to a data frame
+  cutoffs_df <- as.data.frame(cutoffs)
+  names(cutoffs_df) <- paste0("Simulation_", 1:num_simulations)
+
+  return(cutoffs_df)
+}
+
+```
+
+```{r cutoffexample}
+vaultcutoffs <- getmedalcutoffs(VT_ranks)
+```
+
+
+
+
 ```{r get-model-probs-func}
-calculatePodiumPercentages <- function(df) {
-  # Number of gymnasts
-  num_gymnasts <- nrow(df)
+calculatePodiumPercentages <- function(usa, thresholds) {
+  # Number of USA gymnasts
+  num_USAgymnasts <- nrow(usa)
   
   # Initialize an empty dataframe for the results
   results <- data.frame(
-    firstName = df[, 1],
-    lastName = df[, 2],
-    thirdPlace = numeric(num_gymnasts),
-    secondPlace = numeric(num_gymnasts),
-    firstPlace = numeric(num_gymnasts),
+    firstName = usa[, 1],
+    lastName = usa[, 2],
+    thirdPlace = numeric(num_USAgymnasts),
+    secondPlace = numeric(num_USAgymnasts),
+    firstPlace = numeric(num_USAgymnasts),
     stringsAsFactors = FALSE
   )
   
-  # Iterating over each set of scores
-  for (i in 1:1000) {
+  # Iterating over each set of scores to give medals
+  for (i in 1:1000) { ## THIS IS NOT A SIM
     # Extract the scores for the ith sample
     sample_scores <- df[, i + 2]
     
