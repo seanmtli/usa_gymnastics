@@ -17,6 +17,7 @@ data_2017_2021 <- read_csv("Data/data_2017_2021.csv")
 
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "UE"] <- "UB"
 
 data_2022_2023$Penalty[is.na(data_2022_2023$Penalty)] <- 0
 
@@ -107,6 +108,7 @@ data_2022_2023 <- rbind(data_2022_2023, data_2017_2021)
 
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+
 ```
 
 ```{r date_things}
