@@ -455,6 +455,92 @@ print(final_average_df)
 overall_BB_women <- final_average_df
 ```
 
+```{r BB-simulation-t-dist-women, eval = FALSE}
+
+set.seed(123)
+
+# Identify unique gymnasts
+unique_gymnasts <- unique(sampling_usa_data_2022_2023_f[, c("FirstName", "LastName")])
+
+# Create a new dataframe to store sampled scores
+n_iterations_data <- data.frame(
+  FirstName = character(),
+  LastName = character(),
+  Score_1 = numeric()
+)
+
+# Assume we have a variable 'nsimulation' that defines the number of simulations
+for (n in 1:nsimulation) {
+  sampled_scores_data <- data.frame(
+    FirstName = character(),
+    LastName = character(),
+    Score = numeric()
+  )
+
+  for (i in 1:nrow(unique_gymnasts)) {
+    # Extract the current gymnast's information
+    current_gymnast <- unique_gymnasts[i, ]
+
+    # Subset the data for the current gymnast
+    subset_data <- sampling_usa_data_2022_2023_f[sampling_usa_data_2022_2023_f$FirstName == current_gymnast$FirstName & 
+                                sampling_usa_data_2022_2023_f$LastName == current_gymnast$LastName, ]
+
+    # Sample scores for each apparatus
+    BB_subset_data <- subset_data[subset_data$Apparatus == "BB",]
+    
+    # Check if the gymnast has at least 5 rows of data
+    if (nrow(BB_subset_data) < 5) {
+      next  # Skip to the next gymnast
+    }
+    
+    if (nrow(BB_subset_data) == 0) {
+      # If the subset is empty, set the sampled value to 0
+      sampled_BB_score <- 0
+    } else {
+      # Calculate mean and standard deviation
+      mean_score <- mean(BB_subset_data$Score)
+      sd_score <- sd(BB_subset_data$Score)
+      max_cutoff <- max(BB_subset_data$Score) + 0.3
+      
+      # Initialize sampled_BB_score
+      sampled_BB_score <- NA
+      
+      # Sample from the t-distribution until the score is less than or equal to max_cutoff
+      while(is.na(sampled_BB_score) || sampled_BB_score > max_cutoff) {
+        df <- max(nrow(BB_subset_data) - 1, 1) # to avoid df being zero
+        sampled_BB_score <- mean_score + rt(1, df) * sd_score
+      }
+    }
+
+    # Create a data frame for the current gymnast's sampled scores
+    current_data <- data.frame(
+      FirstName = current_gymnast$FirstName,
+      LastName = current_gymnast$LastName,
+      Score = sampled_BB_score,
+      stringsAsFactors = FALSE
+    )
+
+    # Append the current data to the overall sampled_scores_data dataframe
+    sampled_scores_data <- rbind(sampled_scores_data, current_data)
+  }
+  
+  # Combine the scores into n_iterations_data
+  if (n == 1) {
+    n_iterations_data <- sampled_scores_data
+  } else {
+    n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+    colnames(n_iterations_data)[ncol(n_iterations_data)] <- paste("Score_", n, sep = "")
+  }
+}
+
+# Calculate the average scores
+columns_to_average <- n_iterations_data[, -(1:2)]
+n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+print(final_average_df)
+```
+
 ```{r FX simulation women, eval = FALSE}
 set.seed(123)
 
@@ -1867,6 +1953,11 @@ ggplot(data = tb_f, aes(x = all_around, fill = made_final)) +
 
 ggplot(data = tb_f, aes(y = all_around, x = rank)) +
   geom_line()
+
+sampling_usa_data_2022_2023_m |>
+  filter(Apparatus == 'PH') |>
+  ggplot(aes(x=Score)) +
+  geom_histogram()
 ```
 
 ```{r}
