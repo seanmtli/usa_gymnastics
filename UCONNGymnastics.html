@@ -388,6 +388,7 @@ library(lubridate)</code></pre>
 
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == &quot;VT2&quot;] &lt;- &quot;VT&quot;
 data_2022_2023$Apparatus[data_2022_2023$Apparatus == &quot;VT1&quot;] &lt;- &quot;VT&quot;
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == &quot;UE&quot;] &lt;- &quot;UB&quot;
 
 data_2022_2023$Penalty[is.na(data_2022_2023$Penalty)] &lt;- 0
 
@@ -2217,7 +2218,7 @@ mean_usa_app</code></pre>
 ##  9 Mc       CALLUM     55.2
 ## 10 BLAKELY  Skye       54.5
 ## # ℹ 50 more rows</code></pre>
-<pre class="r"><code>VT_ranks &lt;- data_2022_2023_f |&gt;
+<pre class="r"><code>VT_ranks_f &lt;- data_2022_2023_f |&gt;
   group_by(LastName, FirstName, Country, Apparatus) |&gt;
   filter(Apparatus == &quot;VT&quot;) |&gt;
   summarise(mean_score = mean(Score),
@@ -2244,7 +2245,7 @@ mean_usa_app</code></pre>
   head(24)</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
 ## override using the `.groups` argument.</code></pre>
-<pre class="r"><code>FX_ranks &lt;- data_2022_2023_f |&gt;
+<pre class="r"><code>FX_ranks_f &lt;- data_2022_2023_f |&gt;
   group_by(LastName, FirstName, Country, Apparatus) |&gt;
   filter(Apparatus == &quot;FX&quot;) |&gt;
   summarise(mean_score = mean(Score),
@@ -2253,70 +2254,62 @@ mean_usa_app</code></pre>
   head(24)</code></pre>
 <pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
 ## override using the `.groups` argument.</code></pre>
-<pre class="r"><code>VT_ranks</code></pre>
-<pre><code>## # A tibble: 24 × 6
-## # Groups:   LastName, FirstName, Country [24]
-##    LastName    FirstName  Country Apparatus mean_score sd_score
-##    &lt;chr&gt;       &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
-##  1 BILES       Simone     USA     VT              14.9   0.477 
-##  2 SKINNER     Mykayla    USA     VT              14.9   0.0998
-##  3 ANDRADE     Rebeca     BRA     VT              14.8   0.902 
-##  4 OLSEN       Shallon    CAN     VT              14.7   0.270 
-##  5 AKHAIMOVA   Liliia     ROC     VT              14.7   0.0572
-##  6 STEINGRUBER Giulia     SUI     VT              14.7   0.266 
-##  7 MELNIKOVA   Angelina   ROC     VT              14.6   0.118 
-##  8 URAZOVA     Vladislava ROC     VT              14.5   0.0690
-##  9 Mc          CALLUM     USA     VT              14.5  NA     
-## 10 JESUS SANT  &lt;NA&gt;       FRA     VT              14.5   0.0240
-## # ℹ 14 more rows</code></pre>
-<pre class="r"><code>BB_ranks</code></pre>
-<pre><code>## # A tibble: 24 × 6
-## # Groups:   LastName, FirstName, Country [24]
-##    LastName  FirstName      Country Apparatus mean_score sd_score
-##    &lt;chr&gt;     &lt;chr&gt;          &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
-##  1 GUAN      Chenchen       CHN     BB              14.8    0.214
-##  2 WU        Ran            CHN     BB              14.6    0    
-##  3 ZHOU      Yaqin          CHN     BB              14.6    0.107
-##  4 MCCLAIN   Konnor         USA     BB              14.5    0.361
-##  5 BILES     Simone         USA     BB              14.4    0.325
-##  6 IORDACHE  Larisa Andreea ROU     BB              14.1   NA    
-##  7 SUN       Xinyi          CHN     BB              14.1   NA    
-##  8 LEE       Sunisa         USA     BB              14.1    0.258
-##  9 LISTUNOVA Viktoriia      ROC     BB              14.0    0.234
-## 10 OU        Yushan         CHN     BB              14.0    0.361
-## # ℹ 14 more rows</code></pre>
-<pre class="r"><code>UB_ranks</code></pre>
-<pre><code>## # A tibble: 24 × 6
-## # Groups:   LastName, FirstName, Country [24]
-##    LastName  FirstName  Country Apparatus mean_score sd_score
-##    &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
-##  1 LEE       Sunisa     USA     UB              15.3   0.141 
-##  2 DERWAEL   Nina       BEL     UB              15.0   0.395 
-##  3 NEMOUR    Kaylia     ALG     UB              15.0   0.237 
-##  4 MELNIKOVA Angelina   ROC     UB              14.9   0     
-##  5 URAZOVA   Vladislava ROC     UB              14.9   0     
-##  6 LISTUNOVA Viktoriia  ROC     UB              14.8   0.0948
-##  7 LISTUNOVA Viktoria   RUS     UB              14.6   0.0948
-##  8 HUANG     Zhuofan    CHN     UB              14.6   0.135 
-##  9 WEI       Xiaoyuan   CHN     UB              14.5   0.689 
-## 10 JONES     Shilese    USA     UB              14.5   0.493 
-## # ℹ 14 more rows</code></pre>
-<pre class="r"><code>FX_ranks</code></pre>
-<pre><code>## # A tibble: 24 × 6
-## # Groups:   LastName, FirstName, Country [24]
-##    LastName  FirstName Country Apparatus mean_score sd_score
-##    &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;
-##  1 BILES     Simone    USA     FX              14.6   0.438 
-##  2 FERRARI   Vanessa   ITA     FX              14.2   0.0419
-##  3 ANDRADE   Rebeca    BRA     FX              14.1   0.288 
-##  4 GADIROVA  Jessica   GBR     FX              14.1   0.309 
-##  5 MELNIKOVA Angelina  ROC     FX              14.0   0.0728
-##  6 MURAKAMI  Mai       JPN     FX              14.0   0.0931
-##  7 LINCOLN   Kaliya    USA     FX              14     0.308 
-##  8 CAREY     Jade      USA     FX              13.9   0.360 
-##  9 WU        Ran       CHN     FX              13.8   0.0940
-## 10 LISTUNOVA Viktoriia ROC     FX              13.7   0.738 
-## # ℹ 14 more rows</code></pre>
+<pre class="r"><code>#----------------------------------------------------------
+
+VT_ranks_m &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;VT&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code>SR_ranks &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;SR&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code>PB_ranks &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;PB&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code>FX_ranks_m &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;FX&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code>PH_ranks &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;PH&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<pre class="r"><code>HB_ranks &lt;- data_2022_2023_m |&gt;
+  group_by(LastName, FirstName, Country, Apparatus) |&gt;
+  filter(Apparatus == &quot;HB&quot;) |&gt;
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |&gt;
+  arrange(desc(mean_score)) |&gt;
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Country&#39;. You can
+## override using the `.groups` argument.</code></pre>
 <pre class="r"><code>## sample 24 times from top 24 athletes mean scores in each apparatus to simulate one &quot;olympics&quot;
 ## take top 3 scores and those are cutoffs for gold/silver/bronze respectively
 # Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
@@ -2344,7 +2337,7 @@ getmedalcutoffs &lt;- function(eventranks, num_simulations = 1000) {
 
   return(cutoffs_df)
 }</code></pre>
-<pre class="r"><code>vaultcutoffs &lt;- getmedalcutoffs(VT_ranks)</code></pre>
+<pre class="r"><code># vaultcutoffs &lt;- getmedalcutoffs(VT_ranks)</code></pre>
 <pre class="r"><code>calculatePodiumPercentages &lt;- function(usa, thresholds) {
   # Number of USA gymnasts
   num_USAgymnasts &lt;- nrow(usa)

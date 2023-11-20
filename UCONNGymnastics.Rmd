@@ -1789,7 +1789,7 @@ mean_usa_app |>
   summarise(sum = sum(mean_score)) |>
   arrange(desc(sum))
 
-VT_ranks <- data_2022_2023_f |>
+VT_ranks_f <- data_2022_2023_f |>
   group_by(LastName, FirstName, Country, Apparatus) |>
   filter(Apparatus == "VT") |>
   summarise(mean_score = mean(Score),
@@ -1813,7 +1813,7 @@ UB_ranks <- data_2022_2023_f |>
   arrange(desc(mean_score)) |>
   head(24)
 
-FX_ranks <- data_2022_2023_f |>
+FX_ranks_f <- data_2022_2023_f |>
   group_by(LastName, FirstName, Country, Apparatus) |>
   filter(Apparatus == "FX") |>
   summarise(mean_score = mean(Score),
@@ -1821,10 +1821,55 @@ FX_ranks <- data_2022_2023_f |>
   arrange(desc(mean_score)) |>
   head(24)
 
-VT_ranks
-BB_ranks
-UB_ranks
-FX_ranks
+#----------------------------------------------------------
+
+VT_ranks_m <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+SR_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "SR") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PB_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks_m <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PH_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PH") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+HB_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "HB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
 
 ```
 
@@ -1860,7 +1905,7 @@ getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
 ```
 
 ```{r cutoffexample}
-vaultcutoffs <- getmedalcutoffs(VT_ranks)
+# vaultcutoffs <- getmedalcutoffs(VT_ranks)
 ```
 
 
