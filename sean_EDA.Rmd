@@ -92,19 +92,15 @@ simulate_gymnastics_event <- function(event_name, gender, nsimulation) {
     n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
     colnames(n_iterations_data)[ncol(n_iterations_data)] <- paste("Score_", n, sep = "")
   }
+
+  }
     # add an average scores across sims for each athlete
     columns_to_average <- n_iterations_data[, -(1:2)]
 
     # Calculate the row-wise mean for the selected columns
     n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
-    final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
-    final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
-    
-    
-    
-    #n_iterations_data$AverageScore <- rowMeans(n_iterations_data[, -(1:2)], na.rm = TRUE)
-
-  }
+    #final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+    #final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
 
   return(n_iterations_data)
 }
