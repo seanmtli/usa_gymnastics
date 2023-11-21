@@ -90,6 +90,8 @@ data_2022_2023$LastName[(data_2022_2023$Competition == "2023 Varna World Challen
 data_2022_2023$FirstName[data_2022_2023$LastName == "ABIYURAFI"] <- "Abiyu"
 data_2022_2023$LastName[data_2022_2023$LastName == "ABIYURAFI"] <- "Rafi"
 
+data_2022_2023$FirstName[data_2022_2023$LastName == "Frederick Nathaniel"] <- "Frederick"
+
 
 #Konnor McClain should not be considered, she has hand surgery
 
@@ -1879,19 +1881,36 @@ HB_ranks <- data_2022_2023_m |>
 # Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
 getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
   set.seed(123)
-  distribution <- eventranks$mean_score
+  #distribution <- eventranks$mean_score
   cutoffs <- matrix(NA, nrow = 3, ncol = num_simulations)
 
   for (i in 1:num_simulations) {
     top_three_scores = numeric(0)
     while (length(unique(top_three_scores))<3){
-    # Sample 24 times from the distribution
-    simulated_scores <- sample(distribution, size = 24, replace = TRUE)
-
+      # Sample 24 times from the distribution
+        mean_score <- mean(eventranks$mean_score)
+        sd_score <- sd(eventranks$mean_score)
+        max_cutoff <- max(eventranks$mean_score) + 0.3
+        # Initialize sampled_score
+        sampled_score <- NA
+        simulated_scores <- list()
+        for (j in 1:24){
+          sampled_score <- NA
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+          while (is.na(sampled_score) || sampled_score > max_cutoff) {
+            df <- max(nrow(eventranks) - 1, 1)  # to avoid df being zero
+            sampled_score <- mean_score + rt(1, df) * sd_score
+          }
+        #print(sampled_score)
+        simulated_scores <- append(simulated_scores,sampled_score)
+        }
     # Take the top 3 scores
+    simulated_scores = as.numeric(simulated_scores)
+    #print(simulated_scores)
     top_three_scores <- head(sort(simulated_scores, decreasing = TRUE), 3)
     }
     # Set the cutoffs for gold, silver, and bronze in the matrix
+
     cutoffs[, i] <- top_three_scores
   }
 
@@ -1915,6 +1934,9 @@ HB_medal_cutoffs <- getmedalcutoffs(HB_ranks)
 PH_medal_cutoffs <- getmedalcutoffs(PH_ranks)
 VT_m_medal_cutoffs <- getmedalcutoffs(VT_ranks_m)
 PB_medal_cutoffs <- getmedalcutoffs(PB_ranks)
+
+allroundmen_cutoffs <-getmedalcutoffs(top24AAmen)
+allroudwomen_cutoffs <- getmedalcutoffs(top24AAwomen)
 ```
 
 ```{r get-model-probs-func}

@@ -145,12 +145,14 @@ FX_usa_womens_sims
 VT_usa_womens_sims
 ```
 
+
+
 ```{r mens sims}
 # List of men's events
 men_events <- c("PB", "HB", "PH", "FX", "SR", "VT")
 
 # Number of simulations
-nsimulation <- 10
+nsimulation <- 1000
 
 # Loop over men's events
 for (event_name in men_events) {
@@ -169,6 +171,39 @@ FX_usa_mens_sims
 SR_usa_mens_sims
 VT_usa_mens_sims
 ```
+
+
+```{r all-round}
+topAAmen <- data_2022_2023_m %>% 
+  filter(Gender == "m", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+topAAwomen <- data_2022_2023_f %>% 
+  filter(Gender == "w", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+top24AAmen <- topAAmen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(AAmean = mean(AAtotal)) %>% 
+  arrange(desc(AAmean)) %>% 
+  head(24)
+
+top24AAwomen <- topAAwomen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(AAmean = mean(AAtotal)) %>% 
+  arrange(desc(AAmean)) %>% 
+  head(24)
+```
+
+```{r allroundweights}
+
+```
+
+
+
+
 
 
 
