@@ -74,7 +74,7 @@ There are limitations in the data that prevent us from creating as complete an a
 
 There were also several limitations in our statistical methods. Firstly, we arbitrarily assigned weights to each of the decided ‘cutoffs’ it is more than possible that our weightings could result in the selection of a different team than if no weights were used. However, the weights used were for good reason given how recent performance affects future performance and our desire to pick more ‘clutch’ individuals. Another potential limitation in our method is when determining projected scores for athletes that have not competed in some time. Take Sunisa Lee as an example. Due to competing in college and injuries, Lee has very few scores since her Olympic performance in 2021. Because those performances account for so many of her competitions, her lower recent scores are severely overshadowed by her high, older scores. Even with weights her older scores account for a much greater proportion of her data. Thus in our methodology her projected score is unreasonably high for what recent scores suggest. This could remain true for many other athletes where their projected score does not resemble what their recent form might be. The final issue with our methodology and sampling in general is because there is technically no maximum score a gymnast could receive due to more challenging tricks being completed in every successive competition the sample could possibly get too high scores as there is no maximum cutoff in the distributions.
 
-Some alternatives for methodology could include using a Kernal Density Estimation method to estimate the distribution, and then sampling, or obtaining all possible combinations of 5 athletes and then running an olympics simulation. WE could also introduce more factors to weighting such as the age of the competitor, skill level of the competition, etc.
+Some alternatives for methodology could include using a Kernal Density Estimation method to estimate the distribution, and then sampling, or obtaining all possible combinations of 5 athletes and then running an olympics simulation. We could also introduce more factors to weighting such as the age of the competitor, skill level of the competition, etc.
 
 ### Implications
 
@@ -224,11 +224,21 @@ ggplot(aes(x= Score), data = data_2022_2023_m) + geom_histogram() + facet_wrap(~
 
 ### Works Cited
 Gunston, Jo. “Judging the Judges – How Statistical Analysis Evaluates Fairness And ...” Olympics.Com, 19 Oct. 2023, olympics.com/en/news/how-statistical-analysis-evaluates-fairness-accuracy-gymnastics. Accessed 06 Nov. 2023.
+
+
 Most popular sports in the Summer Olympics US 2021. (n.d.). Statista. https://www.statista.com/statistics/1245746/summer-olympics-most-followed-sports-us/. Accessed 20 Nov. 2023.
+
+
 Olympic Summer Games: global broadcast audience. (n.d.). Statista. https://www.statista.com/statistics/280502/total-number-of-tv-viewers-of-olympic-summer-games-worldwide/#:~:text=Between%202012%20and%202020%2C%20the,3.2%20billion%20five%20years%20earlier.
 . Accessed 20 Nov. 2023.
+
+
 Brody Malone eyes spring 2024 return to gymnastics from leg surgeries. 17 May 2023. NBC Sports. https://www.nbcsports.com/olympics/news/brody-malone-gymnastics-injury-comeback. Accessed 20 Nov. 2023.
+
+
 Olympic champ Sunisa Lee gained 45 pounds due to kidney issue. “It was so scary.” 17 Nov. 2023. USA TODAY. https://www.usatoday.com/story/sports/olympics/2023/11/17/sunisa-lee-olympic-champion-kidney-health-paris/71616483007/. Accessed 20 Nov. 2023.
+
+
 Duffy, P. Konnor McClain enrolling at LSU this fall with hopes of balancing NCAA and elite - Gymnastics Now. Gymnastics-Now.com. 13 Jul. 2023. https://gymnastics-now.com/konnor-mcclain-enrolling-at-lsu-this-fall-with-hopes-of-balancing-ncaa-and-elite/. Accessed 20 Nov. 2023.
 
 
