@@ -2018,7 +2018,63 @@ sampling_usa_data_2022_2023_m |>
   geom_histogram()
 ```
 
-```{r}
-# write.csv(overall_women, '/Users/christophertsai/Downloads/Competition Dataframes/overall_women.csv', row.names=FALSE)
+```{r medal-counts-f}
+f_FX <- read_csv("Data/event_percentages/f_FX.csv")
+f_BB <- read_csv("Data/event_percentages/f_BB.csv")
+f_VT <- read_csv("Data/event_percentages/f_VT.csv")
+f_UB <- read_csv("Data/event_percentages/f_UB.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 100)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+f_BB <- normalize_and_rename(f_BB, "BB")
+f_FX <- normalize_and_rename(f_FX, "FX")
+f_UB <- normalize_and_rename(f_UB, "UB")
+f_VT <- normalize_and_rename(f_VT, "VT")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(f_BB, f_FX, f_UB, f_VT), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+# write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/f.csv', row.names=FALSE)
+```
+
+```{r medal-counts-m}
+m_FX <- read_csv("Data/event_percentages/m_FX.csv")
+m_SR <- read_csv("Data/event_percentages/m_SR.csv")
+m_VT <- read_csv("Data/event_percentages/m_VT.csv")
+m_PB <- read_csv("Data/event_percentages/m_PB.csv")
+m_PH <- read_csv("Data/event_percentages/m_PH.csv")
+m_HB <- read_csv("Data/event_percentages/m_HB.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 100)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+m_SR <- normalize_and_rename(m_SR, "SR")
+m_FX <- normalize_and_rename(m_FX, "FX")
+m_PB <- normalize_and_rename(m_PB, "PB")
+m_VT <- normalize_and_rename(m_VT, "VT")
+m_PH <- normalize_and_rename(m_PH, "PH")
+m_HB <- normalize_and_rename(m_HB, "HB")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(m_SR, m_FX, m_PB, m_VT, m_PH, m_HB), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+# write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/m.csv', row.names=FALSE)
 ```
 
