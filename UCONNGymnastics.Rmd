@@ -2158,7 +2158,7 @@ names <- combined_AA_df[, (1:2)]
 
 
 # Sum every 1000th column and store the result in the condensed dataframe
-condensed_data <- data.frame(matrix(NA, nrow = nrow(noname), ncol = 1000))
+condensed_data <- data.frame(matrix(NA, nrow = nrow(names), ncol = 1000))
 
 # Loop through each group of 1000 columns
 for (i in 1:1001) {
