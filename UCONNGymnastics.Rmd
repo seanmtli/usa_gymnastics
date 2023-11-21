@@ -1901,16 +1901,21 @@ getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
 
   return(cutoffs_df)
 }
+```
 
+```{r get-cutoffs}
 BB_medal_cutoffs <- getmedalcutoffs(BB_ranks)
+FX_f_medal_cutoffs <- getmedalcutoffs(FX_ranks_f)
+UB_medal_cutoffs <- getmedalcutoffs(UB_ranks)
+VT_f_medal_cutoffs <- getmedalcutoffs(VT_ranks_f)
+
+FX_m_medal_cutoffs <- getmedalcutoffs(FX_ranks_m)
+SR_medal_cutoffs <- getmedalcutoffs(SR_ranks)
+HB_medal_cutoffs <- getmedalcutoffs(HB_ranks)
+PH_medal_cutoffs <- getmedalcutoffs(PH_ranks)
+VT_m_medal_cutoffs <- getmedalcutoffs(VT_ranks_m)
+PB_medal_cutoffs <- getmedalcutoffs(PB_ranks)
 ```
-
-```{r cutoffexample}
-# vaultcutoffs <- getmedalcutoffs(VT_ranks)
-```
-
-
-
 
 ```{r get-model-probs-func}
 calculatePodiumPercentages <- function(df, thresholds) {
@@ -1951,12 +1956,13 @@ calculatePodiumPercentages <- function(df, thresholds) {
   
   return(results)
 }
-
-
-BB_sims_data <- read_csv("Data/BB_usa_womens_sims.csv")
-BB_percs <- calculatePodiumPercentages(BB_sims_data, BB_medal_cutoffs)
 ```
 
+```{r write-percs-example}
+sims_data <- read_csv("Data/HB_usa_mens_sims.csv")
+percs <- calculatePodiumPercentages(sims_data, HB_medal_cutoffs)
+# write.csv(percs, '/home/guest/Case2-BDSM/Data/event_percentages/m_HB.csv', row.names=FALSE)
+```
 
 ```{r}
 #breakdown of teams qualifying rank

@@ -2336,10 +2336,18 @@ getmedalcutoffs &lt;- function(eventranks, num_simulations = 1000) {
   names(cutoffs_df) &lt;- paste0(&quot;Simulation_&quot;, 1:num_simulations)
 
   return(cutoffs_df)
-}
+}</code></pre>
+<pre class="r"><code>BB_medal_cutoffs &lt;- getmedalcutoffs(BB_ranks)
+FX_f_medal_cutoffs &lt;- getmedalcutoffs(FX_ranks_f)
+UB_medal_cutoffs &lt;- getmedalcutoffs(UB_ranks)
+VT_f_medal_cutoffs &lt;- getmedalcutoffs(VT_ranks_f)
 
-BB_medal_cutoffs &lt;- getmedalcutoffs(BB_ranks)</code></pre>
-<pre class="r"><code># vaultcutoffs &lt;- getmedalcutoffs(VT_ranks)</code></pre>
+FX_m_medal_cutoffs &lt;- getmedalcutoffs(FX_ranks_m)
+SR_medal_cutoffs &lt;- getmedalcutoffs(SR_ranks)
+HB_medal_cutoffs &lt;- getmedalcutoffs(HB_ranks)
+PH_medal_cutoffs &lt;- getmedalcutoffs(PH_ranks)
+VT_m_medal_cutoffs &lt;- getmedalcutoffs(VT_ranks_m)
+PB_medal_cutoffs &lt;- getmedalcutoffs(PB_ranks)</code></pre>
 <pre class="r"><code>calculatePodiumPercentages &lt;- function(df, thresholds) {
   # Number of gymnasts
   num_gymnasts &lt;- nrow(df)
@@ -2377,11 +2385,9 @@ BB_medal_cutoffs &lt;- getmedalcutoffs(BB_ranks)</code></pre>
   results &lt;- results[order(-results$gold_percentage), ]
   
   return(results)
-}
-
-
-BB_sims_data &lt;- read_csv(&quot;Data/BB_usa_womens_sims.csv&quot;)</code></pre>
-<pre><code>## Rows: 38 Columns: 1003
+}</code></pre>
+<pre class="r"><code>sims_data &lt;- read_csv(&quot;Data/HB_usa_mens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 63 Columns: 1003
 ## ── Column specification ────────────────────────────────────────────────────────
 ## Delimiter: &quot;,&quot;
 ## chr    (2): FirstName, LastName
@@ -2389,7 +2395,8 @@ BB_sims_data &lt;- read_csv(&quot;Data/BB_usa_womens_sims.csv&quot;)</code></pre
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<pre class="r"><code>BB_percs &lt;- calculatePodiumPercentages(BB_sims_data, BB_medal_cutoffs)</code></pre>
+<pre class="r"><code>percs &lt;- calculatePodiumPercentages(sims_data, HB_medal_cutoffs)
+# write.csv(percs, &#39;/home/guest/Case2-BDSM/Data/event_percentages/m_HB.csv&#39;, row.names=FALSE)</code></pre>
 <pre class="r"><code>#breakdown of teams qualifying rank
 
 tb_2016_f &lt;- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
