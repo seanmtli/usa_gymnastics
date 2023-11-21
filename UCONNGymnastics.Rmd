@@ -2122,7 +2122,7 @@ combined_df[is.na(combined_df)] <- 0
 # write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/m.csv', row.names=FALSE)
 ```
 
-```{r all-around-sims}
+```{r all-around-sims womens}
 BB_sims <- read_csv("Data/BB_usa_womens_sims.csv")
 FX_sims <- read_csv("Data/FX_usa_womens_sims.csv")
 UB_sims <- read_csv("Data/UB_usa_womens_sims.csv")
@@ -2144,5 +2144,92 @@ combined_AA_df <- BB_sims_prepared %>%
   left_join(FX_sims_prepared, by = c("FirstName", "LastName")) %>%
   left_join(UB_sims_prepared, by = c("FirstName", "LastName")) %>%
   left_join(VT_sims_prepared, by = c("FirstName", "LastName"))
+```
+
+
+
+```{r sum-across-events-women}
+# Assuming your dataframe is called 'your_dataframe'
+# Assuming you have 4004 columns and 38 rows
+
+# Create a vector of column indices to sum
+original_data <- combined_AA_df[, -(1:2)]
+names <- combined_AA_df[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(noname), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i + 1000,i+2000,i+3000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA <- cbind(names,condensed_data)
+```
+
+
+```{r all-around-sims men}
+HB_sims_m <- read_csv("Data/HB_usa_mens_sims.csv")
+FX_sims_m <- read_csv("Data/FX_usa_mens_sims.csv")
+PB_sims_m <- read_csv("Data/PB_usa_mens_sims.csv")
+VT_sims_m <- read_csv("Data/VT_usa_mens_sims.csv")
+PH_sims_m <- read_csv("Data/PH_usa_mens_sims.csv")
+SR_sims_m <- read_csv("Data/SR_usa_mens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+HB_sims_prepared_m <- prepare_df(HB_sims_m)
+FX_sims_prepared_m <- prepare_df(FX_sims_m)
+PB_sims_prepared_m <- prepare_df(PB_sims_m)
+VT_sims_prepared_m <- prepare_df(VT_sims_m)
+PH_sims_prepared_m <- prepare_df(PH_sims_m)
+SR_sims_prepared_m <- prepare_df(SR_sims_m)
+
+# Use left joins to combine the dataframes
+combined_AA_df_m <- HB_sims_prepared_m %>%
+  left_join(FX_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(PB_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(PH_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(SR_sims_prepared_m, by = c("FirstName", "LastName")) 
+  
+```
+
+```{r sum-across-events-men}
+# Create a vector of column indices to sum
+original_data <- combined_AA_df_m[, -(1:2)]
+names <- combined_AA_df_m[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(original_data), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i + 1000,i+2000,i+3000,i+4000,i+5000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA_m <- cbind(names,condensed_data)
 ```
 
