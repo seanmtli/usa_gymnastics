@@ -1,0 +1,114 @@
+
+```{r load-packages}
+library(dplyr)
+library(lpSolve)
+library(lpSolveAPI)
+library(readr)
+library(stringr)
+library(lubridate)
+```
+
+```{r load-data}
+women <- read_csv("/home/guest/Case2-BDSM/Data/expected_medals/f.csv")
+men <- read_csv("/home/guest/Case2-BDSM/Data/expected_medals/m.csv")
+w_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/w_AA.csv")
+m_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/m_AA.csv")
+```
+
+```{r get-total-probs-m}
+merged_df_m <- merge(m_AA, men, by.x = c("firstName", "lastName"), by.y = c("FirstName", "LastName")) |> 
+  rename("bronze_percentage_AA" = bronze_percentage,
+         "silver_percentage_AA" = silver_percentage,
+         "gold_percentage_AA" = gold_percentage)
+
+# Calculate total probabilities for each event
+merged_df_m$total_AA <- merged_df_m$bronze_percentage_AA + merged_df_m$silver_percentage_AA + merged_df_m$gold_percentage_AA
+merged_df_m$total_SR <- merged_df_m$bronze_percentage_SR + merged_df_m$silver_percentage_SR + merged_df_m$gold_percentage_SR
+merged_df_m$total_FX <- merged_df_m$bronze_percentage_FX + merged_df_m$silver_percentage_FX + merged_df_m$gold_percentage_FX
+merged_df_m$total_PB <- merged_df_m$bronze_percentage_PB + merged_df_m$silver_percentage_PB + merged_df_m$gold_percentage_PB
+merged_df_m$total_PH <- merged_df_m$bronze_percentage_PH + merged_df_m$silver_percentage_PH + merged_df_m$gold_percentage_PH
+merged_df_m$total_VT <- merged_df_m$bronze_percentage_VT + merged_df_m$silver_percentage_VT + merged_df_m$gold_percentage_VT
+merged_df_m$total_HB <- merged_df_m$bronze_percentage_HB + merged_df_m$silver_percentage_HB + merged_df_m$gold_percentage_HB
+
+
+# Create a new dataframe with the total probabilities and gymnast names
+total_medal_probabilities_m <- data.frame(
+  FirstName = merged_df_m$firstName,
+  LastName = merged_df_m$lastName,
+  Total_AA = merged_df_m$total_AA,
+  Total_SR = merged_df_m$total_SR,
+  Total_FX = merged_df_m$total_FX,
+  Total_PB = merged_df_m$total_PB,
+  Total_PH = merged_df_m$total_PH,
+  Total_VT = merged_df_m$total_VT,
+  Total_HB = merged_df_m$total_HB
+)
+```
+
+```{r get-total-probs-f}
+merged_df_f <- merge(w_AA, women, by.x = c("firstName", "lastName"), by.y = c("FirstName", "LastName")) |> 
+  rename("bronze_percentage_AA" = bronze_percentage,
+         "silver_percentage_AA" = silver_percentage,
+         "gold_percentage_AA" = gold_percentage)
+
+# Calculate total probabilities for each event
+merged_df_f$total_AA <- merged_df_f$bronze_percentage_AA + merged_df_f$silver_percentage_AA + merged_df_f$gold_percentage_AA
+merged_df_f$total_BB <- merged_df_f$bronze_percentage_BB + merged_df_f$silver_percentage_BB + merged_df_f$gold_percentage_BB
+merged_df_f$total_FX <- merged_df_f$bronze_percentage_FX + merged_df_f$silver_percentage_FX + merged_df_f$gold_percentage_FX
+merged_df_f$total_UB <- merged_df_f$bronze_percentage_UB + merged_df_f$silver_percentage_UB + merged_df_f$gold_percentage_UB
+merged_df_f$total_VT <- merged_df_f$bronze_percentage_VT + merged_df_f$silver_percentage_VT + merged_df_f$gold_percentage_VT
+
+# Create a new dataframe with the total probabilities and gymnast names
+total_medal_probabilities_f <- data.frame(
+  FirstName = merged_df_f$firstName,
+  LastName = merged_df_f$lastName,
+  Total_AA = merged_df_f$total_AA,
+  Total_BB = merged_df_f$total_BB,
+  Total_FX = merged_df_f$total_FX,
+  Total_VT = merged_df_f$total_VT,
+  Total_UB = merged_df_f$total_UB
+)
+```
+
+
+```{r optimization}
+# Create a matrix of probabilities
+prob_matrix <- as.matrix(remaining_gymnasts[, 3:7])
+
+# Define the objective function (maximize total medals)
+objective <- c(prob_matrix)
+
+# Number of gymnasts and events
+num_gymnasts <- nrow(prob_matrix)
+num_events <- ncol(prob_matrix)
+total_decision_vars <- num_gymnasts * num_events
+
+# Constraints
+# Each gymnast can be selected only once
+select_gymnast <- matrix(0, nrow = num_gymnasts, ncol = total_decision_vars)
+for (i in 1:num_gymnasts) {
+  select_gymnast[i, ((i - 1) * num_events + 1):(i * num_events)] <- 1
+}
+
+# No more than two gymnasts can medal in each event
+event_limit <- matrix(0, nrow = num_events, ncol = total_decision_vars)
+for (i in 1:num_events) {
+  event_limit[i, i:num_events:(total_decision_vars - num_events + i)] <- 1
+}
+
+# Combine constraints
+constr <- rbind(select_gymnast, event_limit)
+rhs <- c(rep(1, num_gymnasts), rep(2, num_events))
+direction <- c(rep("==", num_gymnasts), rep("<=", num_events))
+
+# Solve the optimization problem
+opt_result <- lp("max", objective, constr, direction, rhs, all.bin = TRUE)
+
+# Get the names of the selected gymnasts
+selected_indices <- which(opt_result$solution == 1)
+selected_gymnasts <- remaining_gymnasts[unique((selected_indices - 1) %/% num_events + 1), c("FirstName", "LastName")]
+print(selected_gymnasts)
+```
+
+
+
