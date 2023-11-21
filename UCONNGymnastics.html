@@ -461,6 +461,8 @@ data_2022_2023$LastName[(data_2022_2023$Competition == &quot;2023 Varna World Ch
 data_2022_2023$FirstName[data_2022_2023$LastName == &quot;ABIYURAFI&quot;] &lt;- &quot;Abiyu&quot;
 data_2022_2023$LastName[data_2022_2023$LastName == &quot;ABIYURAFI&quot;] &lt;- &quot;Rafi&quot;
 
+data_2022_2023$FirstName[data_2022_2023$LastName == &quot;Frederick Nathaniel&quot;] &lt;- &quot;Frederick&quot;
+
 
 #Konnor McClain should not be considered, she has hand surgery</code></pre>
 <pre class="r"><code>usa_data_2022_2023 &lt;- data_2022_2023 |&gt;
@@ -2315,19 +2317,36 @@ VT_ranks_m &lt;- data_2022_2023_m |&gt;
 # Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
 getmedalcutoffs &lt;- function(eventranks, num_simulations = 1000) {
   set.seed(123)
-  distribution &lt;- eventranks$mean_score
+  #distribution &lt;- eventranks$mean_score
   cutoffs &lt;- matrix(NA, nrow = 3, ncol = num_simulations)
 
   for (i in 1:num_simulations) {
     top_three_scores = numeric(0)
     while (length(unique(top_three_scores))&lt;3){
-    # Sample 24 times from the distribution
-    simulated_scores &lt;- sample(distribution, size = 24, replace = TRUE)
-
+      # Sample 24 times from the distribution
+        mean_score &lt;- mean(eventranks$mean_score)
+        sd_score &lt;- sd(eventranks$mean_score)
+        max_cutoff &lt;- max(eventranks$mean_score) + 0.3
+        # Initialize sampled_score
+        sampled_score &lt;- NA
+        simulated_scores &lt;- list()
+        for (j in 1:24){
+          sampled_score &lt;- NA
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+          while (is.na(sampled_score) || sampled_score &gt; max_cutoff) {
+            df &lt;- max(nrow(eventranks) - 1, 1)  # to avoid df being zero
+            sampled_score &lt;- mean_score + rt(1, df) * sd_score
+          }
+        #print(sampled_score)
+        simulated_scores &lt;- append(simulated_scores,sampled_score)
+        }
     # Take the top 3 scores
+    simulated_scores = as.numeric(simulated_scores)
+    #print(simulated_scores)
     top_three_scores &lt;- head(sort(simulated_scores, decreasing = TRUE), 3)
     }
     # Set the cutoffs for gold, silver, and bronze in the matrix
+
     cutoffs[, i] &lt;- top_three_scores
   }
 
@@ -2347,7 +2366,36 @@ SR_medal_cutoffs &lt;- getmedalcutoffs(SR_ranks)
 HB_medal_cutoffs &lt;- getmedalcutoffs(HB_ranks)
 PH_medal_cutoffs &lt;- getmedalcutoffs(PH_ranks)
 VT_m_medal_cutoffs &lt;- getmedalcutoffs(VT_ranks_m)
-PB_medal_cutoffs &lt;- getmedalcutoffs(PB_ranks)</code></pre>
+PB_medal_cutoffs &lt;- getmedalcutoffs(PB_ranks)
+
+topAAmen &lt;- data_2022_2023_m %&gt;% 
+  filter(Gender == &quot;m&quot;, Round == &quot;AAfinal&quot;) %&gt;% 
+  group_by(LastName, FirstName, Competition, Country) %&gt;% 
+  summarize(AAtotal = sum(Score))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Competition&#39;. You
+## can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>topAAwomen &lt;- data_2022_2023_f %&gt;% 
+  filter(Gender == &quot;w&quot;, Round == &quot;AAfinal&quot;) %&gt;% 
+  group_by(LastName, FirstName, Competition, Country) %&gt;% 
+  summarize(AAtotal = sum(Score))</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;, &#39;Competition&#39;. You
+## can override using the `.groups` argument.</code></pre>
+<pre class="r"><code>top24AAmen &lt;- topAAmen %&gt;% 
+  group_by(LastName,FirstName,Country) %&gt;% 
+  summarize(mean_score = mean(AAtotal)) %&gt;% 
+  arrange(desc(mean_score)) %&gt;% 
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;. You can override
+## using the `.groups` argument.</code></pre>
+<pre class="r"><code>top24AAwomen &lt;- topAAwomen %&gt;% 
+  group_by(LastName,FirstName,Country) %&gt;% 
+  summarize(mean_score = mean(AAtotal)) %&gt;% 
+  arrange(desc(mean_score)) %&gt;% 
+  head(24)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;LastName&#39;, &#39;FirstName&#39;. You can override
+## using the `.groups` argument.</code></pre>
+<pre class="r"><code>allroundmen_cutoffs &lt;-getmedalcutoffs(top24AAmen)
+allroudwomen_cutoffs &lt;- getmedalcutoffs(top24AAwomen)</code></pre>
 <pre class="r"><code>calculatePodiumPercentages &lt;- function(df, thresholds) {
   # Number of gymnasts
   num_gymnasts &lt;- nrow(df)
@@ -2582,6 +2630,58 @@ combined_df &lt;- reduce(list(m_SR, m_FX, m_PB, m_VT, m_PH, m_HB), full_join, by
 combined_df[is.na(combined_df)] &lt;- 0
 
 # write.csv(combined_df, &#39;/home/guest/Case2-BDSM/Data/expected_medals/m.csv&#39;, row.names=FALSE)</code></pre>
+<pre class="r"><code>BB_sims &lt;- read_csv(&quot;Data/BB_usa_womens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 38 Columns: 1003
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr    (2): FirstName, LastName
+## dbl (1001): Score, Score_2, Score_3, Score_4, Score_5, Score_6, Score_7, Sco...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>FX_sims &lt;- read_csv(&quot;Data/FX_usa_womens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 36 Columns: 1003
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr    (2): FirstName, LastName
+## dbl (1001): Score, Score_2, Score_3, Score_4, Score_5, Score_6, Score_7, Sco...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>UB_sims &lt;- read_csv(&quot;Data/UB_usa_womens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 38 Columns: 1003
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr    (2): FirstName, LastName
+## dbl (1001): Score, Score_2, Score_3, Score_4, Score_5, Score_6, Score_7, Sco...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>VT_sims &lt;- read_csv(&quot;Data/VT_usa_womens_sims.csv&quot;)</code></pre>
+<pre><code>## Rows: 38 Columns: 1003
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: &quot;,&quot;
+## chr    (2): FirstName, LastName
+## dbl (1001): Score, Score_2, Score_3, Score_4, Score_5, Score_6, Score_7, Sco...
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code># Define a function to replace NA with 0 and drop the average score column
+prepare_df &lt;- function(df) {
+  df %&gt;% 
+    mutate(across(starts_with(&quot;Score&quot;), ~ replace_na(., 0)))
+}
+
+BB_sims_prepared &lt;- prepare_df(BB_sims)
+FX_sims_prepared &lt;- prepare_df(FX_sims)
+UB_sims_prepared &lt;- prepare_df(UB_sims)
+VT_sims_prepared &lt;- prepare_df(VT_sims)
+
+# Use left joins to combine the dataframes
+combined_AA_df &lt;- BB_sims_prepared %&gt;%
+  left_join(FX_sims_prepared, by = c(&quot;FirstName&quot;, &quot;LastName&quot;)) %&gt;%
+  left_join(UB_sims_prepared, by = c(&quot;FirstName&quot;, &quot;LastName&quot;)) %&gt;%
+  left_join(VT_sims_prepared, by = c(&quot;FirstName&quot;, &quot;LastName&quot;))</code></pre>
 
 
 

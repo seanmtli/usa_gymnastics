@@ -1935,6 +1935,28 @@ PH_medal_cutoffs <- getmedalcutoffs(PH_ranks)
 VT_m_medal_cutoffs <- getmedalcutoffs(VT_ranks_m)
 PB_medal_cutoffs <- getmedalcutoffs(PB_ranks)
 
+topAAmen <- data_2022_2023_m %>% 
+  filter(Gender == "m", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+topAAwomen <- data_2022_2023_f %>% 
+  filter(Gender == "w", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+top24AAmen <- topAAmen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
+top24AAwomen <- topAAwomen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
 allroundmen_cutoffs <-getmedalcutoffs(top24AAmen)
 allroudwomen_cutoffs <- getmedalcutoffs(top24AAwomen)
 ```
@@ -2098,5 +2120,29 @@ combined_df <- reduce(list(m_SR, m_FX, m_PB, m_VT, m_PH, m_HB), full_join, by = 
 combined_df[is.na(combined_df)] <- 0
 
 # write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/m.csv', row.names=FALSE)
+```
+
+```{r all-around-sims}
+BB_sims <- read_csv("Data/BB_usa_womens_sims.csv")
+FX_sims <- read_csv("Data/FX_usa_womens_sims.csv")
+UB_sims <- read_csv("Data/UB_usa_womens_sims.csv")
+VT_sims <- read_csv("Data/VT_usa_womens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+BB_sims_prepared <- prepare_df(BB_sims)
+FX_sims_prepared <- prepare_df(FX_sims)
+UB_sims_prepared <- prepare_df(UB_sims)
+VT_sims_prepared <- prepare_df(VT_sims)
+
+# Use left joins to combine the dataframes
+combined_AA_df <- BB_sims_prepared %>%
+  left_join(FX_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(UB_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared, by = c("FirstName", "LastName"))
 ```
 
