@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  21 NOV 2023 22:06
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  21 NOV 2023 22:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -487,55 +487,55 @@ Underfull \hbox (badness 10000) in paragraph at lines 234--242
  []
 
 [3 <./REPORT_files/figure-latex/plotuswomen-1.pdf>] [4 <./REPORT_files/figure-latex/usmen-1.pdf>] [5] [6] [7]
-<REPORT_files/figure-latex/unnamed-chunk-5-1.pdf, id=154, 469.755pt x 325.215pt>
+<REPORT_files/figure-latex/unnamed-chunk-5-1.pdf, id=153, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-1.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf  used on input line 577.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf  used on input line 606.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<REPORT_files/figure-latex/unnamed-chunk-5-2.pdf, id=155, 469.755pt x 325.215pt>
+<REPORT_files/figure-latex/unnamed-chunk-5-2.pdf, id=154, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-2.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf  used on input line 578.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf  used on input line 607.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<REPORT_files/figure-latex/unnamed-chunk-5-3.pdf, id=156, 469.755pt x 325.215pt>
+<REPORT_files/figure-latex/unnamed-chunk-5-3.pdf, id=155, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-3.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf  used on input line 579.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf  used on input line 608.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
-<REPORT_files/figure-latex/unnamed-chunk-5-4.pdf, id=157, 469.755pt x 325.215pt>
+<REPORT_files/figure-latex/unnamed-chunk-5-4.pdf, id=156, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-4.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf  used on input line 580.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf  used on input line 609.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 577--581
+Underfull \hbox (badness 10000) in paragraph at lines 606--610
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 577--581
+Underfull \hbox (badness 10000) in paragraph at lines 606--610
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 577--581
+Underfull \hbox (badness 10000) in paragraph at lines 606--610
 []
  []
 
 [8] [9 <./REPORT_files/figure-latex/unnamed-chunk-5-1.pdf> <./REPORT_files/figure-latex/unnamed-chunk-5-2.pdf>] [10 <./REPORT_files/figure-latex/unnamed-chunk-5-3.pdf> <./REPORT_files/figure-latex/unnamed-chunk-5-4.pdf>]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 591.
+(Font)              <10> on input line 620.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 591.
+(Font)              <7> on input line 620.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 591.
+(Font)              <5> on input line 620.
 
-Overfull \hbox (217.90028pt too wide) in paragraph at lines 594--597
+Overfull \hbox (217.90028pt too wide) in paragraph at lines 623--626
 \T1/lmr/m/n/10 total -[] number -[] of -[] tv -[] viewers -[] of -[] olympic -[] summer -[] games -[] worldwide / #$[]:~:text=Between%202012%20and%202020%2C%20the,3.2%20billion%20five%20years%20earlier.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 603--607
+Underfull \hbox (badness 10000) in paragraph at lines 632--636
 \T1/lmr/m/n/10 TO-DAY. []$https : / / www . usatoday . com / story / sports / olympics / 2023 / 11 / 17 / sunisa -[] lee -[] olympic -[] champion -[] kidney -[]
  []
 
@@ -548,15 +548,15 @@ Package rerunfilecheck Info: File `REPORT.out' has not changed.
 (rerunfilecheck)             Checksum: D286815FD01DAAF60970220956084B02;2752.
  ) 
 Here is how much of TeX's memory you used:
- 11130 strings out of 476464
- 170919 string characters out of 5801127
- 1937040 words of memory out of 5000000
- 32626 multiletter control sequences out of 15000+600000
+ 11132 strings out of 476464
+ 170979 string characters out of 5801127
+ 1938040 words of memory out of 5000000
+ 32628 multiletter control sequences out of 15000+600000
  597357 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,6n,79p,369b,437s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,7n,79p,369b,437s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb>
-Output written on REPORT.pdf (11 pages, 221853 bytes).
+Output written on REPORT.pdf (11 pages, 221614 bytes).
 PDF statistics:
  245 PDF objects out of 1000 (max. 8388607)
  207 compressed objects within 3 object streams

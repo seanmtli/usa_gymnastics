@@ -290,19 +290,22 @@ Our Results are compiled in the table below, with predicted individual medals. W
 
 ```{r, echo=FALSE}
 results <- data.frame(
-  Category = c("All Around", "All Around", "Specialist", "Specialist", "Specialist", "Pred. Medals"),
-  USA_Women = c( "Simone Biles", "Shilese Jones", "Skye Blakely", "Jade Carey", "Zoe Miller", "4.565"),
-  USA_Men = c("Fredrick Richard", "Paul Juda", "Donnell Whittenburg", "Khoi Young", "Curran Phillips", "2.402")
+  Category = c("All Around", "All Around", "Specialist", "Specialist", "Specialist", "Total Exp. Medals"),
+  USA_Women = c( "Simone Biles", "Shilese Jones", "Kaliya Lincoln", "Jade Carey", "Zoe Miller", "4.565"),
+  EMC_Women = c('3.409', '0.466', '0.439','0.190','0.061',''),
+  USA_Men = c("Paul Juda", "Fred Richard", "Donnell Whittenburg", "Khoi Young", "Curran Phillips", "2.402"),
+  EMC_Men = c('0.663', '0.491', '0.264', '0.564', '0.310',"")
 )
-kable(results, caption = "Results for USA Gymastics Team, with Predicted Medal Counts")
+kable(results, caption = "Proposed Paris 2024 USA Gymastics Team, with Expected Medal Counts (EMC)")
 ```
 
-To maximize for total medal count at the Paris 2024 Olympics, the USA Gymnastics team should select Simone Biles, Skye Blakely, Shilese Jones, Jade Carey, and Zoe Miller for the women’s team, and Fredrick Richard, Paul Juda, Donnell Whittenburg, Khoi Young, and Curran Phillips for the men’s team. Our total predicted medal counts are 4.565 individual medals for women, and 2.402 for the men’s team. 
+To maximize for total medal count at the Paris 2024 Olympics, the USA Gymnastics team should select Simone Biles, Skye Blakely, Shilese Jones, Jade Carey, and Zoe Miller for the women’s team, and Fred Richard, Paul Juda, Donnell Whittenburg, Khoi Young, and Curran Phillips for the men’s team. Our total predicted medal counts are 4.565 individual medals for women, and 2.402 for the men’s team.
 
-Biles and Jones are the clear all-round selection, expecting to contribute XX and XX medals in total respectively, and having XX% and XX% to medal in the individual all-around finals. Onto the three specialists, Carey is an outstanding performer in Vault and Floor Exercise, having XX% and XX% to medal in those apparatus. Skye Blakely has an expected medal contribution of XX, with her best events in UB and BB. Miller is our last selection, and she brings value in the Uneven Bars, having a %% percent of medaling there. 
+Biles and Jones are the clear all-round selection, expecting to contribute 3.409 and 0.466 medals in total respectively, and having 99.9% and 23.9% to medal in the individual all-around finals. Onto the three specialists, Carey is an outstanding performer in Vault and Floor Exercise, having 19.0% and 19.9% to medal in those apparatus. Lincoln has 43.9% chance medaling in Floor Exercise. Miller is our last selection, and she brings value in the Uneven Bars, having a 6.1% percent of medaling there. 
 
-Juda and Richard were the all-round selections on the men's side. They have the highest chances of medaling in our individual all-round, with XX% and XX% respectively. The first specialist we choose was Khoi Young for his ability in VT, having X% of medaling there. Then we choose veteran Whittenburg for his consistency on the still rings (SR), having the highest % to help the US medal in that apparatus with X%. Lastly, we went with Curran Phillips for ???? as he had X% to medal in (EVENTNAME).
+Juda and Richard were the all-round selections on the men's side. They have the highest chances of medaling in our individual all-round, with 5.1% and 4.9% respectively. The first specialist we choose was Khoi Young for his ability in vault and pommel horse, having 44.9% and 11.5% of medaling respectively. Then we choose veteran Whittenburg for his consistency on the still rings (SR), having the highest percentage chance to help the US medal in that apparatus with 26.4%. Lastly, we went with Curran Phillips for parallel bars as he had 26.3% to medal there.
 
+Information on the percentages chances of medaling for each athlete can be in found in Appendix B. 
 
 ## Discussion
 
