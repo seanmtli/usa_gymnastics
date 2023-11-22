@@ -356,7 +356,24 @@ ggplot(aes(x= Score), data = data_2022_2023_f) + geom_histogram() + facet_wrap(~
 ggplot(aes(x= Score), data = data_2022_2023_m) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)+ labs(title = "Distribution of Scores for All Men for Different Apparatuses", y = "Count")
 ```
 
+\newpage
+## Appendix B
 
+```{r, echo=FALSE, warning= FALSE, message=FALSE}
+f_probs <- read_csv('/home/guest/Case2-BDSM/Data/expected_medals/f_total_probabilities.csv')
+
+f_probs |>
+  kable()
+```
+\newpage
+```{r, echo=FALSE, warning= FALSE, message=FALSE}
+m_probs <- read_csv('/home/guest/Case2-BDSM/Data/expected_medals/m_total_probabilities.csv')
+
+m_probs |>
+  kable()
+```
+
+\newpage
 ### Works Cited
 Gunston, Jo. “Judging the Judges – How Statistical Analysis Evaluates Fairness And ...” Olympics.Com, 19 Oct. 2023, olympics.com/en/news/how-statistical-analysis-evaluates-fairness-accuracy-gymnastics. Accessed 06 Nov. 2023.
 
