@@ -197,9 +197,27 @@ top24AAwomen <- topAAwomen %>%
   head(24)
 ```
 
-```{r allroundweights}
+```{r womens}
+library(patchwork)
+BBplot <- ggplot(topusawomen %>% filter(Apparatus == "BB"), aes(y = reorder(Name,mean), x = Score, color = Name)) + 
+  geom_point(alpha = 0.5)
+UBplot <- ggplot(topusawomen %>% filter(Apparatus == "UB"), aes(y = reorder(Name,mean), x = Score, color = Name)) + 
+  geom_point(alpha = 0.5)
+FXplot <- ggplot(topusawomen %>% filter(Apparatus == "FX"), aes(y = reorder(Name,mean), x = Score, color = Name)) + 
+  geom_point(alpha = 0.5)
+VTplot <- ggplot(topusawomen %>% filter(Apparatus == "VT"), aes(y = reorder(Name,mean), x = Score, color = Name)) + 
+  geom_point(alpha = 0.5)
 
+BBplot
 ```
+
+```{r}
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(data = transform(mpg, class = NULL), colour = "grey85") +
+  geom_point() +
+  facet_wrap(vars(class))
+```
+
 
 
 
