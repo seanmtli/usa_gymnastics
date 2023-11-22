@@ -2,7 +2,12 @@
 title: "Case 2: UCSAS 2024 USOPC Data Challenge"
 author: "Sean Li, Christopher Tsai, Benjamin Thorpe, Jerry Xin"
 date: "2023-11-06"
-output: pdf_document
+geometry: "left=2cm,right=2cm,top=1.5cm,bottom=1.5cm"
+output: 
+  pdf_document:
+    fig_caption: yes
+warnings: false
+fontsize: 9
 ---
 
 ```{r setup, include=FALSE}
@@ -31,7 +36,7 @@ The data consisted of competition results from various competitors. Our categori
 The global data had 23891 observations, and the dataset, when filtered for the USA only, had 3362 observations. There were 12 features given in the dataset.
 
 ### Exploratory Data Analysis
-Our primary takeaways from our EDA (appendix A) were that the distribution of scores for each apparatus for men and women in the USA, and worldwide was roughly normal, with somewhat of a tail towards the left side/ left skew, and somewhat fat tails. 
+Our primary takeaways from our EDA (appendix A) were that the distribution of scores for each apparatus for men and women in the USA, and worldwide was roughly normal, with somewhat of a tail towards the left side/ left skew, and somewhat fat tails. First, this implies that there are some underperformers we should simply filter out for certain events. We do this by samping form the top 24 athletes for the predicted medal threshold. Next, this implies that for each athlete, the distribution of their performance can be approximated by a T-distribution. This in turn inspired us to simulate drawing from a T-distribution, and then comparing that with our predicted medal threshold, derived from also sampling from a T-distribution, to simulate each athlete's chance of medaling. This will account for the individual variance of an athlete on a specific apparatus. 
 
 If our goal is to put forth the best lineup to maximize medal count, we explore who the top US candidates are in each apparatus and all-around. We graph dot plots of the top 3 US gymnasts in each event across all the events, using the mean score from their 2022-2023 data.  
 
@@ -41,6 +46,7 @@ library(tidyverse)
 library(dplyr)
 library(stringr)
 library(lubridate)
+library(knitr)
 ```
 
 ```{r, echo=FALSE, results = FALSE, warning= FALSE, message=FALSE}
@@ -238,6 +244,7 @@ u5w <- ggplot(topusawomen, aes(y = reorder(Name,mean), x = Score, color = Name))
        y = " " )+ theme_bw()
 u5w
 ```
+
 To clarify why some athletes appear but don't have score dots, that athlete was in the top 3 for another apparatus but not this one. We keep them in just to show the "depth" of US gymnastics. A small number of total athletes that appear in the top 3 across all apparatus signals that most elite athletes compete in, and are great at more than 1 event. 
 
 Taking a glance at the top US women, we can see that Simone Biles by far and away is the best USA gymnast. That is quite unsurprising, given that she has the most gymnastics medals in the world and has continued to perform at an elite level in all events. We can almost lock her in to make the Paris 2024 roster. Shilese Jones is the only gymnast have a higher mean score in an apparatus than Simone, specifically in uneven bars (UB). She's someone to keep an eye out for, especially considering her all-round Bronze medal in the World Championships in October 2023. There are only 6 women to place in the top 3 across 4 apparatus, a telling sign that the US womens team selections for Paris 2024 might be top heavy. 
@@ -278,6 +285,16 @@ From there we will use optimization to determine the 5-person lineup that maximi
 
 
 ## Results 
+
+```{r}
+results <- data.frame(
+  Category = c("All Around", "All Around", "Specialist", "Specialist", "Specialist", "Pred. Medal Count"),
+  USA_Women = c( "Simone Biles", "Shilese Jones", "Skye Blakely", "Jade Carey", "Zoe Miller", "4.314"),
+  USA_Men = c("Value2", "Value3", "Value4", "Value5", "Value6", "0")
+)
+kable(results, , caption = "Results for USA Gymastics Team, with Predicted Medal Counts")
+```
+
 
 ## Discussion
 
