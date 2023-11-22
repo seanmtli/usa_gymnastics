@@ -1,13 +1,13 @@
 ---
 title: "Case 2: UCSAS 2024 USOPC Data Challenge"
 author: "Sean Li, Christopher Tsai, Benjamin Thorpe, Jerry Xin"
-date: "2023-11-06"
+date: "2023-11-21"
 geometry: "left=2cm,right=2cm,top=1.5cm,bottom=1.5cm"
 output: 
   pdf_document:
     fig_caption: yes
 warnings: false
-fontsize: 9
+fontsize: 10
 ---
 
 ```{r setup, include=FALSE}
@@ -26,7 +26,7 @@ This selection process has, historically, relied heavily on the expertise and in
 
 ### Research Objective
 
-This study aims to overcome these limitations by analyzing athlete-specific data and incorporating domain expertise from the gymnastics community. It will offer a comprehensive and customized approach that addresses the unique competition format presented by artistic gymnastics and provides the USA Olympics Committee with a robust tool to make informed and data-driven decisions. Our goal is to recommend a team of 5 women and 5 men for the Olympic Games in Paris 2024, with an expected medal count for each team.
+This study aims to overcome these limitations by analyzing athlete-specific data and incorporating domain expertise from the gymnastics community. It will offer a comprehensive and customized approach that addresses the unique competition format presented by artistic gymnastics and provides the USA Olympics Committee with a robust tool to make informed and data-driven decisions. Our goal is to recommend a team of 5 women and 5 men for the Olympic Games in Paris 2024, with an expected individual medal count for each team. We did not include the team medals in our predicted medal counts, but also because team medals are calculated through individual performances, optimizing for the best individual performances would necessarily optimize for the best team medal percentage. In the future, we want to eventually predict for the total medal count.
 
 ### Dataset Overview
 The data is taken from major domestic and international competitions worldwide. We were provided 2 datasets, 1 from the competitions leading up to the Tokyo Games in 2020 (2017 to 2021), and 1 from the competitions leading up to the Paris Games in 2024 (2022 to 2023). We only used the 2022 to 2023 data, as the competition format changed between 2021 and 2022.
@@ -286,11 +286,13 @@ From there we will use optimization to determine the 5-person lineup that maximi
 
 ## Results 
 
-```{r}
+Our Results are compiled in the table below, with predicted individual medals. We used predicted individual medals to select our teams, and categorized each competitor as either All Around or Specialist:
+
+```{r, echo=FALSE}
 results <- data.frame(
-  Category = c("All Around", "All Around", "Specialist", "Specialist", "Specialist", "Pred. Medal Count"),
-  USA_Women = c( "Simone Biles", "Shilese Jones", "Skye Blakely", "Jade Carey", "Zoe Miller", "4.314"),
-  USA_Men = c("Value2", "Value3", "Value4", "Value5", "Value6", "0")
+  Category = c("All Around", "All Around", "Specialist", "Specialist", "Specialist", "Pred. Medals"),
+  USA_Women = c( "Simone Biles", "Shilese Jones", "Skye Blakely", "Jade Carey", "Zoe Miller", "4.565"),
+  USA_Men = c("Fredrick Richard", "Paul Juda", "Donnell Whittenburg", "Khoi Young", "Curran Phillips", "2.402")
 )
 kable(results, , caption = "Results for USA Gymastics Team, with Predicted Medal Counts")
 ```
@@ -298,9 +300,7 @@ kable(results, , caption = "Results for USA Gymastics Team, with Predicted Medal
 
 ## Discussion
 
-RESULT SUMMARY GOES HERE
-
-Our goal was to recommend a team of 5 women and 5 men for the Olympic Games in Paris 2024, with an expected medal count for each team. We accomplish this by recommending Simone Biles, Skye Blakely, Shilese Jones, Jade Carey, and Zoe Miller for the women’s team, and Asher Hong, Paul Juda, Yul Moldauer, Fred Richard, and Khoi Young for the men’s team. Our predicted medal counts are 4.316 individual medals for the women’s team and XXX for the men’s team. We accomplished our goal of selecting atheletes by first selecting 2 all-around athletes, and then finding 3 specialists to complement them, while adjusting for 'clutch' factor and recency by duplicating observations based on final vs qualifying rounds, and recency of competition. We then account for individual variance by creating a T-distribution for each competitor for each apparatus, and sampling from that distrbution 1000 times. Lastly, we then find the medal thresholds using repeated sampling, and use those thresholds to find predicted medal counts.
+Our goal was to recommend a team of 5 women and 5 men for the Olympic Games in Paris 2024, with an expected medal count for each team. We accomplish this by recommending Simone Biles, Skye Blakely, Shilese Jones, Jade Carey, and Zoe Miller for the women’s team, and Fredrick Richard, Paul Juda, Donnell Whittenburg, Khoi Young, and Curran Phillips for the men’s team. Our predicted medal counts are 4.565 individual medals for women, and 2.402 for the men’s team. We accomplished our goal of selecting atheletes by first selecting 2 all-around athletes, and then finding 3 specialists to complement them, while adjusting for 'clutch' factor and recency by duplicating observations based on final vs qualifying rounds, and recency of competition. We then account for individual variance by creating a T-distribution for each competitor for each apparatus, and sampling from that distribution 1000 times. We also then find the predicted medal thresholds using repeated sampling from a T-distribution, taking the top 24 individual scorers, and we then compare our sampled individual results with the predicted thresholds to find predicted individual medal counts.
 
 The ‘eye’ test confirms some of the choices made by our model. The choices of Simone Biles, Skye Blakely, Shielese Jones, Joscelyn Roberson, and Leanne Wong align with the choices of the US team in the most recent World Championships where the US women won a gold medal. Both Jones and Biles also medaled in the individual all-around event justifying them being chosen as the two guaranteed all-around competitors. On the men’s side the model’s choices do align with the US men’s team that won bronze in the most recent World Championship. All of Asher Hong, Paul Juda, Yul Moldauer, Fred Richard, and Khoi Young are both on our suggested Olympic team and the World Championship team. Hong and Richard were the selected all-around competitors also justifying our model’s choices. Furthermore, an independent level 10 gymnast committed to a D1 university chose a team identical to that of the US women’s world championship squad leading us to believe the eye test gives ground for our choices.
 
@@ -312,7 +312,7 @@ There are limitations in the data that prevent us from creating as complete an a
 
 There were also several limitations in our statistical methods. Firstly, we arbitrarily assigned weights to each of the decided ‘cutoffs’ it is more than possible that our weightings could result in the selection of a different team than if no weights were used. However, the weights used were for good reason given how recent performance affects future performance and our desire to pick more ‘clutch’ individuals. Another potential limitation in our method is when determining projected scores for athletes that have not competed in some time. Take Sunisa Lee as an example. Due to competing in college and injuries, Lee has very few scores since her Olympic performance in 2021. Because those performances account for so many of her competitions, her lower recent scores are severely overshadowed by her high, older scores. Even with weights her older scores account for a much greater proportion of her data. Thus in our methodology her projected score is unreasonably high for what recent scores suggest. This could remain true for many other athletes where their projected score does not resemble what their recent form might be. The final issue with our methodology and sampling in general is because there is technically no maximum score a gymnast could receive due to more challenging tricks being completed in every successive competition the sample could possibly get too high scores as there is no maximum cutoff in the distributions.
 
-Some alternatives for methodology could include using a Kernal Density Estimation method to estimate the distribution, and then sampling, or obtaining all possible combinations of 5 athletes and then running an olympics simulation. We could also introduce more factors to weighting such as the age of the competitor, skill level of the competition, etc. For future work, and potentially in the final draft, we could also include a sensitivity analysis on our weights, since they were selected somewhat arbitrarily.
+Some alternatives for methodology could include using a Kernal Density Estimation method to estimate the distribution, and then sampling, or obtaining all possible combinations of 5 athletes and then running an olympics simulation. We could also introduce more factors to weighting such as the age of the competitor, skill level of the competition, etc. For future work, and potentially in the final draft, we could also include a sensitivity analysis on our weights, since they were selected somewhat arbitrarily. We plan in the future to find the predicted total medal counts, which include individual all around, individual specialist, and team medals. We did not include the team medals in our predicted medal counts, but also because team medals are calculated through individual performances, optimizing for the best individual performances would necessarily optimize for the best team medal percentage. 
 
 ### Implications
 
