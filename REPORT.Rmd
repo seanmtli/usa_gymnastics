@@ -294,7 +294,7 @@ results <- data.frame(
   USA_Women = c( "Simone Biles", "Shilese Jones", "Skye Blakely", "Jade Carey", "Zoe Miller", "4.565"),
   USA_Men = c("Fredrick Richard", "Paul Juda", "Donnell Whittenburg", "Khoi Young", "Curran Phillips", "2.402")
 )
-kable(results, , caption = "Results for USA Gymastics Team, with Predicted Medal Counts")
+kable(results, caption = "Results for USA Gymastics Team, with Predicted Medal Counts")
 ```
 
 
