@@ -321,14 +321,13 @@ There were also several limitations in our statistical methods. Firstly, we arbi
 
 Some alternatives for methodology could include using a Kernal Density Estimation method to estimate the distribution, and then sampling, or obtaining all possible combinations of 5 athletes and then running an olympics simulation. We could also introduce more factors to weighting such as the age of the competitor, skill level of the competition, etc. For future work, and potentially in the final draft, we could also include a sensitivity analysis on our weights, since they were selected somewhat arbitrarily. We plan in the future to find the predicted total medal counts, which include individual all around, individual specialist, and team medals. We did not include the team medals in our predicted medal counts, but also because team medals are calculated through individual performances, optimizing for the best individual performances would necessarily optimize for the best team medal percentage. 
 
-### Implications
+### The future of gymnastics: gymnast player grades, flexible optimization criterion, and rising stars
 
-As stated earlier in the paper, several American viewers are concerned with the success of the USA Olympic gymnastic team. As the Olympics has become synonymous with national pride, success in Olympic gymnastics is vital to maintaining a sense of American pride. Given the high expectations laid out for the USA due to past success in the Olympics and as other countries have become more competitive on the gymnastics scene, it has become evermore important to select the team that gives the USA the best chance at being successful in Paris 2024. The statistical analysis done in this paper gives an objective way to determine that “best” team. As more advanced data is measured and the intersection between sports and data analytics continue to grow, there is much incentive to use data to create a competitive advantage over the rest of the field. While there are severe limitations to our analytic process, our optimization strategy combined with the more classical “eye test” method should give the USA Olympic committee the necessary tools to select the best 5 person gymnastics team to send to the 2024 Olympics.
+As the Olympics has become synonymous with national pride, success in Olympic gymnastics is vital to maintaining a sense of American pride. Given the high expectations laid out for the USA due to past success in the Olympics and as other countries have become more competitive on the gymnastics scene, it has become evermore important to select the team that gives the USA the best chance at being successful in Paris 2024. 
 
-### Future Research
+The statistical analysis done in this paper gives one-of-many statistical ways to determine that “best” team to optimize for total medal count. Our nuanced two-tier approach provides the USA Olympic committee with tangible percentages and reasonable estimates for a candidate’s estimated medal contribution, and a percentage chance to medal in a specific apparatus. Using our methodology, others might be able to further optimize for things such as team medal or overall total scores given the chance to run more simulations or adding additional data. Another use case would be replicating this for many countries, and compiling an elite database with “player grades” of sorts attached to Olympic performance. As more advanced data is measured and the intersection between sports and data analytics continue to grow, our methods and data can create a competitive advantage over the rest of the field. 
 
-The potential for future research is endless. We hope to begin by looking into different ways to optimize lineups based on differing definitions of success. Here we optimize by total medal count, but perhaps the US wants to optimize by total gold medals, or by individual apparatus medals won, or by individual all-around gold. Our future research would allow the ideal team to change based on this definition of success. We also would like to look into optimizing lineups based on different criteria. That is, if a person wants to put a higher weighting on having the most consistent gymnasts or on the gymnast with highest potential than the model would be able to put out a lineup based on that criteria. We could also look into more data related to the olympics and gymnsatics, and maybe interview a couple of professional gymnasts or their coaches to get further insight into Olympics level gymnastics. Finally, in the future we hope to use the tools created during this data analysis to potentially predict or scout rising stars competing on the USA Elite pathway to keep an eye on for future Olympic cycles.
-
+The potential for future research is endless. Our next step would be looking into optimizing lineups based on different criteria. That is, if a person wants to put a higher weighting on having the most consistent gymnasts or on the gymnast with highest potential than the model would be able to put out a lineup based on that criteria. Building out something more interactive for a final product is in the works. We will also look into more data related to the Olympics and gymnastics, and maybe interview a couple of professional gymnasts or their coaches to get further insight into Olympics level gymnastics. Finally, in the future we hope to build off similar tools to the ones created during this data analysis to predict or scout rising stars competing on the USA Elite pathway to keep an eye on for future Olympic cycles.
 
 ## Appendix A
 
@@ -360,14 +359,14 @@ ggplot(aes(x= Score), data = data_2022_2023_m) + geom_histogram() + facet_wrap(~
 ## Appendix B
 
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
-f_probs <- read_csv('/home/guest/Case2-BDSM/Data/expected_medals/f_total_probabilities.csv')
+f_probs <- read_csv('~/Case2-BDSM/Data/expected_medals/f_total_probabilities.csv')
 
 f_probs |>
   kable()
 ```
 \newpage
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
-m_probs <- read_csv('/home/guest/Case2-BDSM/Data/expected_medals/m_total_probabilities.csv')
+m_probs <- read_csv('~/home/guest/Case2-BDSM/Data/expected_medals/m_total_probabilities.csv')
 
 m_probs |>
   kable()
