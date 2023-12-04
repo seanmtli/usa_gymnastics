@@ -9,8 +9,8 @@ library(lubridate)
 ```
 
 ```{r load-data}
-women <- read_csv("/home/guest/Case2-BDSM/Data/expected_medals/f.csv")
-men <- read_csv("/home/guest/Case2-BDSM/Data/expected_medals/m.csv")
+women <- read_csv("~/Case2-BDSM/Data/expected_medals/f.csv")
+men <- read_csv("~/Case2-BDSM/Data/expected_medals/m.csv")
 w_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/w_AA.csv")
 m_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/m_AA.csv")
 ```

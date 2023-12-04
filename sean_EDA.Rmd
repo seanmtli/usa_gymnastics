@@ -218,6 +218,11 @@ ggplot(mpg, aes(displ, hwy)) +
   facet_wrap(vars(class))
 ```
 
+```{r}
+f <- read.csv("~/Data/f.csv")
+```
+
+
 
 
 
