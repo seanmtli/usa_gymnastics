@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  21 NOV 2023 22:58
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.12)  4 DEC 2023 19:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -375,24 +375,24 @@ LaTeX Warning: Unused global option(s):
 (./REPORT.aux)
 \openout1 = `REPORT.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 81.
-LaTeX Font Info:    ... okay on input line 81.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 82.
+LaTeX Font Info:    ... okay on input line 82.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
@@ -433,38 +433,38 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-Package hyperref Info: Link coloring OFF on input line 81.
+Package hyperref Info: Link coloring OFF on input line 82.
 (./REPORT.out) (./REPORT.out)
 \@outlinefile=\write3
 \openout3 = `REPORT.out'.
 
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 83.
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 83.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 83.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 83.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 83.
+(Font)              <12> on input line 84.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 83.
+(Font)              <8> on input line 84.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 83.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 83.
+(Font)              <6> on input line 84.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 83.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 84.
 (/Users/seanli/Library/TinyTeX/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
@@ -473,16 +473,16 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 <REPORT_files/figure-latex/plotuswomen-1.pdf, id=93, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/plotuswomen-1.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/plotuswomen-1.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/plotuswomen-1.pdf  used on input line 214.
+Package pdftex.def Info: REPORT_files/figure-latex/plotuswomen-1.pdf  used on input line 215.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 [2]
 <REPORT_files/figure-latex/usmen-1.pdf, id=100, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/usmen-1.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/usmen-1.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/usmen-1.pdf  used on input line 234.
+Package pdftex.def Info: REPORT_files/figure-latex/usmen-1.pdf  used on input line 236.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 234--242
+Underfull \hbox (badness 10000) in paragraph at lines 236--244
 [][] \T1/lmr/m/n/10 The
  []
 
@@ -490,72 +490,72 @@ Underfull \hbox (badness 10000) in paragraph at lines 234--242
 <REPORT_files/figure-latex/unnamed-chunk-5-1.pdf, id=153, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-1.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf  used on input line 605.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-1.pdf  used on input line 607.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <REPORT_files/figure-latex/unnamed-chunk-5-2.pdf, id=154, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-2.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf  used on input line 606.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-2.pdf  used on input line 608.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <REPORT_files/figure-latex/unnamed-chunk-5-3.pdf, id=155, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-3.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf  used on input line 607.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-3.pdf  used on input line 609.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 <REPORT_files/figure-latex/unnamed-chunk-5-4.pdf, id=156, 469.755pt x 325.215pt>
 File: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf Graphic file (type pdf)
 <use REPORT_files/figure-latex/unnamed-chunk-5-4.pdf>
-Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf  used on input line 608.
+Package pdftex.def Info: REPORT_files/figure-latex/unnamed-chunk-5-4.pdf  used on input line 610.
 (pdftex.def)             Requested size: 469.75386pt x 325.2142pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 605--609
+Underfull \hbox (badness 10000) in paragraph at lines 607--611
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 605--609
+Underfull \hbox (badness 10000) in paragraph at lines 607--611
 []
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 605--609
+Underfull \hbox (badness 10000) in paragraph at lines 607--611
 []
  []
 
 [8] [9 <./REPORT_files/figure-latex/unnamed-chunk-5-1.pdf> <./REPORT_files/figure-latex/unnamed-chunk-5-2.pdf>] [10 <./REPORT_files/figure-latex/unnamed-chunk-5-3.pdf> <./REPORT_files/figure-latex/unnamed-chunk-5-4.pdf>] [11]
-Overfull \hbox (1.45145pt too wide) in paragraph at lines 676--677
+Overfull \hbox (1.45145pt too wide) in paragraph at lines 678--679
  []\T1/lmr/m/n/10 Total_AA
  []
 
 
-Overfull \hbox (0.75694pt too wide) in paragraph at lines 684--685
+Overfull \hbox (0.75694pt too wide) in paragraph at lines 686--687
  []\T1/lmr/m/n/10 Total_PH
  []
 
 
-Overfull \hbox (1.17345pt too wide) in paragraph at lines 686--687
+Overfull \hbox (1.17345pt too wide) in paragraph at lines 688--689
  []\T1/lmr/m/n/10 Total_VT
  []
 
 
-Overfull \hbox (1.03444pt too wide) in paragraph at lines 688--689
+Overfull \hbox (1.03444pt too wide) in paragraph at lines 690--691
  []\T1/lmr/m/n/10 Total_HB
  []
 
 [12] [13]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 794.
+(Font)              <10> on input line 792.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 794.
+(Font)              <7> on input line 792.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 794.
+(Font)              <5> on input line 792.
 
-Overfull \hbox (217.90028pt too wide) in paragraph at lines 797--800
+Overfull \hbox (217.90028pt too wide) in paragraph at lines 810--813
 \T1/lmr/m/n/10 total -[] number -[] of -[] tv -[] viewers -[] of -[] olympic -[] summer -[] games -[] worldwide / #$[]:~:text=Between%202012%20and%202020%2C%20the,3.2%20billion%20five%20years%20earlier.
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 806--810
+Underfull \hbox (badness 10000) in paragraph at lines 814--818
 \T1/lmr/m/n/10 TO-DAY. []$https : / / www . usatoday . com / story / sports / olympics / 2023 / 11 / 17 / sunisa -[] lee -[] olympic -[] champion -[] kidney -[]
  []
 
@@ -565,18 +565,18 @@ LaTeX2e <2023-06-01> patch level 1
 L3 programming layer <2023-10-10>
  ***********
 Package rerunfilecheck Info: File `REPORT.out' has not changed.
-(rerunfilecheck)             Checksum: 804188477C26AF943FE9E00EFB24BC2C;3182.
+(rerunfilecheck)             Checksum: 4CCF15F26F02E30D1D7E304D19E3BFFA;3413.
  ) 
 Here is how much of TeX's memory you used:
  11139 strings out of 476464
- 171181 string characters out of 5801127
+ 171259 string characters out of 5801127
  2017040 words of memory out of 5000000
  32630 multiletter control sequences out of 15000+600000
  597357 words of font info for 72 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  75i,7n,79p,626b,550s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/seanli/Library/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb>
-Output written on REPORT.pdf (14 pages, 225977 bytes).
+Output written on REPORT.pdf (14 pages, 229300 bytes).
 PDF statistics:
  261 PDF objects out of 1000 (max. 8388607)
  220 compressed objects within 3 object streams
