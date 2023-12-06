@@ -1068,3 +1068,157 @@ colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
 combinedfinalAA_m <- cbind(names,condensed_data)
 ```
 
+```{r}
+pool_f <- c("Simone", "Shilese", "Skye", "Kaliya", "Kayla", "Jade", "Joscelyn")
+pool_l <- c("BILES", "JONES", "BLAKELY", "LINCOLN", "DICELLO", "CAREY", "ROBERSON")
+
+BB_f <- BB_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+BB_columns_to_med <- BB_f[, (3:1002)]
+
+BB_MedScore <- apply(BB_columns_to_med, 1, median, na.rm=T)
+
+BB_f$MedScore <- BB_MedScore
+
+BB_medians <- BB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+
+FX_f <- FX_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+FX_columns_to_med <- FX_f[, (3:1002)]
+
+FX_MedScore <- apply(FX_columns_to_med, 1, median, na.rm=T)
+
+FX_f$MedScore <- FX_MedScore
+
+FX_medians <- FX_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+UB_f <- UB_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+UB_columns_to_med <-UB_f[, (3:1002)]
+
+UB_MedScore <- apply(UB_columns_to_med, 1, median, na.rm=T)
+
+UB_f$MedScore <- UB_MedScore
+
+UB_medians <- UB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+#--------------------------------------------------------------------------------------------------------------------
+VT_f <- VT_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+VT_columns_to_med <-VT_f[, (3:1002)]
+
+VT_MedScore <- apply(VT_columns_to_med, 1, median, na.rm=T)
+
+VT_f$MedScore <- VT_MedScore
+
+VT_medians <- VT_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+BB_medians
+FX_medians
+UB_medians
+VT_medians
+```
+
+```{r}
+pool_f <- c("Fred", "Paul", "Asher", "Curran", "Khoi", "Donnell", "Yul")
+pool_l <- c("RICHARD", "JUDA", "HONG", "PHILLIPS", "YOUNG", "WHITTENBURG", "MOLDAUER")
+
+HB_f <- HB_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+HB_columns_to_med <- HB_f[, (3:1002)]
+
+HB_MedScore <- apply(HB_columns_to_med, 1, median, na.rm=T)
+
+HB_f$MedScore <- HB_MedScore
+
+HB_medians <- HB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+FX_m_f <- FX_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+FX_m_columns_to_med <- FX_m_f[, (3:1002)]
+
+FX_m_MedScore <- apply(FX_m_columns_to_med, 1, median, na.rm=T)
+
+FX_m_f$MedScore <- FX_m_MedScore
+
+FX_m_medians <- FX_m_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+PB_f <- PB_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+PB_columns_to_med <- PB_f[, (3:1002)]
+
+PB_MedScore <- apply(PB_columns_to_med, 1, median, na.rm=T)
+
+PB_f$MedScore <- PB_MedScore
+
+PB_medians <- PB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+VT_m_f <- VT_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+VT_m_columns_to_med <- VT_m_f[, (3:1002)]
+
+VT_m_MedScore <- apply(VT_m_columns_to_med, 1, median, na.rm=T)
+
+VT_m_f$MedScore <- VT_m_MedScore
+
+VT_m_medians <- VT_m_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+PH_f <- PH_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+PH_columns_to_med <- PH_f[, (3:1002)]
+
+PH_MedScore <- apply(PH_columns_to_med, 1, median, na.rm=T)
+
+PH_f$MedScore <- PH_MedScore
+
+PH_medians <- PH_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+SR_f <- SR_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+SR_columns_to_med <- SR_f[, (3:1002)]
+
+SR_MedScore <- apply(SR_columns_to_med, 1, median, na.rm=T)
+
+SR_f$MedScore <- SR_MedScore
+
+SR_medians <- SR_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+HB_medians
+FX_m_medians
+PB_medians
+VT_m_medians
+PH_medians
+SR_medians
+```
+
