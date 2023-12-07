@@ -391,8 +391,12 @@ ggplot(aes(x= Score), data = data_2022_2023_m) + geom_histogram() + facet_wrap(~
 \newpage
 ## Appendix B
 
+The following tables display the expected medal count for each US gymnast in each event, including in the all-around competition.
+
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
 f_probs <- read_csv('Data/expected_medals/f_total_probabilities.csv')
+
+colnames(f_probs) <- c("Name", "AA", "BB", "FX", "VT", "UB")
 
 f_probs |>
   kable()
@@ -400,6 +404,8 @@ f_probs |>
 \newpage
 ```{r, echo=FALSE, warning= FALSE, message=FALSE}
 m_probs <- read_csv('Data/expected_medals/m_total_probabilities.csv')
+
+colnames(m_probs) <- c("Name", "AA", "SR", "FX","PB", "PH", "VT", "HB")
 
 m_probs |>
   kable()
