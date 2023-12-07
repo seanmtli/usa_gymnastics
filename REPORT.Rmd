@@ -1,5 +1,5 @@
 ---
-title: "USA Gymnastics: Optimizing for Medal Count at the Paris 2024 Olympics"
+title: "Vaulting into Victory: Optimizing for US Gymnastics Medal Count at the Paris 2024 Olympics"
 author: "Sean Li, Christopher Tsai, Benjamin Thorpe, Jerry Xin"
 date: "2023-11-21"
 geometry: "left=2cm,right=2cm,top=1.5cm,bottom=1.5cm"
