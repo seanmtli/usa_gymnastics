@@ -14,6 +14,21 @@ fontsize: 10
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## Reponse to Review
+
+Looking at the feedback provided in Gradescope and talking to the instructor and TAs, we have responded to feedback in our new report. Our changes are summarized below.
+
+Because our introduction gained full points, we decided not to change anything within the introduction. We decided that it gave a great intro to USA and Olympic Gymnastics, the research objective of the case study we wanted to solve, our dataset, as well as exploratory data analysis. We added a title to our case study.
+
+Looking at the methodology section, we were able to perform a more “qualitative” analysis of choosing a team in our final report. In our initial report, we mentioned that our results are aligned with the “eye-test” in our conclusion but provided no formal methodology for this “eye-test”. This qualitative analysis strives to provide more structure to this.
+
+We were trying to simulate the mean score for each gymnast. We think that the mean is still reasonable to do here because the distribution of scores for each gymnast is still roughly normal, which means that the mean is a good summary statistic, and because it makes sense with our methodology. As a reminder, we take the top 24 candidates for each event/apparatus, simulate their mean scores, and then rank them. Next, we compare the mean of our selected candidate for the specific apparatus to find a predicted medal count. Because to find the predicted medal cutoffs we use the mean, it only makes sense to use the mean score for our selected candidate(for the specific apparatus). We simulate the mean by drawing this score repeatedly from a T-distribution, which also will account for individual variability around the mean, and potentially can obtain scores that are not within our dataset. We considered the median, but since the distribution is roughly normal that is the same. We also considered using something such as Q3, but since we are simulating predicted medal cutoffs and counts with the means, it only makes sense to use the mean to compare against these medal cutoffs. We argue that our method, because it takes the top 24 for each event apparatus, and draws samples repeatedly to get the mean, is robust to outliers. 
+
+Looking at the results section, the only comment was to add table headers, and we successfully added table headers for the tables given in our appendix. We also double checked each graph for formatting.
+
+Lastly, because we got full points for the conclusion and discussion section, we thought that our alternative approaches, limitations, and discussion of final results was adequate and not to change anything significantly. We also read over our paper for grammatical errors.
+\newpage
+
 ## Introduction
 
 ### Background
