@@ -15,6 +15,189 @@ w_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/w_AA.csv")
 m_AA <- read_csv("/home/guest/Case2-BDSM/Data/event_percentages/m_AA.csv")
 ```
 
+```{r sean-df-womens}
+FX_usa_womens_sims <- read_csv("App-1/data/FX_usa_womens_sims.csv")
+AA_usa_womens_sims <- read_csv("App-1/data/AA_usa_women_sims.csv")
+BB_usa_womens_sims <- read_csv("App-1/data/BB_usa_womens_sims.csv")
+UB_usa_womens_sims <- read_csv("App-1/data/UB_usa_womens_sims.csv")
+VT_usa_womens_sims <- read_csv("App-1/data/VT_usa_womens_sims.csv")
+
+AA_usa_womens_sims <- AA_usa_womens_sims[, 1:1003]
+
+# Removing ".x" from any column names that contain it
+colnames(AA_usa_womens_sims) <- gsub("\\.x", "", colnames(AA_usa_womens_sims))
+
+# Assuming the datasets are already loaded into the environment
+datasets <- list(AA = AA_usa_womens_sims, BB = BB_usa_womens_sims, VT = VT_usa_womens_sims, UB = UB_usa_womens_sims, FX = FX_usa_womens_sims)
+
+# Function to process each dataset
+process_dataset <- function(df, event_name) {
+  # Create FullName column by concatenating FirstName and capitalized LastName
+  df$FullName <- paste(df$FirstName, sapply(strsplit(tolower(df$LastName), " "), function(x) {
+    # Capitalize each part of a possibly hyphenated or spaced last name
+    paste(sapply(x, function(y) {
+      paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+    }), collapse = " ")
+  }), sep=" ")
+
+  # Select only FullName and AverageScore columns
+  df <- df[, c("FullName", "AverageScore")]
+  
+  # Add the Event column
+  df$Event <- event_name
+  
+  return(df)
+}
+
+# Apply the function to each dataset
+processed_datasets <- lapply(names(datasets), function(name) {
+  process_dataset(datasets[[name]], name)
+})
+
+# Combine all processed datasets into one
+usa_womens_avs <- do.call(rbind, processed_datasets)
+
+
+
+f <- read_csv("App-1/data/expected_medals/f.csv")
+w_AA <- read_csv("App-1/data/event_percentages/w_AA.csv")
+
+# Correcting the case of the LastName in the f dataset
+f$LastName <- sapply(strsplit(tolower(f$LastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+f$FullName <- paste(f$FirstName, f$LastName, sep=" ")
+
+w_AA$lastName <- sapply(strsplit(tolower(w_AA$lastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+w_AA$FullName <- paste(w_AA$firstName, w_AA$lastName, sep=" ")
+
+# Renaming the percentage columns in w_AA to match the format in f
+colnames(w_AA)[colnames(w_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
+  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
+
+# Joining w_AA with f to add the AA percentages
+f <- merge(f, w_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
+           by = "FullName", all.x = TRUE)
+
+# Define a function to extract percentages based on the event and percentage type
+get_event_percentage <- function(full_name, event, percentage_type) {
+  f_row <- f[f$FullName == full_name, ]
+  if (nrow(f_row) == 0) {
+    return(NA)
+  } else {
+    col_name <- paste(percentage_type, "_percentage_", event, sep = "")
+    return(f_row[[col_name]])
+  }
+}
+
+# Adding the GoldPercentage, SilverPercentage, and BronzePercentage columns to usa_womens_avs
+usa_womens_avs$GoldPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "gold"))
+usa_womens_avs$SilverPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "silver"))
+usa_womens_avs$BronzePercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+```
+
+```{r sean-df-mens}
+PB_usa_mens_sims <- read_csv("App-1/data/PB_usa_mens_sims.csv")
+AA_usa_mens_sims <- read_csv("App-1/data/AA_usa_men_sims.csv")
+PH_usa_mens_sims <- read_csv("App-1/data/PH_usa_mens_sims.csv")
+SR_usa_mens_sims <- read_csv("App-1/data/SR_usa_mens_sims.csv")
+VT_usa_mens_sims <- read_csv("App-1/data/VT_usa_mens_sims.csv")
+HB_usa_mens_sims <- read_csv("App-1/data/HB_usa_mens_sims.csv")
+
+AA_usa_mens_sims <- AA_usa_mens_sims[, 1:1003]
+
+# Removing ".x" from any column names that contain it
+colnames(AA_usa_mens_sims) <- gsub("\\.x", "", colnames(AA_usa_mens_sims))
+
+# Assuming the datasets are already loaded into the environment
+datasets_m <- list(AA = AA_usa_mens_sims, PB = PB_usa_mens_sims, VT = VT_usa_mens_sims, PH = PH_usa_mens_sims, SR = SR_usa_mens_sims, HB = HB_usa_mens_sims)
+
+# Function to process each dataset
+process_dataset <- function(df, event_name) {
+  # Create FullName column by concatenating FirstName and capitalized LastName
+  df$FullName <- paste(df$FirstName, sapply(strsplit(tolower(df$LastName), " "), function(x) {
+    # Capitalize each part of a possibly hyphenated or spaced last name
+    paste(sapply(x, function(y) {
+      paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+    }), collapse = " ")
+  }), sep=" ")
+
+  # Select only FullName and AverageScore columns
+  df <- df[, c("FullName", "AverageScore")]
+  
+  # Add the Event column
+  df$Event <- event_name
+  
+  return(df)
+}
+
+# Apply the function to each dataset
+processed_datasets_m <- lapply(names(datasets_m), function(name) {
+  process_dataset(datasets_m[[name]], name)
+})
+
+# Combine all processed datasets into one
+usa_mens_avs <- do.call(rbind, processed_datasets_m)
+
+
+m <- read_csv("App-1/data/expected_medals/m.csv")
+m_AA <- read_csv("App-1/data/event_percentages/m_AA.csv")
+
+# Correcting the case of the LastName in the f dataset
+m$LastName <- sapply(strsplit(tolower(m$LastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+m$FullName <- paste(m$FirstName, m$LastName, sep=" ")
+
+m_AA$lastName <- sapply(strsplit(tolower(m_AA$lastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+m_AA$FullName <- paste(m_AA$firstName, m_AA$lastName, sep=" ")
+
+# Renaming the percentage columns in w_AA to match the format in f
+colnames(m_AA)[colnames(m_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
+  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
+
+# Joining w_AA with f to add the AA percentages
+m <- merge(m, m_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
+           by = "FullName", all.x = TRUE)
+
+# Define a function to extract percentages based on the event and percentage type
+get_event_percentage <- function(full_name, event, percentage_type) {
+  m_row <- m[m$FullName == full_name, ]
+  if (nrow(m_row) == 0) {
+    return(NA)
+  } else {
+    col_name <- paste(percentage_type, "_percentage_", event, sep = "")
+    return(m_row[[col_name]])
+  }
+}
+
+# Adding the GoldPercentage, SilverPercentage, and BronzePercentage columns to usa_mens_avs
+usa_mens_avs$GoldPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "gold"))
+usa_mens_avs$SilverPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "silver"))
+usa_mens_avs$BronzePercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+```
+
+
 ```{r get-total-probs-m}
 merged_df_m <- merge(m_AA, men, by.x = c("firstName", "lastName"), by.y = c("FirstName", "LastName")) |> 
   rename("bronze_percentage_AA" = bronze_percentage,
