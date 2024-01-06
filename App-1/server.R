@@ -1,23 +1,47 @@
-library(shiny)
 library(tidyverse)
 library(DT)
-women <- read.csv("data/expected_medals/f_total_probabilities.csv")
-men <- read.csv("data/expected_medals/m_total_probabilities.csv")
-# Define server logic required to draw a histogram ----
+
+w_topcand <- read.csv("data/expected_medals/f_total_probabilities.csv")
+m_topcand <- read.csv("data/expected_medals/m_total_probabilities.csv")
+m_byevent <- read.csv("data/expected_medals/usa_mens_avs.csv")
+w_byevent <- read.csv("data/expected_medals/usa_womens_avs.csv")
+# Define server logic for slider examples ----
 server <- function(input, output) {
   
-  selected_data <- reactive({
-    print(input$var)  # Debugging line
-    if (input$var == "Men") {
-      return(men)
+  #Reactive to Men's or Women's on Top Candidates Page
+  tc_data <- reactive({
+    if (input$var == "Women") {
+      w_topcand
     } else {
-      return(women)
+      m_topcand
     }
   })
   
-  output$individuals <- renderDT(
-    selected_data()   
+  #Top Candidates Data Table
+  output$individuals <- renderDT({
+    tc_data()   
+  }
   )
+  
+  #Reactive to Mens/Womens on by Event Page
+  
+  events_data <- reactive({
+    if (input$var == "Women") {
+      w_byevent
+    } else {
+      m_byevent
+    }
+  })
+  
+  #Event Table
+  output$byevent <-renderDT({
+    events_data() %>% filter(Event == input$eventc) %>% arrange(desc(AverageScore))
+  })
+  
+  #selector for events on by Event Page
+  output$events_choices <- renderUI({
+    selectInput("eventc", label = "Event", choices = unique(as.character(events_data()$Event)))
+  })
   
 }
 
