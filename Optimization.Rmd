@@ -113,6 +113,7 @@ PH_usa_mens_sims <- read_csv("App-1/data/PH_usa_mens_sims.csv")
 SR_usa_mens_sims <- read_csv("App-1/data/SR_usa_mens_sims.csv")
 VT_usa_mens_sims <- read_csv("App-1/data/VT_usa_mens_sims.csv")
 HB_usa_mens_sims <- read_csv("App-1/data/HB_usa_mens_sims.csv")
+FX_usa_mens_sims <- read_csv("App-1/data/FX_usa_mens_sims.csv")
 
 AA_usa_mens_sims <- AA_usa_mens_sims[, 1:1003]
 
@@ -120,7 +121,7 @@ AA_usa_mens_sims <- AA_usa_mens_sims[, 1:1003]
 colnames(AA_usa_mens_sims) <- gsub("\\.x", "", colnames(AA_usa_mens_sims))
 
 # Assuming the datasets are already loaded into the environment
-datasets_m <- list(AA = AA_usa_mens_sims, PB = PB_usa_mens_sims, VT = VT_usa_mens_sims, PH = PH_usa_mens_sims, SR = SR_usa_mens_sims, HB = HB_usa_mens_sims)
+datasets_m <- list(AA = AA_usa_mens_sims, PB = PB_usa_mens_sims, VT = VT_usa_mens_sims, PH = PH_usa_mens_sims, SR = SR_usa_mens_sims, HB = HB_usa_mens_sims, FX = FX_usa_mens_sims)
 
 # Function to process each dataset
 process_dataset <- function(df, event_name) {
