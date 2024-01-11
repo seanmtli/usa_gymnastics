@@ -1,0 +1,36 @@
+
+
+```{r}
+library(tidyverse)
+m_byevent <- read.csv("data/expected_medals/usa_mens_avs.csv")
+w_byevent <- read.csv("data/expected_medals/usa_womens_avs.csv")
+```
+
+```{r}
+calcMC <- function(gymnast_name, event_name, gender) {
+  # Filter the dataset for the specified gymnast
+  if (gender == "Men") {
+    dt <- m_byevent
+  }
+  else{
+    dt <- w_byevent
+  }
+  
+  gymnast_data <- dt[dt$FullName == gymnast_name,]
+  
+  # Filter the gymnast's data for the specified event
+  event_data <- gymnast_data[gymnast_data$Event == event_name, ]
+  
+  # Calculate the total expected medal contribution
+  total_medal_contribution <- event_data$GoldPercentage + event_data$SilverPercentage + event_data$BronzePercentage
+  
+  return(total_medal_contribution)
+}
+```
+
+```{r}
+calcMC("Brody Malone", "FX", "Men")
+```
+
+
+
