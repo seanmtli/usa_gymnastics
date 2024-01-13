@@ -114,7 +114,7 @@ ui <- navbarPage(
              ),
              
              column(3,
-                    h2("Team Events"),
+                    h2("Individual Events"),
                     h2("\n"), #i'm trying to space things out better but this \n doesn't do anything? 
                     uiOutput("event_choices_tb1"),
                     uiOutput("event_choices_tb2"),
@@ -125,7 +125,7 @@ ui <- navbarPage(
                     
                     
              ),
-             textOutput("selected_choices_output")
+             DTOutput("selected_choices_output")
              
              
            )

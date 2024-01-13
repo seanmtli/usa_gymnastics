@@ -94,19 +94,43 @@ server <- function(input, output) {
       for (event_name in selected_choices$events[[i]]) {
         # Call your custom function with gymnast name and event name
         medal_contribution <- calcMC(gymnast_name, event_name, input$genderTeamBuilder)
+        #if (medal_contribution == -1) {
+          
+        #}
         total_medal_contribution <- total_medal_contribution + medal_contribution
       }
+  
       
       total_medal_contributions[[gymnast_name]] <- total_medal_contribution
     }
     # Display total expected medal contributions
-    output$selected_choices_output <- renderText({
-      result_text <- paste("Total Expected Medal Contributions:")
-      for (i in 1:5) {
-        gymnast_name <- selected_choices$gymnasts[i]
-        result_text <- paste(result_text, "\n", gymnast_name, ":", total_medal_contributions[[gymnast_name]])
-      }
-      result_text
+    # output$selected_choices_output <- renderText({
+    #   result_text <- paste("Total Expected Medal Contributions:")
+    #   for (i in 1:5) {
+    #     gymnast_name <- selected_choices$gymnasts[i]
+    #     result_text <- paste(result_text, "\n", gymnast_name, ":", total_medal_contributions[[gymnast_name]])
+    #   }
+    #   result_text
+    # })
+    
+    output$selected_choices_output <- renderDataTable({
+      # Create a data frame with gymnast names and total expected medal contributions
+      result_df <- data.frame(
+        Gymnast = selected_choices$gymnasts,
+        Total_Medal_Contribution = sapply(selected_choices$gymnasts, function(gymnast_name) {
+          total_medal_contributions[[gymnast_name]]
+        })
+      )
+      
+      # Calculate and add the overall total across all team members
+      overall_total <- sum(result_df$Total_Medal_Contribution)
+      result_data <- rbind(result_df, c("Overall Total", overall_total))
+      
+      # Rename the columns
+      colnames(result_data) <- c("Gymnast", "Total Medal Contribution")
+      
+      # Display the data table
+      datatable(result_data, options = list(dom = 't'), rownames = FALSE)
     })
     
     
@@ -123,6 +147,12 @@ server <- function(input, output) {
     }
     
     gymnast_data <- dt[dt$FullName == gymnast_name,]
+    
+    # Check if the gymnast name is found
+    #if (nrow(gymnast_data) == 0) {
+    #  return(-1)
+      #stop(paste("Error: Gymnast", gymnast_name, "not found in the dataset."))
+    #}
     
     # Filter the gymnast's data for the specified event
     event_data <- gymnast_data[gymnast_data$Event == event_name, ]
