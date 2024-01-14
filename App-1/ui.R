@@ -23,7 +23,7 @@ ui <- navbarPage(
              tags$ul(
                tags$li("Statistical analysis visualized for athlete potential"),
                tags$li("Insights into medal probability for athletes in specific events"),
-               tags$li("Predicted team medal performance"),
+               tags$li("Predicted medal performance"),
                tags$li("Empowering the selection process for the Paris 2024 Olympics")
              ),
              
@@ -105,11 +105,11 @@ ui <- navbarPage(
                                 label = "Gender",
                                 choices = list("Women", "Men"),
                                 selected = "Women"),
-                    textInput("g1input", h3("Gymnast 1")),
-                    textInput("g2input", h3("Gymnast 2")),
-                    textInput("g3input", h3("Gymnast 3")),
-                    textInput("g4input", h3("Gymnast 4")),
-                    textInput("g5input", h3("Gymnast 5")),
+                    textInput("g1input", h3("All-around Gymnast 1:")),
+                    textInput("g2input", h3("All-around Gymnast 2:")),
+                    textInput("g3input", h3("Specialist Gymnast 3")),
+                    textInput("g4input", h3("Specialist Gymnast 4")),
+                    textInput("g5input", h3("Specialist Gymnast 5")),
                     
              ),
              
@@ -124,7 +124,8 @@ ui <- navbarPage(
                     
                     
              ),
-             DTOutput("selected_choices_output")
+             column(3,DTOutput("selected_choices_output"))
+             
              
              
            )

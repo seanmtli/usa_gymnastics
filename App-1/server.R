@@ -52,21 +52,28 @@ server <- function(input, output) {
     selectInput("eventc", label = "Event", choices = unique(as.character(events_data()$Event)))
   })
   
-  #selectors for events on By Event Page in Gymnasts Tab
+  #selectors for events in Team Builder Tab
   output$event_choices_tb1 <- renderUI({
-    selectInput("event_g1", label = "Team Events: Gymnast 1", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+    selectInput("event_g1", label = "Events: Gymnast 1", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
   })
   output$event_choices_tb2 <- renderUI({
-    selectInput("event_g2", label = "Team Events: Gymnast 2", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+    selectInput("event_g2", label = "Events: Gymnast 2", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
   })
   output$event_choices_tb3 <- renderUI({
-    selectInput("event_g3", label = "Team Events: Gymnast 3", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+    selectInput("event_g3", label = "Events: Gymnast 3", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
   })
   output$event_choices_tb4 <- renderUI({
-    selectInput("event_g4", label = "Team Events: Gymnast 4", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+    selectInput("event_g4", label = "Events: Gymnast 4", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
   })
   output$event_choices_tb5 <- renderUI({
-    selectInput("event_g5", label = "Team Events: Gymnast 5", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+    selectInput("event_g5", label = "Events: Gymnast 5", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
+  })
+  
+  names <- reactive({
+    validate(
+      need(input$g1input != "", "Please Enter a Gymnast Name")
+    )
+    c(input$g1input, input$g2input, input$g3input, input$g4input, input$g5input)
   })
   
   observeEvent(input$show_choices, {
@@ -74,9 +81,7 @@ server <- function(input, output) {
     selected_choices <- list()
     
     # Retrieve and store selected gymnasts
-    selected_choices$gymnasts <- c(
-      input$g1input, input$g2input, input$g3input, input$g4input, input$g5input
-    )
+    selected_choices$gymnasts <- names()
     
     # Retrieve and store selected events for each gymnast
     selected_choices$events <- lapply(1:5, function(i) {
@@ -114,6 +119,7 @@ server <- function(input, output) {
     # })
     
     output$selected_choices_output <- renderDataTable({
+
       # Create a data frame with gymnast names and total expected medal contributions
       result_df <- data.frame(
         Gymnast = selected_choices$gymnasts,
