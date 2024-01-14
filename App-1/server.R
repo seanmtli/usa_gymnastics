@@ -69,9 +69,34 @@ server <- function(input, output) {
     selectInput("event_g5", label = "Events: Gymnast 5", choices = unique(as.character(events_data2()$Event)), multiple = TRUE)
   })
   
+  name_errors <- function(n1, n2, n3, n4, n5, gender) {
+ 
+    if (gender == "Men") {
+      dt <- m_byevent
+    }
+    else{
+      dt <- w_byevent
+    }
+    
+    # Condition 1: Any of the names are blank or empty strings
+    if (any(sapply(list(n1, n2, n3, n4, n5), function(name) trimws(name) == ""))) {
+      return("Please enter a full team")
+    }
+    
+    # Condition 2: Any of the names are not found in the dataset
+    all_names <- c(n1, n2, n3, n4, n5)
+    if (any(!all_names %in% dt$FullName)) {
+      return("Gymnast not found, please ensure all names are spelled correctly")
+    }
+    
+    # If none of the conditions are met, return TRUE
+    return(NULL)
+  }
+  
+  
   names <- reactive({
     validate(
-      need(input$g1input != "", "Please Enter a Gymnast Name")
+      name_errors(input$g1input, input$g2input, input$g3input, input$g4input, input$g5input,input$genderTeamBuilder)
     )
     c(input$g1input, input$g2input, input$g3input, input$g4input, input$g5input)
   })
@@ -119,7 +144,7 @@ server <- function(input, output) {
     # })
     
     output$selected_choices_output <- renderDataTable({
-
+      names()
       # Create a data frame with gymnast names and total expected medal contributions
       result_df <- data.frame(
         Gymnast = selected_choices$gymnasts,
@@ -136,7 +161,7 @@ server <- function(input, output) {
       colnames(result_data) <- c("Gymnast", "Total Medal Contribution")
       
       # Display the data table
-      datatable(result_data, options = list(dom = 't'), rownames = FALSE)
+      return(datatable(result_data, options = list(dom = 't'), rownames = FALSE))
     })
     
     
