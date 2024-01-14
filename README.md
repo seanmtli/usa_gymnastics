@@ -1,7 +1,7 @@
 # Vaulting into Victory
 ## Optimizing for USA Gymnastics Medal Count at the Paris 2024 Olympics
 
-This is a project that creates a tool to choose the best liineup for the total expected medal count in artistic gymnastics at the Paris 2024 Olympics. It is part of a submission to the UCSAS 2024 data challenge. Our goal is to use a simulation based approach to predict the best five-member lineups for both the
+This is a project that creates a tool to choose the best lineup for the total expected medal count in artistic gymnastics at the Paris 2024 Olympics. It is part of a submission to the UCSAS 2024 data challenge. Our goal is to use a simulation based approach to predict the best five-member lineups for both the
 USA Men’s and Women’s artistic gymnastics teams, optimizing for total medal count. The research report with full methodology can be found in the REPORT.PDF file in this repository. 
 
 We also built an interactive web app which can be found here: LINK
