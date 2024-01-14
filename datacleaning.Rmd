@@ -1,0 +1,188 @@
+
+```{r libraries}
+#| label: load-libraries
+
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(lubridate)
+```
+
+
+
+```{r cleaningdata}
+#| label: load-data
+data_2022_2023 <- read_csv("App-1/data/data_2022_2023.csv")
+data_2017_2021 <- read_csv("App-1/data/data_2017_2021.csv")
+data_2022_2023 <- rbind(data_2022_2023, data_2017_2021)
+
+#DO NOT CHANGE ORDER
+
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "UE"] <- "UB"
+
+data_2022_2023$Penalty[is.na(data_2022_2023$Penalty)] <- 0
+
+#Girls filtering for middle name
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Joscelyn Michelle"] <- "Joscelyn"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Nola Rhianne"] <- "Nola"
+
+#Guys filtering for middle name
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Taylor Troy"] <- "Taylor"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Joshua Andrew"] <- "Joshua"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yul Kyung Tae"] <- "Yul"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Curran Michael"] <- "Curran"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Frederick Nathaniel"] <- "Frederick"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Ian Hunter"] <- "Ian"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Shane Michael"] <- "Shane"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Khoi Alexander"] <- "Khoi"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yunus Emre"] <- "Yunus"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yuan-Hsi"] <- "Yuan Hsi"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yu-Jan"] <- "Yu Jan"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "VILLAVERDE MEDEROS"] <- "VILLAVERDE"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "VALENZUELA ASTUDILLO"] <- "VALENZUELA"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yiseth Eliana"] <- "Yiseth"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yi-Chen"] <- "Yi Chen"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yi-Chun"] <- "Yi Chun"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Yefferson Gregorio"] <- "Yefferson"
+data_2022_2023$LastName[data_2022_2023$LastName == "ANTON YEGUEZ"] <- "ANTON"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ANTON YEGUEZ"] <- "ANTON"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wout Johan Alexander"] <- "Wout"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wilfry Manuel"] <- "Wilfry"
+
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Wei-Sheng"] <- "Wei Sheng"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "BIRMINGHAM 2022 Commonwealth Games") & (is.na(data_2022_2023$LastName))] <- "Kate"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "BIRMINGHAM 2022 Commonwealth Games") & (is.na(data_2022_2023$LastName))] <- "MCDONALD"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "SOUZA BITENCOU"] <- "Lucas"
+data_2022_2023$LastName[data_2022_2023$LastName == "SOUZA BITENCOU"] <- "BITENCOURT"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "DE JESUS DOS SANTOS"] <- "JESUS SANTOS"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "JESUS SANT"] <- "Melanie"
+data_2022_2023$LastName[data_2022_2023$LastName == "JESUS SANT"] <- "JESUS SANTOS"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ELPITIYA BADALGE DONA"] <- "GEHANI"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Milka Gehani"] <- "Milka"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "ELPITIYA BADALG D"] <- "Milka"
+
+data_2022_2023$LastName[data_2022_2023$LastName == "ELPITIYA BADALG D"] <- "GEHANI"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "2022 51st FIG Artistic Gymnastics World Championship") & (is.na(data_2022_2023$LastName))] <- "Kate"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "2022 51st FIG Artistic Gymnastics World Championship") & (is.na(data_2022_2023$LastName))] <- "MCDONALD"
+
+data_2022_2023$FirstName[(data_2022_2023$Competition == "2023 Varna World Challenge Cup") & (is.na(data_2022_2023$LastName))] <- "Daria"
+
+data_2022_2023$LastName[(data_2022_2023$Competition == "2023 Varna World Challenge Cup") & (is.na(data_2022_2023$LastName))] <- "HARTMANN"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "ABIYURAFI"] <- "Abiyu"
+data_2022_2023$LastName[data_2022_2023$LastName == "ABIYURAFI"] <- "Rafi"
+
+data_2022_2023$FirstName[data_2022_2023$LastName == "Frederick Nathaniel"] <- "Frederick"
+data_2022_2023$FirstName[data_2022_2023$FirstName == "Fred"] <- "FREDERICK"
+
+
+##Tidy for plots ... #MEN
+data_2022_2023$LastName[data_2022_2023$LastName == "RICHARD"] <- "Richard"
+data_2022_2023$LastName[data_2022_2023$LastName == "MALONE"] <- "Malone"
+data_2022_2023$LastName[data_2022_2023$LastName == "JUDA"] <- "Juda"
+data_2022_2023$LastName[data_2022_2023$LastName == "PHILLIPS"] <- "Phillips"
+data_2022_2023$LastName[data_2022_2023$LastName == "WALKER"] <- "Walker"
+data_2022_2023$LastName[data_2022_2023$LastName == "HONG"] <- "Hong"
+data_2022_2023$LastName[data_2022_2023$LastName == "MOLDAUER"] <- "Moldauer"
+data_2022_2023$LastName[data_2022_2023$LastName == "YOUNG"] <- "Young"
+data_2022_2023$LastName[data_2022_2023$LastName == "MCCOOL"] <- "McCool"
+data_2022_2023$LastName[data_2022_2023$LastName == "NEDOROSCIK"] <- "Nedoroscik"
+data_2022_2023$LastName[data_2022_2023$LastName == "SKIRKEY"] <- "Skirkey"
+data_2022_2023$LastName[data_2022_2023$LastName == "WHITTENBURG"] <- "Whittenburg"
+data_2022_2023$LastName[data_2022_2023$LastName == "DIAB"] <- "Diab"
+data_2022_2023$LastName[data_2022_2023$LastName == "LOOS"] <- "Loos"
+data_2022_2023$LastName[data_2022_2023$LastName == "SUN"] <- "Sun"
+data_2022_2023$LastName[data_2022_2023$LastName == "JAROH"] <- "Jaroh"
+
+#WOMEN
+data_2022_2023$LastName[data_2022_2023$LastName == "BILES"] <- "Biles"
+data_2022_2023$LastName[data_2022_2023$LastName == "SUMANASEKERA"] <- "Sumanasekera"
+data_2022_2023$LastName[data_2022_2023$LastName == "BLAKELY"] <- "Blakely"
+data_2022_2023$LastName[data_2022_2023$LastName == "JONES"] <- "Jones"
+data_2022_2023$LastName[data_2022_2023$LastName == "WONG"] <- "Wong"
+data_2022_2023$LastName[data_2022_2023$LastName == "CHILES"] <- "Chiles"
+data_2022_2023$LastName[data_2022_2023$LastName == "CAREY"] <- "Carey"
+data_2022_2023$LastName[data_2022_2023$LastName == "DICELLO"] <- "DiCello"
+data_2022_2023$LastName[data_2022_2023$LastName == "LEE"] <- "Lee"
+data_2022_2023$LastName[data_2022_2023$LastName == "ROBERSON"] <- "Roberson"
+
+```
+
+```{r filtering}
+#| label: usa-filter-data
+
+usa_data_2022_2023 <- data_2022_2023 |>
+  filter(`Country` == "USA")
+
+usa_data_2017_2021 <- data_2017_2021 |>
+  filter(`Country` == "USA")
+
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT2"] <- "VT"
+data_2022_2023$Apparatus[data_2022_2023$Apparatus == "VT1"] <- "VT"
+
+```
+
+```{r date_things}
+
+# Assuming your dataframe is called data_2022_2023 and the column with dates is "Date"
+
+# Step 1: Create a function to extract the second date from each string
+extract_second_date <- function(date_string) {
+  parts <- str_extract_all(date_string, "\\d{1,2}\\s[A-Za-z]+\\s\\d{4}")[[1]]
+  if (length(parts) == 2) {
+    # If there are two dates, return the second one
+    return(parts[2])
+  } else if (length(parts) == 1) {
+    # If there is only one date, return it
+    return(parts[1])
+  } else {
+    return(NA)
+  }
+}
+
+# Step 2: Apply the function to the Date column and convert to Date objects
+data_2022_2023 <- data_2022_2023 %>%
+  mutate(
+    SecondDateStr = sapply(Date, extract_second_date),
+    SecondDate = dmy(SecondDateStr)
+  )
+
+# Define the end date
+end_date <- dmy("01-01-2024")
+
+# Calculate the number of days from the SecondDate to the end date
+data_2022_2023 <- data_2022_2023 %>%
+  mutate(
+    DaysUntil2024 = as.integer(end_date - SecondDate)
+  )
+
+# Inspect the changes
+head(data_2022_2023)
+```
+
+```{r write cleaned data}
+write.csv(data_2022_2023, "App-1/data/cleaned.csv")
+```
+

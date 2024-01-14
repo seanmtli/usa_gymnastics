@@ -1,0 +1,684 @@
+```{r libraries}
+#| label: load-libraries
+
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(lubridate)
+```
+
+
+
+```{r create-sampling-dist}
+data_2022_2023 <- read.csv("App-1/data/cleaned.csv")
+```
+
+
+```{r medal-cutoffs function}
+## sample 24 times from top 24 athletes mean scores in each apparatus to simulate one "olympics"
+## take top 3 scores and those are cutoffs for gold/silver/bronze respectively
+# Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
+getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
+  set.seed(123)
+  #distribution <- eventranks$mean_score
+  cutoffs <- matrix(NA, nrow = 3, ncol = num_simulations)
+
+  for (i in 1:num_simulations) {
+    top_three_scores = numeric(0)
+    while (length(unique(top_three_scores))<3){
+      # Sample 24 times from the distribution
+        mean_score <- mean(eventranks$mean_score)
+        sd_score <- sd(eventranks$mean_score)
+        max_cutoff <- max(eventranks$mean_score) + 0.3
+        # Initialize sampled_score
+        sampled_score <- NA
+        simulated_scores <- list()
+        for (j in 1:24){
+          sampled_score <- NA
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+          while (is.na(sampled_score) || sampled_score > max_cutoff) {
+            df <- max(nrow(eventranks) - 1, 1)  # to avoid df being zero
+            sampled_score <- mean_score + rt(1, df) * sd_score
+          }
+        #print(sampled_score)
+        simulated_scores <- append(simulated_scores,sampled_score)
+        }
+    # Take the top 3 scores
+    simulated_scores = as.numeric(simulated_scores)
+    #print(simulated_scores)
+    top_three_scores <- head(sort(simulated_scores, decreasing = TRUE), 3)
+    }
+    # Set the cutoffs for gold, silver, and bronze in the matrix
+
+    cutoffs[, i] <- top_three_scores
+  }
+
+  # Convert the matrix to a data frame
+  cutoffs_df <- as.data.frame(cutoffs)
+  names(cutoffs_df) <- paste0("Simulation_", 1:num_simulations)
+
+  return(cutoffs_df)
+}
+```
+
+
+```{r rankings}
+usa_data_2022_2023 <- data_2022_2023 |>
+  filter(`Country` == "USA")
+
+
+
+data_2022_2023 |>
+  summarise(mean = mean(Score))
+
+usa_data_2022_2023_f <-  usa_data_2022_2023 |>
+  filter(Gender == "w")
+
+usa_data_2022_2023_m <- usa_data_2022_2023 |>
+  filter(Gender == "m")
+
+data_2022_2023_f <- data_2022_2023 |>
+  filter(Gender == "w")
+
+data_2022_2023_m <- data_2022_2023 |>
+  filter(Gender == "m")
+
+#ggplot(aes(x= Score), data = usa_data_2022_2023_f) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)
+
+#ggplot(aes(x= Score), data = usa_data_2022_2023_m) + geom_histogram() + facet_wrap(~Apparatus, scales = "free_y", ncol = 2)
+
+
+mean_usa_app <- usa_data_2022_2023_f |>
+  group_by(LastName, FirstName, Apparatus) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score))
+
+mean_usa_app_men <- usa_data_2022_2023_m |>
+  group_by(LastName, FirstName, Apparatus) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score))
+
+usa_data_2022_2023_f_BB <- mean_usa_app |>
+  filter(Apparatus == "BB") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_UB <- mean_usa_app |>
+  filter(Apparatus == "UB") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_FX <- mean_usa_app |>
+  filter(Apparatus == "FX") |>
+  arrange(desc(mean_score))
+
+usa_data_2022_2023_f_VT <- mean_usa_app |>
+  filter(Apparatus == "VT") |>
+  arrange(desc(mean_score))
+
+mean_usa_app
+
+mean_usa_app_men
+
+usa_data_2022_2023_f_BB
+usa_data_2022_2023_f_UB
+usa_data_2022_2023_f_FX
+usa_data_2022_2023_f_VT
+
+mean_usa_app |>
+  group_by(LastName, FirstName) |>
+  filter(Apparatus != "VT1",
+         Apparatus != "VT2") |>
+  summarise(sum = sum(mean_score)) |>
+  arrange(desc(sum))
+
+VT_ranks_f <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+BB_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "BB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+UB_ranks <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "UB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks_f <- data_2022_2023_f |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+#----------------------------------------------------------
+
+VT_ranks_m <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+SR_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "SR") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PB_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks_m <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PH_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PH") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+HB_ranks <- data_2022_2023_m |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "HB") |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+```
+
+
+
+```{r get-cutoffs}
+BB_medal_cutoffs <- getmedalcutoffs(BB_ranks)
+FX_f_medal_cutoffs <- getmedalcutoffs(FX_ranks_f)
+UB_medal_cutoffs <- getmedalcutoffs(UB_ranks)
+VT_f_medal_cutoffs <- getmedalcutoffs(VT_ranks_f)
+
+FX_m_medal_cutoffs <- getmedalcutoffs(FX_ranks_m)
+SR_medal_cutoffs <- getmedalcutoffs(SR_ranks)
+HB_medal_cutoffs <- getmedalcutoffs(HB_ranks)
+PH_medal_cutoffs <- getmedalcutoffs(PH_ranks)
+VT_m_medal_cutoffs <- getmedalcutoffs(VT_ranks_m)
+PB_medal_cutoffs <- getmedalcutoffs(PB_ranks)
+
+topAAmen <- data_2022_2023_m %>% 
+  filter(Gender == "m", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+topAAwomen <- data_2022_2023_f %>% 
+  filter(Gender == "w", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  summarize(AAtotal = sum(Score))
+
+top24AAmen <- topAAmen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
+top24AAwomen <- topAAwomen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
+allroundmen_cutoffs <-getmedalcutoffs(top24AAmen)
+allroudwomen_cutoffs <- getmedalcutoffs(top24AAwomen)
+```
+
+```{r get-model-probs-func}
+calculatePodiumPercentages <- function(df, thresholds) {
+  # Number of gymnasts
+  num_gymnasts <- nrow(df)
+  
+  # Initialize an empty dataframe for the results
+  results <- data.frame(
+    firstName = df[, 1],
+    lastName = df[, 2],
+    bronze_percentage = numeric(num_gymnasts),
+    silver_percentage = numeric(num_gymnasts),
+    gold_percentage = numeric(num_gymnasts),
+    stringsAsFactors = FALSE
+  )
+  
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample and the thresholds
+    sample_scores <- df[, i + 2]
+    gold_threshold <- thresholds[1, i]
+    silver_threshold <- thresholds[2, i]
+    bronze_threshold <- thresholds[3, i]
+
+    # Count placements based on thresholds
+    results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+    results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+    results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
+  }
+
+  # Convert counts to percentages
+  results$gold_percentage <- (results$gold_percentage / 1000)
+  results$silver_percentage <- (results$silver_percentage / 1000)
+  results$bronze_percentage <- (results$bronze_percentage / 1000)
+
+  # Sort the dataframe by gold_percentage in descending order
+  results <- results[order(-results$gold_percentage), ]
+  
+  return(results)
+}
+```
+
+```{r write-percs-example}
+#sims_data <- read_csv("Data/HB_usa_mens_sims.csv")
+#percs <- calculatePodiumPercentages(sims_data, HB_medal_cutoffs)
+# write.csv(percs, '/home/guest/Case2-BDSM/Data/event_percentages/m_HB.csv', row.names=FALSE)
+```
+
+```{r team-qualifying-rank}
+#breakdown of teams qualifying rank
+
+tb_2016_f <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "CHN", "RUS", "GBR", "BRA", "GER", "JPN", "NED", "CAN", "ITA", "FRA", "BEL"),
+                      all_around = c(3, 2, 3, 2, 3, 2, 3, 3, 2, 2, 3, 2))
+
+tb_2016_f <- tb_2016_f |>
+  mutate(year = "2016",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "F")
+
+tb_2016_m <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("CHN", "USA", "RUS", "JPN", "GBR", "BRA", "UKR", "GER", "SUI", "NED", "KOR", "FRA"),
+                      all_around = c(2, 2, 3, 2, 3, 3, 2, 2, 3, 3, 1, 2))
+
+tb_2016_m <- tb_2016_m |>
+  mutate(year = "2016",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "M")
+
+tb_2012_f <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "RUS", "CHN", "ROU", "GBR", "JPN", "ITA", "CAN", "GER", "AUS", "FRA", "BRA"),
+                      all_around = c(3, 3, 3, 2, 3, 2, 3, 2, 2, 2, 2, 3))
+
+tb_2012_f <- tb_2012_f |>
+  mutate(year = "2012",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "F")
+
+tb_2012_m <- data.frame(rank = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12),
+                      country = c("USA", "RUS", "GBR", "GER", "JPN", "CHN", "UKR", "FRA", "ESP", "ROU", "ITA", "KOR"),
+                      all_around = c(2, 2, 2, 3, 3, 1, 3, 1, 3, 1, 3, 1))
+
+tb_2012_m <- tb_2012_m |>
+  mutate(year = "2012",
+         made_final = ifelse(rank <= 8, "yes", "no"),
+         gender = "M")
+
+tb_f <- rbind(tb_2016_f, tb_2012_f) |>
+  mutate(all_around = as.character(all_around))
+
+ggplot(data = tb_f, aes(x = all_around, fill = made_final)) +
+  geom_bar()
+
+ggplot(data = tb_f, aes(y = all_around, x = rank)) +
+  geom_line()
+
+sampling_usa_data_2022_2023_m |>
+  filter(Apparatus == 'PH') |>
+  ggplot(aes(x=Score)) +
+  geom_histogram()
+```
+
+```{r medal-counts-f}
+f_FX <- read_csv("App-1/data/event_percentages/f_FX.csv")
+f_BB <- read_csv("App-1/data/event_percentages/f_BB.csv")
+f_VT <- read_csv("App-1/data/event_percentages/f_VT.csv")
+f_UB <- read_csv("App-1/data/event_percentages/f_UB.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 100)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+f_BB <- normalize_and_rename(f_BB, "BB")
+f_FX <- normalize_and_rename(f_FX, "FX")
+f_UB <- normalize_and_rename(f_UB, "UB")
+f_VT <- normalize_and_rename(f_VT, "VT")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(f_BB, f_FX, f_UB, f_VT), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+# write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/f.csv', row.names=FALSE)
+```
+
+```{r medal-counts-m}
+m_FX <- read_csv("Data/event_percentages/m_FX.csv")
+m_SR <- read_csv("Data/event_percentages/m_SR.csv")
+m_VT <- read_csv("Data/event_percentages/m_VT.csv")
+m_PB <- read_csv("Data/event_percentages/m_PB.csv")
+m_PH <- read_csv("Data/event_percentages/m_PH.csv")
+m_HB <- read_csv("Data/event_percentages/m_HB.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 100)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+m_SR <- normalize_and_rename(m_SR, "SR")
+m_FX <- normalize_and_rename(m_FX, "FX")
+m_PB <- normalize_and_rename(m_PB, "PB")
+m_VT <- normalize_and_rename(m_VT, "VT")
+m_PH <- normalize_and_rename(m_PH, "PH")
+m_HB <- normalize_and_rename(m_HB, "HB")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(m_SR, m_FX, m_PB, m_VT, m_PH, m_HB), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+# write.csv(combined_df, '/home/guest/Case2-BDSM/Data/expected_medals/m.csv', row.names=FALSE)
+```
+
+```{r all-around-sims womens}
+BB_sims <- read_csv("App-1/data/BB_usa_womens_sims.csv")
+FX_sims <- read_csv("App-1/data/FX_usa_womens_sims.csv")
+UB_sims <- read_csv("App-1/data/UB_usa_womens_sims.csv")
+VT_sims <- read_csv("App-1/data/VT_usa_womens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+BB_sims_prepared <- prepare_df(BB_sims)
+FX_sims_prepared <- prepare_df(FX_sims)
+UB_sims_prepared <- prepare_df(UB_sims)
+VT_sims_prepared <- prepare_df(VT_sims)
+
+# Use left joins to combine the dataframes
+combined_AA_df <- BB_sims_prepared %>%
+  left_join(FX_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(UB_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared, by = c("FirstName", "LastName"))
+```
+
+
+
+```{r sum-across-events-women}
+# Assuming your dataframe is called 'your_dataframe'
+# Assuming you have 4004 columns and 38 rows
+
+# Create a vector of column indices to sum
+original_data <- combined_AA_df[, -(1:2)]
+names <- combined_AA_df[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(names), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i + 1000,i+2000,i+3000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA <- cbind(names,condensed_data)
+```
+
+
+```{r all-around-sims men}
+HB_sims_m <- read_csv("App-1/data/HB_usa_mens_sims.csv")
+FX_sims_m <- read_csv("App-1/data/FX_usa_mens_sims.csv")
+PB_sims_m <- read_csv("App-1/data/PB_usa_mens_sims.csv")
+VT_sims_m <- read_csv("App-1/data/VT_usa_mens_sims.csv")
+PH_sims_m <- read_csv("App-1/data/PH_usa_mens_sims.csv")
+SR_sims_m <- read_csv("App-1/data/SR_usa_mens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+HB_sims_prepared_m <- prepare_df(HB_sims_m)
+FX_sims_prepared_m <- prepare_df(FX_sims_m)
+PB_sims_prepared_m <- prepare_df(PB_sims_m)
+VT_sims_prepared_m <- prepare_df(VT_sims_m)
+PH_sims_prepared_m <- prepare_df(PH_sims_m)
+SR_sims_prepared_m <- prepare_df(SR_sims_m)
+
+# Use left joins to combine the dataframes
+combined_AA_df_m <- HB_sims_prepared_m %>%
+  left_join(FX_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(PB_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(PH_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(SR_sims_prepared_m, by = c("FirstName", "LastName")) 
+  
+```
+
+```{r sum-across-events-men}
+# Create a vector of column indices to sum
+original_data <- combined_AA_df_m[, -(1:2)]
+names <- combined_AA_df_m[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(original_data), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i + 1000,i+2000,i+3000,i+4000,i+5000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA_m <- cbind(names,condensed_data)
+```
+
+```{r}
+pool_f <- c("Simone", "Shilese", "Skye", "Kaliya", "Kayla", "Jade", "Joscelyn")
+pool_l <- c("BILES", "JONES", "BLAKELY", "LINCOLN", "DICELLO", "CAREY", "ROBERSON")
+
+BB_f <- BB_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+BB_columns_to_med <- BB_f[, (3:1002)]
+
+BB_MedScore <- apply(BB_columns_to_med, 1, median, na.rm=T)
+
+BB_f$MedScore <- BB_MedScore
+
+BB_medians <- BB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+
+FX_f <- FX_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+FX_columns_to_med <- FX_f[, (3:1002)]
+
+FX_MedScore <- apply(FX_columns_to_med, 1, median, na.rm=T)
+
+FX_f$MedScore <- FX_MedScore
+
+FX_medians <- FX_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+UB_f <- UB_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+UB_columns_to_med <-UB_f[, (3:1002)]
+
+UB_MedScore <- apply(UB_columns_to_med, 1, median, na.rm=T)
+
+UB_f$MedScore <- UB_MedScore
+
+UB_medians <- UB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+#--------------------------------------------------------------------------------------------------------------------
+VT_f <- VT_sims_prepared |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+VT_columns_to_med <-VT_f[, (3:1002)]
+
+VT_MedScore <- apply(VT_columns_to_med, 1, median, na.rm=T)
+
+VT_f$MedScore <- VT_MedScore
+
+VT_medians <- VT_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+BB_medians
+FX_medians
+UB_medians
+VT_medians
+```
+
+```{r}
+pool_f <- c("Fred", "Paul", "Asher", "Curran", "Khoi", "Donnell", "Yul")
+pool_l <- c("RICHARD", "JUDA", "HONG", "PHILLIPS", "YOUNG", "WHITTENBURG", "MOLDAUER")
+
+HB_f <- HB_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+HB_columns_to_med <- HB_f[, (3:1002)]
+
+HB_MedScore <- apply(HB_columns_to_med, 1, median, na.rm=T)
+
+HB_f$MedScore <- HB_MedScore
+
+HB_medians <- HB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+FX_m_f <- FX_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+FX_m_columns_to_med <- FX_m_f[, (3:1002)]
+
+FX_m_MedScore <- apply(FX_m_columns_to_med, 1, median, na.rm=T)
+
+FX_m_f$MedScore <- FX_m_MedScore
+
+FX_m_medians <- FX_m_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+PB_f <- PB_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+PB_columns_to_med <- PB_f[, (3:1002)]
+
+PB_MedScore <- apply(PB_columns_to_med, 1, median, na.rm=T)
+
+PB_f$MedScore <- PB_MedScore
+
+PB_medians <- PB_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+VT_m_f <- VT_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+VT_m_columns_to_med <- VT_m_f[, (3:1002)]
+
+VT_m_MedScore <- apply(VT_m_columns_to_med, 1, median, na.rm=T)
+
+VT_m_f$MedScore <- VT_m_MedScore
+
+VT_m_medians <- VT_m_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+PH_f <- PH_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+PH_columns_to_med <- PH_f[, (3:1002)]
+
+PH_MedScore <- apply(PH_columns_to_med, 1, median, na.rm=T)
+
+PH_f$MedScore <- PH_MedScore
+
+PH_medians <- PH_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+#--------------------------------------------------------------------------------------------------------------------
+SR_f <- SR_sims_prepared_m |>
+  filter(FirstName %in% pool_f, LastName %in% pool_l) |>
+  group_by(FirstName, LastName)
+
+SR_columns_to_med <- SR_f[, (3:1002)]
+
+SR_MedScore <- apply(SR_columns_to_med, 1, median, na.rm=T)
+
+SR_f$MedScore <- SR_MedScore
+
+SR_medians <- SR_f |>
+  select(FirstName, LastName, MedScore, AverageScore)
+
+HB_medians
+FX_m_medians
+PB_medians
+VT_m_medians
+PH_medians
+SR_medians
+```
+
