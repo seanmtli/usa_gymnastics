@@ -15,11 +15,11 @@ The three of us are all seniors at Duke University studying Statistics and part 
   - ui.R: file that generates the UI for our web app
   - server.R: server file for web app backend
   - data/
-    - sims: folder of simulations for all events for USA gymnasts
+    - sims/: folder of simulations for all events for USA gymnasts
     - data_2017_2021: given data on gymnastic meet results from 2017-2021
     - data_2022_2023: given data on gymnastic meet results from 2022-2023
-    - event_percentages: a per gender per event folder of medal probabilities
-    - expected_medals: consolidated and transformed datasets of medal probabilities for use in web app
+    - event_percentages/: a per gender per event folder of medal probabilities
+    - expected_medals/: consolidated and transformed datasets of medal probabilities for use in web app
 - REPORT.Rmd: code and writeup that generates our final report
 - REPORT.PDF: main report in PDF form
 - Optimization.Rmd: creation of datasets to use in web app + an attempt at using optimization code methods
