@@ -8,9 +8,9 @@ The three of us are all seniors at Duke University studying Statistics and part 
 ### File Directory
 
 - App-1/
-- ui.R
-- server.R
-- data/
+  - ui.R
+  - server.R
+  - data/
 - REPORT.Rmd: code and writeup that generates our final report
 - REPORT.PDF: main report in PDF form
 - Optimization.Rmd: attempts to utilize optimization 
