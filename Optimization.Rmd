@@ -103,6 +103,8 @@ get_event_percentage <- function(full_name, event, percentage_type) {
 usa_womens_avs$GoldPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "gold"))
 usa_womens_avs$SilverPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "silver"))
 usa_womens_avs$BronzePercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+
+write.csv(usa_womens_avs, "App-1/data/expected_medals/usa_womens_avs.csv")
 ```
 
 ```{r sean-df-mens}
@@ -194,6 +196,8 @@ get_event_percentage <- function(full_name, event, percentage_type) {
 usa_mens_avs$GoldPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "gold"))
 usa_mens_avs$SilverPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "silver"))
 usa_mens_avs$BronzePercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+
+write.csv(usa_mens_avs, "App-1/data/expected_medals/usa_mens_avs.csv")
 ```
 
 

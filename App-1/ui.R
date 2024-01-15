@@ -2,6 +2,11 @@ library(tidyverse)
 library(DT)
 library(shiny)
 library(htmltools)
+
+w_topcand <- read.csv("data/expected_medals/f_total_probabilities.csv")
+m_topcand <- read.csv("data/expected_medals/m_total_probabilities.csv")
+gymnast_names <- c(w_topcand$Name, m_topcand$Name)
+
 ui <- navbarPage(
   
   # App title ----
@@ -109,11 +114,16 @@ ui <- navbarPage(
                                 label = "Gender",
                                 choices = list("Women", "Men"),
                                 selected = "Women"),
-                    textInput("g1input", h3("Gymnast 1")),
-                    textInput("g2input", h3("Gymnast 2")),
-                    textInput("g3input", h3("Gymnast 3")),
-                    textInput("g4input", h3("Gymnast 4")),
-                    textInput("g5input", h3("Gymnast 5")),
+                    selectizeInput("g1input", label = h3("Gymnast 1"), choices = gymnast_names,
+                                   selected = "Simone Biles", multiple = FALSE, options = NULL),
+                    selectizeInput("g2input", label = h3("Gymnast 2"), choices = gymnast_names,
+                                   selected = "Shilese Jones", multiple = FALSE, options = NULL),
+                    selectizeInput("g3input", label = h3("Gymnast 3"), choices = gymnast_names,
+                                   selected = "Jade Carey", multiple = FALSE, options = NULL),
+                    selectizeInput("g4input", label = h3("Gymnast 4"), choices = gymnast_names,
+                                   selected = "Kaliya Lincoln", multiple = FALSE, options = NULL),
+                    selectizeInput("g5input", label = h3("Gymnast 5"), choices = gymnast_names,
+                                   selected = "Zoe Miller", multiple = FALSE, options = NULL),
                     
              ),
              
