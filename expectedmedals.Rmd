@@ -386,12 +386,12 @@ combined_df[is.na(combined_df)] <- 0
 ```
 
 ```{r medal-counts-m}
-m_FX <- read_csv("Data/event_percentages/m_FX.csv")
-m_SR <- read_csv("Data/event_percentages/m_SR.csv")
-m_VT <- read_csv("Data/event_percentages/m_VT.csv")
-m_PB <- read_csv("Data/event_percentages/m_PB.csv")
-m_PH <- read_csv("Data/event_percentages/m_PH.csv")
-m_HB <- read_csv("Data/event_percentages/m_HB.csv")
+m_FX <- read_csv("App-1/data/event_percentages/m_FX.csv")
+m_SR <- read_csv("App-1/data/event_percentages/m_SR.csv")
+m_VT <- read_csv("App-1/data/event_percentages/m_VT.csv")
+m_PB <- read_csv("App-1/data/event_percentages/m_PB.csv")
+m_PH <- read_csv("App-1/data/event_percentages/m_PH.csv")
+m_HB <- read_csv("App-1/data/event_percentages/m_HB.csv")
 
 # Function to normalize and rename percentage columns
 normalize_and_rename <- function(df, suffix) {
@@ -418,10 +418,10 @@ combined_df[is.na(combined_df)] <- 0
 ```
 
 ```{r all-around-sims womens}
-BB_sims <- read_csv("App-1/data/BB_usa_womens_sims.csv")
-FX_sims <- read_csv("App-1/data/FX_usa_womens_sims.csv")
-UB_sims <- read_csv("App-1/data/UB_usa_womens_sims.csv")
-VT_sims <- read_csv("App-1/data/VT_usa_womens_sims.csv")
+BB_sims <- read_csv("App-1/data/sims/BB_usa_womens_sims.csv")
+FX_sims <- read_csv("App-1/data/sims/FX_usa_womens_sims.csv")
+UB_sims <- read_csv("App-1/data/sims/UB_usa_womens_sims.csv")
+VT_sims <- read_csv("App-1/data/sims/VT_usa_womens_sims.csv")
 
 # Define a function to replace NA with 0 and drop the average score column
 prepare_df <- function(df) {
@@ -469,16 +469,18 @@ colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
 
 # Print or use the condensed dataframe as needed
 combinedfinalAA <- cbind(names,condensed_data)
+
+write.csv(combinedfinalAA, "App-1/data/sims/AA_usa_womens_sims.csv")
 ```
 
 
 ```{r all-around-sims men}
-HB_sims_m <- read_csv("App-1/data/HB_usa_mens_sims.csv")
-FX_sims_m <- read_csv("App-1/data/FX_usa_mens_sims.csv")
-PB_sims_m <- read_csv("App-1/data/PB_usa_mens_sims.csv")
-VT_sims_m <- read_csv("App-1/data/VT_usa_mens_sims.csv")
-PH_sims_m <- read_csv("App-1/data/PH_usa_mens_sims.csv")
-SR_sims_m <- read_csv("App-1/data/SR_usa_mens_sims.csv")
+HB_sims_m <- read_csv("App-1/data/sims/HB_usa_mens_sims.csv")
+FX_sims_m <- read_csv("App-1/data/sims/FX_usa_mens_sims.csv")
+PB_sims_m <- read_csv("App-1/data/sims/PB_usa_mens_sims.csv")
+VT_sims_m <- read_csv("App-1/data/sims/VT_usa_mens_sims.csv")
+PH_sims_m <- read_csv("App-1/data/sims/PH_usa_mens_sims.csv")
+SR_sims_m <- read_csv("App-1/data/sims/SR_usa_mens_sims.csv")
 
 # Define a function to replace NA with 0 and drop the average score column
 prepare_df <- function(df) {
@@ -500,7 +502,6 @@ combined_AA_df_m <- HB_sims_prepared_m %>%
   left_join(VT_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
   left_join(PH_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
   left_join(SR_sims_prepared_m, by = c("FirstName", "LastName")) 
-  
 ```
 
 ```{r sum-across-events-men}
@@ -526,6 +527,8 @@ colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
 
 # Print or use the condensed dataframe as needed
 combinedfinalAA_m <- cbind(names,condensed_data)
+
+write.csv(combinedfinalAA_m, "App-1/data/sims/AA_usa_mens_sims.csv")
 ```
 
 ```{r}

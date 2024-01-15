@@ -16,16 +16,15 @@ m_AA <- read_csv("App-1/data/event_percentages/m_AA.csv")
 ```
 
 ```{r sean-df-womens}
-FX_usa_womens_sims <- read_csv("App-1/data/FX_usa_womens_sims.csv")
-AA_usa_womens_sims <- read_csv("App-1/data/AA_usa_women_sims.csv")
-BB_usa_womens_sims <- read_csv("App-1/data/BB_usa_womens_sims.csv")
-UB_usa_womens_sims <- read_csv("App-1/data/UB_usa_womens_sims.csv")
-VT_usa_womens_sims <- read_csv("App-1/data/VT_usa_womens_sims.csv")
+FX_usa_womens_sims <- read_csv("App-1/data/sims/FX_usa_womens_sims.csv")
+AA_usa_womens_sims <- read_csv("App-1/data/sims/AA_usa_womens_sims.csv")
+BB_usa_womens_sims <- read_csv("App-1/data/sims/BB_usa_womens_sims.csv")
+UB_usa_womens_sims <- read_csv("App-1/data/sims/UB_usa_womens_sims.csv")
+VT_usa_womens_sims <- read_csv("App-1/data/sims/VT_usa_womens_sims.csv")
 
-AA_usa_womens_sims <- AA_usa_womens_sims[, 1:1003]
+AA_usa_womens_sims <- AA_usa_womens_sims[, 2:1004]
 
-# Removing ".x" from any column names that contain it
-colnames(AA_usa_womens_sims) <- gsub("\\.x", "", colnames(AA_usa_womens_sims))
+colnames(AA_usa_womens_sims)[ncol(AA_usa_womens_sims)] <- "AverageScore"
 
 # Assuming the datasets are already loaded into the environment
 datasets <- list(AA = AA_usa_womens_sims, BB = BB_usa_womens_sims, VT = VT_usa_womens_sims, UB = UB_usa_womens_sims, FX = FX_usa_womens_sims)
@@ -107,18 +106,17 @@ usa_womens_avs$BronzePercentage <- mapply(get_event_percentage, usa_womens_avs$F
 ```
 
 ```{r sean-df-mens}
-PB_usa_mens_sims <- read_csv("App-1/data/PB_usa_mens_sims.csv")
-AA_usa_mens_sims <- read_csv("App-1/data/AA_usa_men_sims.csv")
-PH_usa_mens_sims <- read_csv("App-1/data/PH_usa_mens_sims.csv")
-SR_usa_mens_sims <- read_csv("App-1/data/SR_usa_mens_sims.csv")
-VT_usa_mens_sims <- read_csv("App-1/data/VT_usa_mens_sims.csv")
-HB_usa_mens_sims <- read_csv("App-1/data/HB_usa_mens_sims.csv")
-FX_usa_mens_sims <- read_csv("App-1/data/FX_usa_mens_sims.csv")
+PB_usa_mens_sims <- read_csv("App-1/data/sims/PB_usa_mens_sims.csv")
+AA_usa_mens_sims <- read_csv("App-1/data/sims/AA_usa_mens_sims.csv")
+PH_usa_mens_sims <- read_csv("App-1/data/sims/PH_usa_mens_sims.csv")
+SR_usa_mens_sims <- read_csv("App-1/data/sims/SR_usa_mens_sims.csv")
+VT_usa_mens_sims <- read_csv("App-1/data/sims/VT_usa_mens_sims.csv")
+HB_usa_mens_sims <- read_csv("App-1/data/sims/HB_usa_mens_sims.csv")
+FX_usa_mens_sims <- read_csv("App-1/data/sims/FX_usa_mens_sims.csv")
 
-AA_usa_mens_sims <- AA_usa_mens_sims[, 1:1003]
+AA_usa_mens_sims <- AA_usa_mens_sims[, 2:1004]
 
-# Removing ".x" from any column names that contain it
-colnames(AA_usa_mens_sims) <- gsub("\\.x", "", colnames(AA_usa_mens_sims))
+colnames(AA_usa_mens_sims)[ncol(AA_usa_mens_sims)] <- "AverageScore"
 
 # Assuming the datasets are already loaded into the environment
 datasets_m <- list(AA = AA_usa_mens_sims, PB = PB_usa_mens_sims, VT = VT_usa_mens_sims, PH = PH_usa_mens_sims, SR = SR_usa_mens_sims, HB = HB_usa_mens_sims, FX = FX_usa_mens_sims)
