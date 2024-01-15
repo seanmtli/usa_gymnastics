@@ -127,16 +127,20 @@ teamsims <- function(g1,g2,g3,g4,g5,gender) {
   
   nm <- c(g1, g2, g3, g4, g5)
   #print(nm)
-  pds <- list()
+  pds <- data.frame()
 
   for (event_data in dataevents) {
     e <- process_dataset(nm, event_data)
-    pds <- c(pds,e)
-    #print(pds)
+    pds <- rbind(pds,e)
+    
   }
-  #print(pds)
+ 
   # Combine the results into one big dataframe
-  final_result <- do.call(rbind, pds)
+ 
+  final_result <- pds %>% 
+    mutate(across(2:1001, ~ sum(.))) %>% 
+    head(1)
+  
   return(final_result)
   
 }
@@ -168,9 +172,56 @@ process_dataset <- function(nm, dataset) {
 # put into the get_podiumPercentages function with the cutoffs
 ```
 
+
+```{r}
+calculateTeamPodiumPercentages <- function(df, thresholds) {
+  # Number of gymnasts
+  num_gymnasts <- nrow(df)
+  
+  # Initialize an empty dataframe for the results
+  results <- data.frame(
+    firstName = df[, 1],
+    bronze_percentage = numeric(num_gymnasts),
+    silver_percentage = numeric(num_gymnasts),
+    gold_percentage = numeric(num_gymnasts),
+    stringsAsFactors = FALSE
+  )
+  
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample and the thresholds
+    sample_scores <- df[, i + 1]
+    gold_threshold <- thresholds[1, i]
+    silver_threshold <- thresholds[2, i]
+    bronze_threshold <- thresholds[3, i]
+
+    # Count placements based on thresholds
+    results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+    results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+    results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
+  }
+
+  # Convert counts to percentages
+  results$gold_percentage <- (results$gold_percentage / 10)
+  results$silver_percentage <- (results$silver_percentage / 10)
+  results$bronze_percentage <- (results$bronze_percentage / 10)
+
+  # Sort the dataframe by gold_percentage in descending order
+  results <- results[order(-results$gold_percentage), ]
+  
+  return(results)
+}
+```
+
+```{r}
+calculateTeamPodiumPercentages(hun,teamWomenscutoffs)
+```
+
+
+
 ```{r}
 #process_dataset(c("Simone Biles","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln"),VTw)
-hun <- teamsims("Simone Biles","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln", "Women")
+hun <- teamsims("Zoe Miller","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln", "Women")
 ```
 
 ```{r}

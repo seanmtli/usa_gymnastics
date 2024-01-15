@@ -84,7 +84,7 @@ ui <- navbarPage(
       h3("Gymnast Database"),
       p("This page is a display of the top USA gymnasts based upon expected medals. You may choose to view it by event or consolidated."),
       p("For example, a row with Simone Biles with 0.715 under Total_BB means that we can expect Simone Biles to have a 71.5% chance of medaling in the Balance Beam individual apparatus."),
-      helpText("If a gymnast does not show up, they did not medal in any of our simulations."),
+      helpText("Note: If a gymnast does not show up, they did not medal in any of our simulations."),
       selectInput("var", 
                   label = "Gender",
                   choices = list("Women", "Men"),
@@ -138,7 +138,10 @@ ui <- navbarPage(
                     
                     
              ),
-             column(3,DTOutput("selected_choices_output"))
+             column(3, h2("Individual Expected Medal Contributions"),
+                    DTOutput("selected_choices_output"),
+                    h2("Team Medal Probabilities"),
+                    DTOutput("teamMedal"))
              
            )
   )

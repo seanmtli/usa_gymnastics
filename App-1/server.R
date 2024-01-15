@@ -5,6 +5,19 @@ w_topcand <- read.csv("data/expected_medals/f_total_probabilities.csv")
 m_topcand <- read.csv("data/expected_medals/m_total_probabilities.csv")
 m_byevent <- read.csv("data/expected_medals/usa_mens_avs.csv")
 w_byevent <- read.csv("data/expected_medals/usa_womens_avs.csv")
+BBw <- read.csv("data/sims/BB_usa_womens_sims.csv")
+FXw <- read.csv("data/sims/FX_usa_womens_sims.csv")
+VTw <- read.csv("data/sims/VT_usa_womens_sims.csv")
+UBw <- read.csv("data/sims/UB_usa_womens_sims.csv")
+
+HBm <- read.csv("data/sims/HB_usa_mens_sims.csv")
+PBm <- read.csv("data/sims/PB_usa_mens_sims.csv")
+PHm <- read.csv("data/sims/PH_usa_mens_sims.csv")
+FXm <- read.csv("data/sims/FX_usa_mens_sims.csv")
+SRm <- read.csv("data/sims/SR_usa_mens_sims.csv")
+VTm <- read.csv("data/sims/VT_usa_mens_sims.csv")
+teamMencutoffs <- read.csv("data/team_cutoffs/team_men_cutoffs.csv")
+teamWomenscutoffs <- read.csv("data/team_cutoffs/team_women_cutoffs.csv")
 
 # Define server logic for slider examples ----
 server <- function(input, output) {
@@ -127,24 +140,14 @@ server <- function(input, output) {
       for (event_name in selected_choices$events[[i]]) {
         # Call your custom function with gymnast name and event name
         medal_contribution <- calcMC(gymnast_name, event_name, input$genderTeamBuilder)
-        #if (medal_contribution == -1) {
-          
-        #}
         total_medal_contribution <- total_medal_contribution + medal_contribution
       }
   
       
       total_medal_contributions[[gymnast_name]] <- total_medal_contribution
     }
-    # Display total expected medal contributions
-    # output$selected_choices_output <- renderText({
-    #   result_text <- paste("Total Expected Medal Contributions:")
-    #   for (i in 1:5) {
-    #     gymnast_name <- selected_choices$gymnasts[i]
-    #     result_text <- paste(result_text, "\n", gymnast_name, ":", total_medal_contributions[[gymnast_name]])
-    #   }
-    #   result_text
-    # })
+    
+    
     
     output$selected_choices_output <- renderDataTable({
       names()
@@ -167,9 +170,130 @@ server <- function(input, output) {
       return(datatable(result_data, options = list(dom = 't'), rownames = FALSE))
     })
     
-    
+    output$teamMedal <- renderDataTable({
+      names()
+      
+      if (input$genderTeamBuilder == "Men") {
+        cutoffs <- teamMencutoffs
+      }
+      else{
+        cutoffs <- teamWomenscutoffs
+      }
+      
+      sims <- teamsims(selected_choices$gymnasts, input$genderTeamBuilder)
+      mp <- calculateTeamPodiumPercentages(sims,cutoffs)
+      
+      
+      colnames(mp) <- c("Gymnasts", "Bronze Probability", "Silver Probability", "Gold Probability")
+      
+      return (datatable(mp, options = list(dom = 't'), rownames = FALSE))
+    })
     
   })
+  
+  # Correcting the case of the LastName in the f dataset
+  nfix <- function(dataset) {
+    dataset <- as.data.frame(dataset)
+    dataset$LastName <- sapply(strsplit(tolower(dataset$LastName), " "), function(x) {
+      paste(sapply(x, function(y) {
+        paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+      }), collapse = " ")
+    })
+    
+    # Create FullName in f dataset
+    dataset$FullName <- paste(dataset$FirstName, dataset$LastName, sep=" ")
+    
+    fnd <- select(dataset,1004,3:1003)
+    return (fnd)
+  }
+  
+  process_dataset <- function(nm, dataset) {
+    # Step 1: Filter for 5 names
+    #fix_data
+    
+    fixed_data <- nfix(dataset)
+    
+    filtered_dataset <- fixed_data[fixed_data$FullName %in% nm, ]
+    
+    # Step 2: Sort by average points
+    sorted_dataset <- filtered_dataset %>% 
+      arrange(desc(AverageScore)) %>% 
+      head(3)
+    
+    # Step 3: Aggregate the top 3 scores into one row
+    aggregated_row <- sorted_dataset %>%
+      mutate(across(2:1001, ~ sum(.))) %>% 
+      head(1)
+    
+    return(aggregated_row)
+  }
+  
+  teamsims <- function(gymnasts,gender) {
+    
+    if (gender == "Men") {
+      dataevents <- list(HBm,PHm,PBm,FXm,VTm,SRm) 
+    }
+    else{
+      dataevents <- list(BBw,VTw,UBw,FXw)
+    }
+    
+    
+    #print(nm)
+    pds <- data.frame()
+    
+    for (event_data in dataevents) {
+      e <- process_dataset(gymnasts, event_data)
+      pds <- rbind(pds,e)
+      
+    }
+    
+    # Combine the results into one big dataframe
+    
+    final_result <- pds %>% 
+      mutate(across(2:1001, ~ sum(.))) %>% 
+      head(1)
+    
+    return(final_result)
+    
+  }
+  
+  calculateTeamPodiumPercentages <- function(df, thresholds) {
+    # Number of gymnasts
+    num_gymnasts <- nrow(df)
+    
+    # Initialize an empty dataframe for the results
+    results <- data.frame(
+      firstName = df[, 1],
+      bronze_percentage = numeric(num_gymnasts),
+      silver_percentage = numeric(num_gymnasts),
+      gold_percentage = numeric(num_gymnasts),
+      stringsAsFactors = FALSE
+    )
+    
+    # Iterating over each set of scores
+    for (i in 1:1000) {
+      # Extract the scores for the ith sample and the thresholds
+      sample_scores <- df[, i + 1]
+      gold_threshold <- thresholds[1, i]
+      silver_threshold <- thresholds[2, i]
+      bronze_threshold <- thresholds[3, i]
+      
+      # Count placements based on thresholds
+      results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+      results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+      results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
+    }
+    
+    # Convert counts to percentages
+    results$gold_percentage <- (results$gold_percentage / 10)
+    results$silver_percentage <- (results$silver_percentage / 10)
+    results$bronze_percentage <- (results$bronze_percentage / 10)
+    
+    # Sort the dataframe by gold_percentage in descending order
+    results <- results[order(-results$gold_percentage), ]
+    
+    return(results)
+  }
   
   calcMC <- function(gymnast_name, event_name, gender) {
     # Filter the dataset for the specified gymnast
