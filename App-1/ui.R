@@ -6,6 +6,7 @@ library(htmltools)
 w_topcand <- read.csv("data/expected_medals/f_total_probabilities.csv")
 m_topcand <- read.csv("data/expected_medals/m_total_probabilities.csv")
 gymnast_names <- c(w_topcand$Name, m_topcand$Name)
+gymnast_names <- gsub("Frederick Richard", "Fred Richard", gymnast_names)
 
 ui <- navbarPage(
   

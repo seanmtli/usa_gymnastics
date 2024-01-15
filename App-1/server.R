@@ -186,6 +186,10 @@ server <- function(input, output) {
       colnames(mp) <- c("Gymnasts", "Bronze Probability", "Silver Probability", "Gold Probability")
       mp <- select(mp,"Gold Probability","Silver Probability", "Bronze Probability")
       
+      mp$`Gold Probability` <- sprintf("%.1f%%", mp$`Gold Probability`)
+      mp$`Silver Probability` <- sprintf("%.1f%%", mp$`Silver Probability`)
+      mp$`Bronze Probability` <- sprintf("%.1f%%", mp$`Bronze Probability`)
+      
       return (datatable(mp, options = list(dom = 't'), rownames = FALSE))
     })
     
