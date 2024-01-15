@@ -12,11 +12,11 @@ ui <- navbarPage(
              class = "about-content",
              
              # App Description
-             h2("USA Gymnastics Olympic Selection Tool"),
+             h2("USA Gymnastics Olympic Selection Tool", tags$img(src = "usagymnastics.png", alt = "App Logo", width = 120, height = 75), " "),
              p("Welcome to the USA Gymnastics Olympic Selection Tool for the Paris 2024 Olympics. This tool is designed to assist the USA Gymnastics Olympic Committee in making informed decisions about athlete selection."),
              
              # Placeholder for App Logo/Image
-             img(src = "usagymnastics.png", alt = "App Logo"),
+             
              
              # App Features
              h3("Key Features"),
@@ -36,9 +36,9 @@ ui <- navbarPage(
              p("We were provided with two datasets: Data from competitions leading up to the Tokyo Games in 2020 (2017 to 2021). Data from competitions leading up to the Paris Games in 2024 (2022 to 2023). We only used the 2022 to 2023 data, as the competition format changed between 2021 and 2022."),
              
              
-             h3("Team | Contact Information"),
+             h3("Team | Contact Information | ",  tags$img(src = "dsac_logo.jpg", width = 50, height = 50, alt = "dsac logo")," "),
              p("Our team consists of 3 members: Ben Thorpe, Sean Li, and Chris Tsai. The three of us are all seniors at Duke University studying Statistics and part of the Duke Sports Analytics Club. You can find more information about the Duke Sports Analytics Club at https://dukesportsanalytics.com"),
-             
+            
              # Team Member A
              div(
                class = "team-member",
@@ -76,6 +76,9 @@ ui <- navbarPage(
     sidebarLayout(
     # Sidebar panel for inputs ----
     sidebarPanel(
+      h3("Gymnast Database"),
+      p("This page is a display of the top USA gymnasts based upon expected medals. You may choose to view it by event or consolidated."),
+      p("For example, a row with Simone Biles with 0.715 under Total_BB means that we can expect Simone Biles to have a 71.5% chance of medaling in the Balance Beam individual apparatus."),
       helpText("If a gymnast does not show up, they did not medal in any of our simulations."),
       selectInput("var", 
                   label = "Gender",
@@ -98,6 +101,7 @@ ui <- navbarPage(
   
   ### Team Builder
   tabPanel("Team Builder",
+           p("Welcome to the team builder. This page allows you to enter 5 gymnasts of your choice to build a potential team to represent team USA at the Paris 2024 Olympics. First, type the full names of the gymnasts you want on the team in each of the gymnast text entry boxes. Next, select the events that each gymnast will be participating in. Note that selecting AA means that this athlete will be competing in the individual All-Around competition. After selecting the events, please press Enter Team to view the table with the team and expected medal contributions. "),
            fluidRow(
              column(3,
                      #h2("Full Name"),
@@ -120,13 +124,11 @@ ui <- navbarPage(
                     uiOutput("event_choices_tb3"),
                     uiOutput("event_choices_tb4"),
                     uiOutput("event_choices_tb5"),
-                    actionButton("show_choices", "Show Choices")
+                    actionButton("show_choices", "Build Team")
                     
                     
              ),
              column(3,DTOutput("selected_choices_output"))
-             
-             
              
            )
   )
