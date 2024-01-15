@@ -106,6 +106,7 @@ ui <- navbarPage(
   
   ### Team Builder
   tabPanel("Team Builder",
+           h2("Build Your Own Team!"),
            p("Welcome to the team builder. This page allows you to enter 5 gymnasts of your choice to build a potential team to represent team USA at the Paris 2024 Olympics. First, type the full names of the gymnasts you want on the team in each of the gymnast text entry boxes. Next, select the events that each gymnast will be participating in. Note that selecting AA means that this athlete will be competing in the individual All-Around competition. After selecting the events, please press Enter Team to view the table with the team and expected medal contributions. "),
            fluidRow(
              column(3,

@@ -183,8 +183,8 @@ server <- function(input, output) {
       sims <- teamsims(selected_choices$gymnasts, input$genderTeamBuilder)
       mp <- calculateTeamPodiumPercentages(sims,cutoffs)
       
-      
       colnames(mp) <- c("Gymnasts", "Bronze Probability", "Silver Probability", "Gold Probability")
+      mp <- select(mp,"Gold Probability","Silver Probability", "Bronze Probability")
       
       return (datatable(mp, options = list(dom = 't'), rownames = FALSE))
     })
