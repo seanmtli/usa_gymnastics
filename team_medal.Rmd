@@ -1,0 +1,180 @@
+
+```{r pack}
+library(tidyverse)
+```
+
+
+```{r readdata}
+AAmens <- read.csv("App-1/data/sims/AA_usa_mens_sims.csv")
+AAwomens <- read.csv("App-1/data/sims/AA_usa_womens_sims.csv")
+
+BBw <- read.csv("App-1/data/sims/BB_usa_womens_sims.csv")
+FXw <- read.csv("App-1/data/sims/FX_usa_womens_sims.csv")
+VTw <- read.csv("App-1/data/sims/VT_usa_womens_sims.csv")
+UBw <- read.csv("App-1/data/sims/UB_usa_womens_sims.csv")
+
+HBm <- read.csv("App-1/data/sims/HB_usa_mens_sims.csv")
+PBm <- read.csv("App-1/data/sims/PB_usa_mens_sims.csv")
+PHm <- read.csv("App-1/data/sims/PH_usa_mens_sims.csv")
+FXm <- read.csv("App-1/data/sims/FX_usa_mens_sims.csv")
+SRm <- read.csv("App-1/data/sims/SR_usa_mens_sims.csv")
+VTm <- read.csv("App-1/data/sims/VT_usa_mens_sims.csv")
+```
+
+```{r}
+# Correcting the case of the LastName in the f dataset
+nfix <- function(dataset) {
+  dataset <- as.data.frame(dataset)
+dataset$LastName <- sapply(strsplit(tolower(dataset$LastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+dataset$FullName <- paste(dataset$FirstName, dataset$LastName, sep=" ")
+
+fnd <- select(dataset,1004,3:1003)
+return (fnd)
+}
+```
+
+```{r}
+#nfix(VTw)
+#write.csv(nfix(UBw),"App-1/data/sims/UB_usa_womens_sims.csv")
+```
+
+
+Making new data frame for past womens' team scores
+
+```{r womensteam}
+womens_team_results = data.frame(mean_score = c(167.729,165.530,164.064,163.162,162.997,161.864,159.563,157.496,
+          166.564, 163.363, 160.563, 159.661, 159.463, 157.529, 156.964, 155.863,
+          172.330, 166.529,164.796,164.230,163.638, 161.495,160.563,159.427,
+          171.629, 162.863, 162.396, 161.644, 161.294, 160.262, 159.830, 159.428))
+```
+
+
+
+```{r mensteam}
+mens_team_results = data.frame(mean_score = c(255.584,253.794,252.428,249.461,244.426,244.026,243.028,241.16,
+          257.858, 253.395,247.229, 245.995, 245.692, 244.027, 241.361,232.868,
+          261.726, 260.729, 258.159, 254.578, 251.611, 248.243, 247.038, 246.593,
+          256.634, 256.858, 253.744, 251.994, 248.628, 244.294,243.994,240.660))
+```
+
+
+```{r getmedalcutoffs}
+getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
+  set.seed(123)
+  #distribution <- eventranks$mean_score
+  cutoffs <- matrix(NA, nrow = 3, ncol = num_simulations)
+
+  for (i in 1:num_simulations) {
+    top_three_scores = numeric(0)
+    while (length(unique(top_three_scores))<3){
+      # Sample 24 times from the distribution
+        mean_score <- mean(eventranks$mean_score)
+        sd_score <- sd(eventranks$mean_score)
+        max_cutoff <- max(eventranks$mean_score) + 0.3
+        # Initialize sampled_score
+        sampled_score <- NA
+        simulated_scores <- list()
+        for (j in 1:24){
+          sampled_score <- NA
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+          while (is.na(sampled_score) || sampled_score > max_cutoff) {
+            df <- max(nrow(eventranks) - 1, 1)  # to avoid df being zero
+            sampled_score <- mean_score + rt(1, df) * sd_score
+          }
+        #print(sampled_score)
+        simulated_scores <- append(simulated_scores,sampled_score)
+        }
+    # Take the top 3 scores
+    simulated_scores = as.numeric(simulated_scores)
+    #print(simulated_scores)
+    top_three_scores <- head(sort(simulated_scores, decreasing = TRUE), 3)
+    }
+    # Set the cutoffs for gold, silver, and bronze in the matrix
+
+    cutoffs[, i] <- top_three_scores
+  }
+
+  # Convert the matrix to a data frame
+  cutoffs_df <- as.data.frame(cutoffs)
+  names(cutoffs_df) <- paste0("Simulation_", 1:num_simulations)
+
+  return(cutoffs_df)
+}
+```
+
+```{r}
+teamMencutoffs <- getmedalcutoffs(mens_team_results)
+teamWomenscutoffs <- getmedalcutoffs(womens_team_results)
+```
+
+
+```{r teamsims}
+#filtered for selected gymnasts on all event sims
+teamsims <- function(g1,g2,g3,g4,g5,gender) {
+
+   if (gender == "Men") {
+      dataevents <- list(HBm,PHm,PBm,FXm,VTm,SRm) 
+    }
+    else{
+      dataevents <- list(BBw,VTw,UBw,FXw)
+    }
+  
+  nm <- c(g1, g2, g3, g4, g5)
+  #print(nm)
+  pds <- list()
+
+  for (event_data in dataevents) {
+    e <- process_dataset(nm, event_data)
+    pds <- c(pds,e)
+    #print(pds)
+  }
+  #print(pds)
+  # Combine the results into one big dataframe
+  final_result <- do.call(rbind, pds)
+  return(final_result)
+  
+}
+
+process_dataset <- function(nm, dataset) {
+  # Step 1: Filter for 5 names
+  #fix_data
+  
+  fixed_data <- nfix(dataset)
+  
+  filtered_dataset <- fixed_data[fixed_data$FullName %in% nm, ]
+
+  # Step 2: Sort by average points
+  sorted_dataset <- filtered_dataset %>% 
+    arrange(desc(AverageScore)) %>% 
+    head(3)
+
+  # Step 3: Aggregate the top 3 scores into one row
+  aggregated_row <- sorted_dataset %>%
+    mutate(across(2:1001, ~ sum(.))) %>% 
+    head(1)
+
+  return(aggregated_row)
+}
+
+# for each event, take top 3 athlete average scores ... add them up
+# 3000 sims per event -> 1000 sims of a team score for that event
+# add up across all events --> 1000 sims of a team score total
+# put into the get_podiumPercentages function with the cutoffs
+```
+
+```{r}
+#process_dataset(c("Simone Biles","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln"),VTw)
+hun <- teamsims("Simone Biles","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln", "Women")
+```
+
+```{r}
+process_dataset(c("Simone Biles","Shilese Jones", "Jade Carey", "Skye Blakely", "Kaliya Lincoln"),BBw)
+```
+
+

@@ -299,7 +299,7 @@ calculatePodiumPercentages <- function(df, thresholds) {
 
 ```{r write-percs-example}
 #sims_data <- read_csv("Data/HB_usa_mens_sims.csv")
-#percs <- calculatePodiumPercentages(sims_data, HB_medal_cutoffs)
+#percs <- calculatePodiumPercentages(VTm, VT_m_medal_cutoffs)
 # write.csv(percs, '/home/guest/Case2-BDSM/Data/event_percentages/m_HB.csv', row.names=FALSE)
 ```
 
