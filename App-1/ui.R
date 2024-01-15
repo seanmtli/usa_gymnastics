@@ -76,7 +76,7 @@ ui <- navbarPage(
     sidebarLayout(
     # Sidebar panel for inputs ----
     sidebarPanel(
-      helpText("Help text caption"),
+      helpText("If a gymnast does not show up, they did not medal in any of our simulations."),
       selectInput("var", 
                   label = "Gender",
                   choices = list("Women", "Men"),
@@ -105,11 +105,11 @@ ui <- navbarPage(
                                 label = "Gender",
                                 choices = list("Women", "Men"),
                                 selected = "Women"),
-                    textInput("g1input", h3("All-around Gymnast 1:")),
-                    textInput("g2input", h3("All-around Gymnast 2:")),
-                    textInput("g3input", h3("Specialist Gymnast 3")),
-                    textInput("g4input", h3("Specialist Gymnast 4")),
-                    textInput("g5input", h3("Specialist Gymnast 5")),
+                    textInput("g1input", h3("Gymnast 1")),
+                    textInput("g2input", h3("Gymnast 2")),
+                    textInput("g3input", h3("Gymnast 3")),
+                    textInput("g4input", h3("Gymnast 4")),
+                    textInput("g5input", h3("Gymnast 5")),
                     
              ),
              

@@ -12,7 +12,7 @@ server <- function(input, output) {
   #Reactive to Men's or Women's on Top Candidates Page
   tc_data <- reactive({
     if (input$var == "Women") {
-      w_topcand
+      w_topcand 
     } else {
       m_topcand
     }
@@ -20,7 +20,8 @@ server <- function(input, output) {
   
   #Top Candidates Data Table
   output$individuals <- renderDT({
-    tc_data()   
+    tc_data() %>% filter(rowSums(select(., starts_with("Total")) != 0) > 0)
+      #filter(across(starts_with("Total"), ~. > 0))
   }
   )
   
@@ -36,15 +37,17 @@ server <- function(input, output) {
   ## Reactive to Mens/Womens on Team Builder Page
   events_data2 <- reactive({
     if (input$genderTeamBuilder == "Women") {
-      w_byevent
+      w_byevent #%>% filter(Event!="AA")
     } else {
-      m_byevent
+      m_byevent #%>% filter(Event!="AA")
     }
   })
   
   #Event Table
   output$byevent <-renderDT({
-    events_data() %>% filter(Event == input$eventc) %>% arrange(desc(AverageScore))
+    events_data() %>% filter(Event == input$eventc) %>% 
+      filter(rowSums(select(., ends_with("Percentage")) != 0) > 0) %>% 
+      arrange(desc(AverageScore))
   })
   
   #selector for events on By Event Page in Gymnasts Tab
