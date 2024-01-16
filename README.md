@@ -6,7 +6,7 @@ USA Men’s and Women’s artistic gymnastics teams, optimizing for total medal 
 
 We also built an interactive web app which can be found here: https://seanmtli.shinyapps.io/usa_gymnastics2024/
 
-An explanation of the web app can be found in this short video: https://www.loom.com/share/e1c7ff776087475ea694b9e7d9e828b6?sid=4c7e5b9a-b802-4624-8487-5882247eb101
+An explanation of the web app can be found in this short video: [https://www.loom.com/share/e1c7ff776087475ea694b9e7d9e828b6?sid=4c7e5b9a-b802-4624-8487-5882247eb101](https://www.loom.com/share/e1c7ff776087475ea694b9e7d9e828b6?sid=2ccbe893-af38-48e5-a6a9-cad11ff2be6a)
 
 ## Blue Devil Statistics Magicians | Team Members: Benjamin Thorpe, Sean Li, Chris Tsai
 The three of us are all seniors at Duke University studying Statistics and part of the Duke Sports Analytics Club. You can find more information about the Duke Sports Analytics Club at https://dukesportsanalytics.com Feel free to reach out with questions or comments to Sean Li at sean.li571@duke.edu 
