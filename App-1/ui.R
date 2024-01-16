@@ -34,7 +34,18 @@ ui <- navbarPage(
              ),
              
             h3("How it works"),
-            p("The full details of our methodology can be found in our report, which can be found at https://github.com/sta440-fa23/Case2-BlueDevilSM"),
+            p("Our methodology was a three step process consisting of weighting, simulating, sampling. We first weight each individual gymnast’s scores from their competitions since 2022 based on the recency of the competition as well as if the score came from a qualifying or final round performance to get an expected score on each apparatus."),
+            p("Then, we simulated the following process 1000 times: "),
+            tags$ul(
+              tags$li("Create a distribution for the top 24 gymnasts based on past scores for each apparatus"),
+              tags$li("Sample from the t-distribution created from these scores"),
+              tags$li("The top 3 sampled scores in each simulation correspond to gold, silver, and bronze medal thesholds scores"),
+              tags$li("Create a t-distribution of an individual USA gymnast for each apparatus, obtaining a mean and variance"),
+              tags$li("Sample from the individual gymnast t-distribution"),
+              tags$li("If that gymnast’s score was above the Gold medal threshold they received Gold for the given simulation, if above Silver, but below Gold, a Silver, and so on")
+            ),
+            p("Adding up the amount of times a gymnast received a medal and dividing it by the number of simulations (1000) gave us expected medal probabilities."),
+            p("The full details of our methodology can be found in our report, which can be found at", tags$a(href="https://github.com/sta440-fa23/Case2-BlueDevilSM", "https://github.com/sta440-fa23/Case2-BlueDevilSM"), " " ),
              
              # Source Data Information
              h3("Source Data"),
@@ -43,36 +54,7 @@ ui <- navbarPage(
              
              
              h3("Team | Contact Information | ",  tags$img(src = "dsac_logo.jpg", width = 50, height = 50, alt = "dsac logo")," "),
-             p("Our team consists of 3 members: Ben Thorpe, Sean Li, and Chris Tsai. The three of us are all seniors at Duke University studying Statistics and part of the Duke Sports Analytics Club. You can find more information about the Duke Sports Analytics Club at https://dukesportsanalytics.com"),
-            
-             # Team Member A
-             div(
-               class = "team-member",
-               h4("Ben Thorpe"),
-               img(src = "path/to/team_member_a.jpg", alt = "Team Member A Photo", width = 100),
-               p("Bio: Team Member A is an expert in gymnastics analytics with a background in statistics."),
-               p("Contact: benjamin.thorpe@duke.edu")
-             ),
-             
-             # Team Member B
-             div(
-               class = "team-member",
-               h4("Sean Li"),
-               img(src = "path/to/team_member_b.jpg", alt = "Team Member B Photo", width = 100),
-               p("Bio: Team Member B is a web development specialist with a passion for sports analytics."),
-               p("Contact: sean.li571@duke.edu")
-             ),
-             
-             # Team Member C
-             div(
-               class = "team-member",
-               h4("Chris Tsai"),
-               img(src = "path/to/team_member_c.jpg", alt = "Team Member C Photo", width = 100),
-               p("Bio: Team Member C is a data visualization expert with extensive experience in gymnastics."),
-               p("Contact: christopher.tsai@duke.edu")
-             )
-             
-             
+             p("Our team consists of 3 members: Ben Thorpe, Sean Li, and Chris Tsai. The three of us are all seniors at Duke University studying Statistics and part of the Duke Sports Analytics Club. You can find more information about the Duke Sports Analytics Club at", tags$a(href="https://dukesportsanalytics.com", "https://dukesportsanalytics.com")),
         
            )
   ),
@@ -143,7 +125,8 @@ ui <- navbarPage(
              column(3, h2("Individual Expected Medal Contributions"),
                     DTOutput("selected_choices_output"),
                     h2("Team Medal Probabilities"),
-                    DTOutput("teamMedal"))
+                    DTOutput("teamMedal")),
+             column(3, h2("Total Medals"))
              
            )
   )

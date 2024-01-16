@@ -5,7 +5,7 @@ account: seanmtli
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 10926834
-bundleId: 8144524
+bundleId: 8147462
 url: https://seanmtli.shinyapps.io/usa_gymnastics2024/
 version: 1
 asMultiple: FALSE
