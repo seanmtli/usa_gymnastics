@@ -22,6 +22,7 @@ The three of us are all seniors at Duke University studying Statistics and part 
     - data_2022_2023: given data on gymnastic meet results from 2022-2023
     - event_percentages/: a per gender per event folder of medal probabilities
     - expected_medals/: consolidated and transformed datasets of medal probabilities for use in web app
+    - team_cutoffs/: folder for generated team medal cutoffs
 - REPORT.Rmd: code and writeup that generates our final report
 - REPORT.PDF: main report in PDF form
 - Optimization.Rmd: creation of datasets to use in web app + an attempt at using optimization code methods
