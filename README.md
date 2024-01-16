@@ -6,6 +6,8 @@ USA Men’s and Women’s artistic gymnastics teams, optimizing for total medal 
 
 We also built an interactive web app which can be found here: https://seanmtli.shinyapps.io/usa_gymnastics2024/
 
+An explanation of the web app can be found in this short video: [https://www.loom.com/share/e1c7ff776087475ea694b9e7d9e828b6?sid=4c7e5b9a-b802-4624-8487-5882247eb101](https://www.loom.com/share/e1c7ff776087475ea694b9e7d9e828b6?sid=2ccbe893-af38-48e5-a6a9-cad11ff2be6a)
+
 ## Blue Devil Statistics Magicians | Team Members: Benjamin Thorpe, Sean Li, Chris Tsai
 The three of us are all seniors at Duke University studying Statistics and part of the Duke Sports Analytics Club. You can find more information about the Duke Sports Analytics Club at https://dukesportsanalytics.com Feel free to reach out with questions or comments to Sean Li at sean.li571@duke.edu 
 
@@ -14,12 +16,15 @@ The three of us are all seniors at Duke University studying Statistics and part 
 - App-1/
   - ui.R: file that generates the UI for our web app
   - server.R: server file for web app backend
+  - rsconnect/: files for publishing web app onto shinyapps.io
+  - www/: folder for images in web app
   - data/
     - sims/: folder of simulations for all events for USA gymnasts
     - data_2017_2021: given data on gymnastic meet results from 2017-2021
     - data_2022_2023: given data on gymnastic meet results from 2022-2023
     - event_percentages/: a per gender per event folder of medal probabilities
     - expected_medals/: consolidated and transformed datasets of medal probabilities for use in web app
+    - team_cutoffs/: folder for generated team medal cutoffs
 - REPORT.Rmd: code and writeup that generates our final report
 - REPORT.PDF: main report in PDF form
 - Optimization.Rmd: creation of datasets to use in web app + an attempt at using optimization code methods
