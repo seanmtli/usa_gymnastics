@@ -113,6 +113,7 @@ ui <- navbarPage(
              
              column(3,
                     h2("Individual Events"),
+                    p("Please select 2 athletes for all-around and a maximum of two athletes for any individual event."),
                     uiOutput("event_choices_tb1"),
                     uiOutput("event_choices_tb2"),
                     uiOutput("event_choices_tb3"),
@@ -126,7 +127,7 @@ ui <- navbarPage(
                     DTOutput("selected_choices_output"),
                     h2("Team Medal Probabilities"),
                     DTOutput("teamMedal")),
-             column(3, h2("Total Medals"))
+             column(3, h2("Total Medals"), textOutput("totalM"), helpText("Note: This is assuming that the USA team qualifies to the final round in all events"))
              
            )
   )

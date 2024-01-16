@@ -147,6 +147,9 @@ server <- function(input, output) {
       total_medal_contributions[[gymnast_name]] <- total_medal_contribution
     }
     
+    # Add this reactive value to store the 'mp' results
+    teamMedalProbabilities <- reactiveVal()
+    indmedals <- reactiveVal()
     
     
     output$selected_choices_output <- renderDataTable({
@@ -167,6 +170,8 @@ server <- function(input, output) {
       colnames(result_data) <- c("Gymnast", "Total Medal Contribution")
       
       # Display the data table
+      indmedals(result_data)
+      
       return(datatable(result_data, options = list(dom = 't'), rownames = FALSE))
     })
     
@@ -190,7 +195,26 @@ server <- function(input, output) {
       mp$`Silver Probability` <- sprintf("%.1f%%", mp$`Silver Probability`)
       mp$`Bronze Probability` <- sprintf("%.1f%%", mp$`Bronze Probability`)
       
+      # Save 'mp' to the reactive value
+      teamMedalProbabilities(mp)
+      
       return (datatable(mp, options = list(dom = 't'), rownames = FALSE))
+    })
+    
+    output$totalM <- renderText({
+      # Retrieve 'mp' from the reactive value
+      mp <- teamMedalProbabilities()
+      result_data <- indmedals()
+      
+      
+      
+      # Calculate total
+      total = as.numeric(sub("%", "", mp$`Gold Probability`[1]))/100 +
+        as.numeric(sub("%", "", mp$`Silver Probability`[1]))/100 +
+        as.numeric(sub("%", "", mp$`Bronze Probability`[1]))/100 +
+        as.numeric(result_data$`Total Medal Contribution`[6])
+      
+      paste0(total, " projected medals combining individual medals and team medal")
     })
     
   })
