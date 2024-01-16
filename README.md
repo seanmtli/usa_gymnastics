@@ -14,6 +14,8 @@ The three of us are all seniors at Duke University studying Statistics and part 
 - App-1/
   - ui.R: file that generates the UI for our web app
   - server.R: server file for web app backend
+  - rsconnect/: files for publishing web app onto shinyapps.io
+  - www/: folder for images in web app
   - data/
     - sims/: folder of simulations for all events for USA gymnasts
     - data_2017_2021: given data on gymnastic meet results from 2017-2021
