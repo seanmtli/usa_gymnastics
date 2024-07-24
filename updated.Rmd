@@ -1,0 +1,231 @@
+---
+title: "updated"
+output: pdf_document
+date: "2024-07-24"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+```{r packages}
+library(readr)
+library(tidyverse)
+library(dplyr)
+library(stringr)
+library(lubridate)
+```
+
+
+```{r loadingdata}
+# using data from 2017-2024
+
+newdata <- read.csv("gym_data_22_24.csv")
+data_2017_2021 <- read_csv("App-1/data/data_2017_2021.csv")
+rawdata <- rbind(newdata, data_2017_2021)
+```
+
+
+```{r cleaning function}
+
+data_cleaning <- function(data) {
+  #DO NOT CHANGE ORDER
+  
+  data$Apparatus[data$Apparatus == "VT2"] <- "VT"
+  data$Apparatus[data$Apparatus == "VT1"] <- "VT"
+  data$Apparatus[data$Apparatus == "UE"] <- "UB"
+  
+  data$Penalty[is.na(data$Penalty)] <- 0
+  
+  #Girls filtering for middle name
+  data$FirstName[data$FirstName == "Joscelyn Michelle"] <- "Joscelyn"
+  data$FirstName[data$FirstName == "Nola Rhianne"] <- "Nola"
+  
+  #Guys filtering for middle name
+  data$FirstName[data$FirstName == "Taylor Troy"] <- "Taylor"
+  data$FirstName[data$FirstName == "Joshua Andrew"] <- "Joshua"
+  data$FirstName[data$FirstName == "Yul Kyung Tae"] <- "Yul"
+  data$FirstName[data$FirstName == "Curran Michael"] <- "Curran"
+  data$FirstName[data$FirstName == "Frederick Nathaniel"] <- "Frederick"
+  data$FirstName[data$FirstName == "Ian Hunter"] <- "Ian"
+  data$FirstName[data$FirstName == "Shane Michael"] <- "Shane"
+  data$FirstName[data$FirstName == "Khoi Alexander"] <- "Khoi"
+  
+  data$FirstName[data$FirstName == "Yunus Emre"] <- "Yunus"
+  
+  data$FirstName[data$FirstName == "Yuan-Hsi"] <- "Yuan Hsi"
+  
+  data$FirstName[data$FirstName == "Yu-Jan"] <- "Yu Jan"
+  
+  data$LastName[data$LastName == "VILLAVERDE MEDEROS"] <- "VILLAVERDE"
+  
+  data$LastName[data$LastName == "VALENZUELA ASTUDILLO"] <- "VALENZUELA"
+  
+  data$FirstName[data$FirstName == "Yiseth Eliana"] <- "Yiseth"
+  data$FirstName[data$FirstName == "Yi-Chen"] <- "Yi Chen"
+  data$FirstName[data$FirstName == "Yi-Chun"] <- "Yi Chun"
+  
+  data$FirstName[data$FirstName == "Yefferson Gregorio"] <- "Yefferson"
+  data$LastName[data$LastName == "ANTON YEGUEZ"] <- "ANTON"
+  
+  data$LastName[data$LastName == "ANTON YEGUEZ"] <- "ANTON"
+  
+  data$FirstName[data$FirstName == "Wout Johan Alexander"] <- "Wout"
+  
+  data$FirstName[data$FirstName == "Wilfry Manuel"] <- "Wilfry"
+  
+  data$FirstName[data$FirstName == "Wei-Sheng"] <- "Wei Sheng"
+  
+  data$FirstName[(data$Competition == "BIRMINGHAM 2022 Commonwealth Games") &
+                             (is.na(data$LastName))] <- "Kate"
+  
+  data$LastName[(data$Competition == "BIRMINGHAM 2022 Commonwealth Games") &
+                            (is.na(data$LastName))] <- "MCDONALD"
+  
+  data$FirstName[data$LastName == "SOUZA BITENCOU"] <- "Lucas"
+  data$LastName[data$LastName == "SOUZA BITENCOU"] <- "BITENCOURT"
+  
+  data$LastName[data$LastName == "DE JESUS DOS SANTOS"] <- "JESUS SANTOS"
+  
+  data$FirstName[data$LastName == "JESUS SANT"] <- "Melanie"
+  data$LastName[data$LastName == "JESUS SANT"] <- "JESUS SANTOS"
+  
+  data$LastName[data$LastName == "ELPITIYA BADALGE DONA"] <- "GEHANI"
+  data$FirstName[data$FirstName == "Milka Gehani"] <- "Milka"
+  
+  data$FirstName[data$LastName == "ELPITIYA BADALG D"] <- "Milka"
+  
+  data$LastName[data$LastName == "ELPITIYA BADALG D"] <- "GEHANI"
+  
+  data$FirstName[(data$Competition == "2022 51st FIG Artistic Gymnastics World Championship") &
+                             (is.na(data$LastName))] <- "Kate"
+  
+  data$LastName[(data$Competition == "2022 51st FIG Artistic Gymnastics World Championship") &
+                            (is.na(data$LastName))] <- "MCDONALD"
+  
+  data$FirstName[(data$Competition == "2023 Varna World Challenge Cup") &
+                             (is.na(data$LastName))] <- "Daria"
+  
+  data$LastName[(data$Competition == "2023 Varna World Challenge Cup") &
+                            (is.na(data$LastName))] <- "HARTMANN"
+  
+  data$FirstName[data$LastName == "ABIYURAFI"] <- "Abiyu"
+  data$LastName[data$LastName == "ABIYURAFI"] <- "Rafi"
+  
+  data$FirstName[data$LastName == "Frederick Nathaniel"] <- "Frederick"
+  data$FirstName[data$FirstName == "Fred"] <- "FREDERICK"
+  
+  
+  ##Tidy for plots ... #MEN
+  data$LastName[data$LastName == "RICHARD"] <- "Richard"
+  data$LastName[data$LastName == "MALONE"] <- "Malone"
+  data$LastName[data$LastName == "JUDA"] <- "Juda"
+  data$LastName[data$LastName == "PHILLIPS"] <- "Phillips"
+  data$LastName[data$LastName == "WALKER"] <- "Walker"
+  data$LastName[data$LastName == "HONG"] <- "Hong"
+  data$LastName[data$LastName == "MOLDAUER"] <- "Moldauer"
+  data$LastName[data$LastName == "YOUNG"] <- "Young"
+  data$LastName[data$LastName == "MCCOOL"] <- "McCool"
+  data$LastName[data$LastName == "NEDOROSCIK"] <- "Nedoroscik"
+  data$LastName[data$LastName == "SKIRKEY"] <- "Skirkey"
+  data$LastName[data$LastName == "WHITTENBURG"] <- "Whittenburg"
+  data$LastName[data$LastName == "DIAB"] <- "Diab"
+  data$LastName[data$LastName == "LOOS"] <- "Loos"
+  data$LastName[data$LastName == "SUN"] <- "Sun"
+  data$LastName[data$LastName == "JAROH"] <- "Jaroh"
+  
+  #WOMEN
+  data$LastName[data$LastName == "BILES"] <- "Biles"
+  data$LastName[data$LastName == "SUMANASEKERA"] <- "Sumanasekera"
+  data$LastName[data$LastName == "BLAKELY"] <- "Blakely"
+  data$LastName[data$LastName == "JONES"] <- "Jones"
+  data$LastName[data$LastName == "WONG"] <- "Wong"
+  data$LastName[data$LastName == "CHILES"] <- "Chiles"
+  data$LastName[data$LastName == "CAREY"] <- "Carey"
+  data$LastName[data$LastName == "DICELLO"] <- "DiCello"
+  data$LastName[data$LastName == "LEE"] <- "Lee"
+  data$LastName[data$LastName == "ROBERSON"] <- "Roberson"
+  
+  data$Apparatus[data$Apparatus == "VT2"] <- "VT"
+  data$Apparatus[data$Apparatus == "VT1"] <- "VT"
+  
+  # data cleaning
+  extract_second_date <- function(date_string) {
+  parts <- str_extract_all(date_string, "\\d{1,2}\\s[A-Za-z]+\\s\\d{4}")[[1]]
+  if (length(parts) == 2) {
+    # If there are two dates, return the second one
+    return(parts[2])
+  } else if (length(parts) == 1) {
+    # If there is only one date, return it
+    return(parts[1])
+  } else {
+    return(NA)
+  }
+}
+
+# Step 2: Apply the function to the Date column and convert to Date objects
+data <- data %>%
+  mutate(
+    SecondDateStr = sapply(Date, extract_second_date),
+    SecondDate = dmy(SecondDateStr)
+  )
+
+# Define the end date
+end_date <- dmy("27-07-2024")
+
+# Calculate the number of days from the SecondDate to the end date
+data <- data %>%
+  mutate(
+    DaysUntil2024 = as.integer(end_date - SecondDate)
+  )
+  
+  
+  
+}
+
+```
+
+```{r cleaning}
+cleaned_data <- data_cleaning(rawdata)
+```
+
+### Simulations
+
+```{r sampling_dist}
+
+create_sampling_dist <- function(data){
+  final_rows_full <- data[grep("final|Final", data$Round), ]
+  less_than_180_rows <- data[data$DaysUntil2024 < 180, ]
+  between_180_540_rows <- data[data$DaysUntil2024 >= 180 &
+                                 data$DaysUntil2024 <= 540, ]
+  
+  sampling_data <- rbind(
+    data,
+    final_rows_full,
+    less_than_180_rows,
+    less_than_180_rows,
+    between_180_540_rows
+  )
+  return (sampling_data)
+
+
+}
+sampling_data <- create_sampling_dist(cleaned_data)
+
+#USA_mens_roster <- [""]
+
+sampling_usa_data_f <-  sampling_data |>
+  filter(`Country` == "USA") |>
+  filter(Gender == "w")
+
+sampling_usa_data_m <-  sampling_data |>
+  filter(`Country` == "USA") |>
+  filter(Gender == "m")
+
+
+
+```
+
+
