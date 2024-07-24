@@ -17,7 +17,7 @@ library(dplyr)
 library(stringr)
 library(lubridate)
 ```
-
+### Cleaning and Data Prep
 
 ```{r loadingdata}
 # using data from 2017-2024
@@ -116,7 +116,8 @@ data_cleaning <- function(data) {
   
   data$FirstName[data$LastName == "Frederick Nathaniel"] <- "Frederick"
   data$FirstName[data$FirstName == "Fred"] <- "FREDERICK"
-  
+  data$FirstName[data$FirstName == "Viktoriia"] <- "Viktoria"
+  data$LastName[data$LastName == "D AMATO"] <- "D'AMATO"
   
   ##Tidy for plots ... #MEN
   data$LastName[data$LastName == "RICHARD"] <- "Richard"
@@ -214,7 +215,8 @@ create_sampling_dist <- function(data){
 }
 sampling_data <- create_sampling_dist(cleaned_data)
 
-#USA_mens_roster <- [""]
+usa_mens_roster <- c("Asher Hong", "Paul Juda", "Brody Malone","Stephen Nedoroscik", "Fred Richard")
+usa_womens_roster <- c("Simone Biles", "Jade Carey", "Jordan Chiles", "Sunisa Lee", "Hezly Rivera")
 
 sampling_usa_data_f <-  sampling_data |>
   filter(`Country` == "USA") |>
@@ -225,7 +227,376 @@ sampling_usa_data_m <-  sampling_data |>
   filter(Gender == "m")
 
 
+```
+
+```{r simulate func}
+simulate_gymnastics_event <- function(event_name, gender, nsimulation) {
+  set.seed(123)
+
+  # Select the appropriate dataframe based on gender
+  if (gender == "f") {
+    gymnast_data <- sampling_usa_data_f
+  } else if (gender == "m") {
+    gymnast_data <- sampling_usa_data_m
+  } else {
+    stop("Invalid gender. Use 'f' for female or 'm' for male.")
+  }
+
+  # Identify unique gymnasts
+  unique_gymnasts <- unique(gymnast_data[, c("FirstName", "LastName")])
+
+  # Create a new dataframe to store sampled scores
+  n_iterations_data <- data.frame(
+    FirstName = character(),
+    LastName = character()
+  )
+
+  for (n in 1:nsimulation) {
+    sampled_scores_data <- data.frame(
+      FirstName = character(),
+      LastName = character(),
+      stringsAsFactors = FALSE
+    )
+
+    for (i in 1:nrow(unique_gymnasts)) {
+      # Extract the current gymnast's information
+      current_gymnast <- unique_gymnasts[i, ]
+
+      # Subset the data for the current gymnast
+      subset_data <- gymnast_data[
+        gymnast_data$FirstName == current_gymnast$FirstName &
+        gymnast_data$LastName == current_gymnast$LastName &
+        gymnast_data$Apparatus == event_name,
+      ]
+
+      # Check if the gymnast has at least 5 rows of data
+      if (nrow(subset_data) < 5) {
+        next  # Skip to the next gymnast
+      }
+
+      if (nrow(subset_data) == 0) {
+        # If the subset is empty, set the sampled value to 0
+        sampled_score <- 0
+      } else {
+        # Calculate mean and standard deviation
+        mean_score <- mean(subset_data$Score)
+        sd_score <- sd(subset_data$Score)
+        max_cutoff <- max(subset_data$Score) + 0.3
+
+        # Initialize sampled_score
+        sampled_score <- NA
+
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+        while (is.na(sampled_score) || sampled_score > max_cutoff) {
+          df <- max(nrow(subset_data) - 1, 1)  # to avoid df being zero
+          sampled_score <- mean_score + rt(1, df) * sd_score
+        }
+      }
+
+      # Create a data frame for the current gymnast's sampled scores
+      current_data <- data.frame(
+        FirstName = current_gymnast$FirstName,
+        LastName = current_gymnast$LastName,
+        Score = sampled_score,
+        stringsAsFactors = FALSE
+      )
+
+      # Append the current data to the overall sampled_scores_data dataframe
+      sampled_scores_data <- rbind(sampled_scores_data, current_data)
+    }
+
+    # Combine the scores into n_iterations_data
+    if (n == 1) {
+    n_iterations_data <- sampled_scores_data
+    } else {
+    n_iterations_data <- cbind(n_iterations_data, sampled_scores_data$Score)
+    colnames(n_iterations_data)[ncol(n_iterations_data)] <- paste("Score_", n, sep = "")
+  }
+
+  }
+    # add an average scores across sims for each athlete
+    columns_to_average <- n_iterations_data[, -(1:2)]
+
+    # Calculate the row-wise mean for the selected columns
+    n_iterations_data$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+    #final_average_df <- n_iterations_data[, c(1, 2, ncol(n_iterations_data))]
+    #final_average_df = final_average_df[order(-final_average_df$AverageScore), ]
+
+  return(n_iterations_data)
+}
+```
+
+
+```{r womens sims}
+# List of women's events
+women_events <- c("BB", "UB", "FX", "VT")
+
+# Number of simulations
+nsimulation <- 1000
+
+# Loop over women's events
+for (event_name in women_events) {
+  # Generate dataframe name
+  dataframe_name <- paste0(event_name, "_usa_womens_sims")
+
+  # Run the function for the specific event and save the results
+  tempsims <- assign(dataframe_name, simulate_gymnastics_event(event_name, "f", nsimulation))
+  path <- paste0("App-1/data/07_24_2024_sims/",dataframe_name,".csv")
+  write.csv(tempsims, path, row.names = FALSE)
+}
 
 ```
 
+
+
+
+```{r mens sims}
+# List of men's events
+men_events <- c("PB", "HB", "PH", "FX", "SR", "VT")
+
+# Number of simulations
+nsimulation <- 1000
+
+# Loop over men's events
+for (event_name in men_events) {
+  # Generate dataframe name
+  dataframe_name <- paste0(event_name, "_usa_mens_sims")
+
+  # Run the function for the specific event and save the results
+  tempsims <- assign(dataframe_name, simulate_gymnastics_event(event_name, "m", nsimulation))
+  path <- paste0("App-1/data/07_24_2024_sims/",dataframe_name,".csv")
+  write.csv(tempsims, path, row.names = FALSE)
+}
+
+```
+
+
+
+### Medaling 
+
+
+
+```{r medal-cutoffs function}
+## sample 24 times from top 24 athletes mean scores in each apparatus to simulate one "olympics"
+## take top 3 scores and those are cutoffs for gold/silver/bronze respectively
+# Returns data frame with three rows (gold, silver, bronze) and a column for each simulation
+getmedalcutoffs <- function(eventranks, num_simulations = 1000) {
+  set.seed(123)
+  #distribution <- eventranks$mean_score
+  cutoffs <- matrix(NA, nrow = 3, ncol = num_simulations)
+
+  for (i in 1:num_simulations) {
+    top_three_scores = numeric(0)
+    while (length(unique(top_three_scores))<3){
+      # Sample 24 times from the distribution
+        mean_score <- mean(eventranks$mean_score)
+        sd_score <- sd(eventranks$mean_score)
+        max_cutoff <- max(eventranks$mean_score) + 0.3
+        # Initialize sampled_score
+        sampled_score <- NA
+        simulated_scores <- list()
+        for (j in 1:24){
+          sampled_score <- NA
+        # Sample from the t-distribution until the score is less than or equal to max_cutoff
+          while (is.na(sampled_score) || sampled_score > max_cutoff) {
+            df <- max(nrow(eventranks) - 1, 1)  # to avoid df being zero
+            sampled_score <- mean_score + rt(1, df) * sd_score
+          }
+        #print(sampled_score)
+        simulated_scores <- append(simulated_scores,sampled_score)
+        }
+    # Take the top 3 scores
+    simulated_scores = as.numeric(simulated_scores)
+    #print(simulated_scores)
+    top_three_scores <- head(sort(simulated_scores, decreasing = TRUE), 3)
+    }
+    # Set the cutoffs for gold, silver, and bronze in the matrix
+
+    cutoffs[, i] <- top_three_scores
+  }
+
+  # Convert the matrix to a data frame
+  cutoffs_df <- as.data.frame(cutoffs)
+  names(cutoffs_df) <- paste0("Simulation_", 1:num_simulations)
+
+  return(cutoffs_df)
+}
+```
+
+### Event Rankings
+
+```{r rankings}
+
+VT_ranks_f <- cleaned_data |>
+  filter(Gender == "w") |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+BB_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "BB", Gender == "w", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+UB_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "UB", Gender == "w", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks_f <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX", Gender == "w", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+#----------------------------------------------------------
+
+VT_ranks_m <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "VT", Gender == "m", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+SR_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "SR", Gender == "m", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PB_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PB", Gender == "m", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+FX_ranks_m <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "FX", Gender == "m", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+PH_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "PH", Gender == "m", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+HB_ranks <- cleaned_data |>
+  group_by(LastName, FirstName, Country, Apparatus) |>
+  filter(Apparatus == "HB", n()>=3) |>
+  summarise(mean_score = mean(Score),
+            sd_score = sd(Score)) |>
+  arrange(desc(mean_score)) |>
+  head(24)
+
+```
+
+```{r get-cutoffs}
+BB_medal_cutoffs_w <- getmedalcutoffs(BB_ranks)
+FX_medal_cutoffs_w <- getmedalcutoffs(FX_ranks_f)
+UB_medal_cutoffs_w <- getmedalcutoffs(UB_ranks)
+VT_medal_cutoffs_w <- getmedalcutoffs(VT_ranks_f)
+
+FX_medal_cutoffs_m <- getmedalcutoffs(FX_ranks_m)
+SR_medal_cutoffs_m <- getmedalcutoffs(SR_ranks)
+HB_medal_cutoffs_m <- getmedalcutoffs(HB_ranks)
+PH_medal_cutoffs_m <- getmedalcutoffs(PH_ranks)
+VT_medal_cutoffs_m <- getmedalcutoffs(VT_ranks_m)
+PB_medal_cutoffs_m <- getmedalcutoffs(PB_ranks)
+
+topAAmen <- cleaned_data %>% 
+  filter(Gender == "m", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  filter(n()<7) %>% 
+  summarize(AAtotal = sum(Score))
+
+topAAwomen <- cleaned_data %>% 
+  filter(Gender == "w", Round == "AAfinal") %>% 
+  group_by(LastName, FirstName, Competition, Country) %>% 
+  filter(n()<5) %>% 
+  summarize(AAtotal = sum(Score))
+
+top24AAmen <- topAAmen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
+top24AAwomen <- topAAwomen %>% 
+  group_by(LastName,FirstName,Country) %>% 
+  summarize(mean_score = mean(AAtotal)) %>% 
+  arrange(desc(mean_score)) %>% 
+  head(24)
+
+allroundmen_cutoffs <-getmedalcutoffs(top24AAmen)
+allroudwomen_cutoffs <- getmedalcutoffs(top24AAwomen)
+```
+
+```{r get-model-probs-func}
+calculatePodiumPercentages <- function(df, thresholds) {
+  # Number of gymnasts
+  num_gymnasts <- nrow(df)
+  
+  # Initialize an empty dataframe for the results
+  results <- data.frame(
+    firstName = df[, 1],
+    lastName = df[, 2],
+    bronze_percentage = numeric(num_gymnasts),
+    silver_percentage = numeric(num_gymnasts),
+    gold_percentage = numeric(num_gymnasts),
+    stringsAsFactors = FALSE
+  )
+  
+  # Iterating over each set of scores
+  for (i in 1:1000) {
+    # Extract the scores for the ith sample and the thresholds
+    sample_scores <- df[, i + 2]
+    gold_threshold <- thresholds[1, i]
+    silver_threshold <- thresholds[2, i]
+    bronze_threshold <- thresholds[3, i]
+
+    # Count placements based on thresholds
+    results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+    results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+    results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
+  }
+
+  # Convert counts to percentages
+  results$gold_percentage <- (results$gold_percentage / 1000)
+  results$silver_percentage <- (results$silver_percentage / 1000)
+  results$bronze_percentage <- (results$bronze_percentage / 1000)
+
+  # Sort the dataframe by gold_percentage in descending order
+  results <- results[order(-results$gold_percentage), ]
+  
+  return(results)
+}
+```
+
+```{r write-percs-example}
+sims_data <- read_csv("App-1/data/07_24_2024_sims/VT_usa_womens_sims.csv")
+percs <- calculatePodiumPercentages(sims_data, VT_medal_cutoffs_w)
+write.csv(percs, 'App-1/data/07_24_2024_sims/w_VT_medalpercentages.csv', row.names=FALSE)
+```
 
