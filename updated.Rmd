@@ -730,7 +730,7 @@ condensed_data <- data.frame(matrix(NA, nrow = nrow(original_data), ncol = 1000)
 # Loop through each group of 1000 columns
 for (i in 1:1001) {
   # Identify the columns in the current group
-  current_group_columns <- c(i + 1000,i+2000,i+3000,i+4000,i+5000)
+  current_group_columns <- c(i, i + 1000,i+2000,i+3000,i+4000,i+5000)
   #print(current_group_columns)
   # Sum the values across the columns in the current group
   condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
@@ -742,7 +742,7 @@ colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
 # Print or use the condensed dataframe as needed
 combinedfinalAA_m <- cbind(names,condensed_data)
 
-#write.csv(combinedfinalAA_m, "App-1/data/07_24_2024_sims/AA_usa_mens_sims.csv", row.names = FALSE)
+write.csv(combinedfinalAA_m, "App-1/data/07_24_2024_sims/AA_usa_mens_sims.csv", row.names = FALSE)
 ```
 
 ```{r load-data}
@@ -936,4 +936,135 @@ usa_mens_avs$BronzePercentage <- mapply(get_event_percentage, usa_mens_avs$FullN
 
 write.csv(usa_mens_avs, "App-1/data/07_24_2024_sims/usa_mens_avs.csv")
 ```
+
+
+### Teams Medaling
+
+```{r}
+teamMencutoffs <- read.csv("App-1/data/team_cutoffs/team_men_cutoffs.csv")
+teamWomenscutoffs <- read.csv("App-1/data/team_cutoffs/team_women_cutoffs.csv")
+```
+
+```{r}
+calculateTeamPodiumPercentages <- function(df, thresholds) {
+    # Number of gymnasts
+    num_gymnasts <- nrow(df)
+    
+    # Initialize an empty dataframe for the results
+    results <- data.frame(
+      firstName = df[, 1],
+      bronze_percentage = numeric(num_gymnasts),
+      silver_percentage = numeric(num_gymnasts),
+      gold_percentage = numeric(num_gymnasts),
+      stringsAsFactors = FALSE
+    )
+    
+    # Iterating over each set of scores
+    for (i in 1:1000) {
+      # Extract the scores for the ith sample and the thresholds
+      sample_scores <- df[, i + 1]
+      gold_threshold <- thresholds[1, i]
+      silver_threshold <- thresholds[2, i]
+      bronze_threshold <- thresholds[3, i]
+      
+      # Count placements based on thresholds
+      results$gold_percentage <- results$gold_percentage + (sample_scores >= gold_threshold)
+      results$silver_percentage <- results$silver_percentage + (sample_scores >= silver_threshold & sample_scores < gold_threshold)
+      results$bronze_percentage <- results$bronze_percentage + (sample_scores >= bronze_threshold & sample_scores < silver_threshold)
+    }
+    
+    # Convert counts to percentages
+    results$gold_percentage <- (results$gold_percentage / 10)
+    results$silver_percentage <- (results$silver_percentage / 10)
+    results$bronze_percentage <- (results$bronze_percentage / 10)
+    
+    # Sort the dataframe by gold_percentage in descending order
+    results <- results[order(-results$gold_percentage), ]
+    
+    return(results)
+  }
+```
+
+
+```{r}
+  # Correcting the case of the LastName in the f dataset
+  nfix <- function(dataset) {
+    dataset <- as.data.frame(dataset)
+    dataset$LastName <- sapply(strsplit(tolower(dataset$LastName), " "), function(x) {
+      paste(sapply(x, function(y) {
+        paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+      }), collapse = " ")
+    })
+    
+    # Create FullName in f dataset
+    dataset$FullName <- paste(dataset$FirstName, dataset$LastName, sep=" ")
+    
+    fnd <- select(dataset,1004,3:1003)
+    return (fnd)
+  }
+  
+  process_dataset <- function(nm, dataset) {
+    # Step 1: Filter for 5 names
+    #fix_data
+    
+    fixed_data <- nfix(dataset)
+    
+    filtered_dataset <- fixed_data[fixed_data$FullName %in% nm, ]
+    
+    # Step 2: Sort by average points
+    sorted_dataset <- filtered_dataset %>% 
+      arrange(desc(AverageScore)) %>% 
+      head(3)
+    
+    # Step 3: Aggregate the top 3 scores into one row
+    aggregated_row <- sorted_dataset %>%
+      mutate(across(2:1001, ~ sum(.))) %>% 
+      head(1)
+    
+    return(aggregated_row)
+  }
+  
+  teamsims <- function(gymnasts,gender) {
+    
+    if (gender == "Men") {
+      dataevents <- list(HB_sims_m,PH_sims_m,PB_sims_m,FX_sims_m,VT_sims_m,SR_sims_m) 
+    }
+    else{
+      dataevents <- list(BB_sims,VT_sims,UB_sims,FX_sims)
+    }
+    
+    
+    #print(nm)
+    pds <- data.frame()
+    
+    for (event_data in dataevents) {
+      e <- process_dataset(gymnasts, event_data)
+      pds <- rbind(pds,e)
+      
+    }
+    
+    # Combine the results into one big dataframe
+    
+    final_result <- pds %>% 
+      mutate(across(2:1001, ~ sum(.))) %>% 
+      head(1)
+    
+    return(final_result)
+    
+  }
+```
+
+```{r}
+teamMencutoffs <- read.csv("App-1/data/team_cutoffs/team_men_cutoffs.csv")
+teamWomenscutoffs <- read.csv("App-1/data/team_cutoffs/team_women_cutoffs.csv")
+
+usm <- c("Asher Hong", "Paul Juda", "Brody Malone","Stephen Nedoroscik", "Frederick Richard")
+usw <- c("Simone Biles", "Jade Carey", "Jordan Chiles", "Sunisa Lee", "Hezly Rivera")
+
+
+mp <- calculateTeamPodiumPercentages(teamsims(usw, "Women"),teamWomenscutoffs)
+mpm <- calculateTeamPodiumPercentages(teamsims(usm, "Men"),teamMencutoffs)
+```
+
+
 
