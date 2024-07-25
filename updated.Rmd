@@ -566,9 +566,9 @@ calculatePodiumPercentages <- function(df, thresholds) {
 ```
 
 ```{r write-percs-example}
-sims_data <- read_csv("App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv")
-percs <- calculatePodiumPercentages(sims_data, allroudwomen_cutoffs)
-write.csv(percs, 'App-1/data/07_24_2024_sims/w_AA.csv', row.names=FALSE)
+sims_data <- read_csv("App-1/data/07_24_2024_sims/AA_usa_mens_sims.csv")
+percs <- calculatePodiumPercentages(sims_data, allroundmen_cutoffs)
+write.csv(percs, 'App-1/data/07_24_2024_sims/m_AA.csv', row.names=FALSE)
 ```
 
 ```{r medal-counts-f}
@@ -748,8 +748,8 @@ combinedfinalAA_m <- cbind(names,condensed_data)
 ```{r load-data}
 women <- read_csv("App-1/data/07_24_2024_sims/f.csv")
 men <- read_csv("App-1/data/07_24_2024_sims/m.csv")
-w_AA <- read_csv("App-1/data/event_percentages/w_AA.csv")
-m_AA <- read_csv("App-1/data/event_percentages/m_AA.csv")
+w_AA <- read_csv("App-1/data/07_24_2024_sims/w_AA.csv")
+m_AA <- read_csv("App-1/data/07_24_2024_sims/m_AA.csv")
 ```
 
 ```{r sean-df-womens}
@@ -796,7 +796,7 @@ usa_womens_avs <- do.call(rbind, processed_datasets)
 
 
 f <- read_csv("App-1/data/07_24_2024_sims/f.csv")
-w_AA <- read_csv("App-1/data/event_percentages/w_AA.csv")
+w_AA <- read_csv("App-1/data/07_24_2024_sims/w_AA.csv")
 
 # Correcting the case of the LastName in the f dataset
 f$LastName <- sapply(strsplit(tolower(f$LastName), " "), function(x) {
@@ -806,24 +806,24 @@ f$LastName <- sapply(strsplit(tolower(f$LastName), " "), function(x) {
 })
 
 # Create FullName in f dataset
-f$FullName <- paste(f$FirstName, f$LastName, sep=" ")
+#f$FullName <- paste(f$FirstName, f$LastName, sep=" ")
 
-w_AA$lastName <- sapply(strsplit(tolower(w_AA$lastName), " "), function(x) {
-  paste(sapply(x, function(y) {
-    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
-  }), collapse = " ")
-})
+#w_AA$lastName <- sapply(strsplit(tolower(w_AA$lastName), " "), function(x) {
+#  paste(sapply(x, function(y) {
+#    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+#  }), collapse = " ")
+#})
 
 # Create FullName in f dataset
-w_AA$FullName <- paste(w_AA$firstName, w_AA$lastName, sep=" ")
+#w_AA$FullName <- paste(w_AA$firstName, w_AA$lastName, sep=" ")
 
 # Renaming the percentage columns in w_AA to match the format in f
-colnames(w_AA)[colnames(w_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
-  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
+#colnames(w_AA)[colnames(w_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
+#  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
 
 # Joining w_AA with f to add the AA percentages
-f <- merge(f, w_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
-           by = "FullName", all.x = TRUE)
+#f <- merge(f, w_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
+#           by = "FullName", all.x = TRUE)
 
 # Define a function to extract percentages based on the event and percentage type
 get_event_percentage <- function(full_name, event, percentage_type) {
