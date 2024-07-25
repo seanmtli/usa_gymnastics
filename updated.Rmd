@@ -119,35 +119,7 @@ data_cleaning <- function(data) {
   data$FirstName[data$FirstName == "Viktoriia"] <- "Viktoria"
   data$LastName[data$LastName == "D AMATO"] <- "D'AMATO"
   
-  ##Tidy for plots ... #MEN
-  data$LastName[data$LastName == "RICHARD"] <- "Richard"
-  data$LastName[data$LastName == "MALONE"] <- "Malone"
-  data$LastName[data$LastName == "JUDA"] <- "Juda"
-  data$LastName[data$LastName == "PHILLIPS"] <- "Phillips"
-  data$LastName[data$LastName == "WALKER"] <- "Walker"
-  data$LastName[data$LastName == "HONG"] <- "Hong"
-  data$LastName[data$LastName == "MOLDAUER"] <- "Moldauer"
-  data$LastName[data$LastName == "YOUNG"] <- "Young"
-  data$LastName[data$LastName == "MCCOOL"] <- "McCool"
-  data$LastName[data$LastName == "NEDOROSCIK"] <- "Nedoroscik"
-  data$LastName[data$LastName == "SKIRKEY"] <- "Skirkey"
-  data$LastName[data$LastName == "WHITTENBURG"] <- "Whittenburg"
-  data$LastName[data$LastName == "DIAB"] <- "Diab"
-  data$LastName[data$LastName == "LOOS"] <- "Loos"
-  data$LastName[data$LastName == "SUN"] <- "Sun"
-  data$LastName[data$LastName == "JAROH"] <- "Jaroh"
-  
-  #WOMEN
-  data$LastName[data$LastName == "BILES"] <- "Biles"
-  data$LastName[data$LastName == "SUMANASEKERA"] <- "Sumanasekera"
-  data$LastName[data$LastName == "BLAKELY"] <- "Blakely"
-  data$LastName[data$LastName == "JONES"] <- "Jones"
-  data$LastName[data$LastName == "WONG"] <- "Wong"
-  data$LastName[data$LastName == "CHILES"] <- "Chiles"
-  data$LastName[data$LastName == "CAREY"] <- "Carey"
-  data$LastName[data$LastName == "DICELLO"] <- "DiCello"
-  data$LastName[data$LastName == "LEE"] <- "Lee"
-  data$LastName[data$LastName == "ROBERSON"] <- "Roberson"
+  data <- data %>% mutate(LastName = str_to_title(LastName))
   
   data$Apparatus[data$Apparatus == "VT2"] <- "VT"
   data$Apparatus[data$Apparatus == "VT1"] <- "VT"
@@ -215,16 +187,15 @@ create_sampling_dist <- function(data){
 }
 sampling_data <- create_sampling_dist(cleaned_data)
 
-usa_mens_roster <- c("Asher Hong", "Paul Juda", "Brody Malone","Stephen Nedoroscik", "Fred Richard")
-usa_womens_roster <- c("Simone Biles", "Jade Carey", "Jordan Chiles", "Sunisa Lee", "Hezly Rivera")
+usa_mens_roster <- c("Hong", "Juda", "Malone","Nedoroscik", "Richard")
+usa_womens_roster <- c("Biles", "Carey", "Chiles", "Lee", "Rivera")
 
 sampling_usa_data_f <-  sampling_data |>
-  filter(`Country` == "USA") |>
-  filter(Gender == "w")
+  filter(`Country` == "USA", Gender == "w", LastName %in% usa_womens_roster)
+
 
 sampling_usa_data_m <-  sampling_data |>
-  filter(`Country` == "USA") |>
-  filter(Gender == "m")
+  filter(`Country` == "USA", Gender == "m", LastName %in% usa_mens_roster)
 
 
 ```
@@ -595,8 +566,374 @@ calculatePodiumPercentages <- function(df, thresholds) {
 ```
 
 ```{r write-percs-example}
-sims_data <- read_csv("App-1/data/07_24_2024_sims/VT_usa_womens_sims.csv")
-percs <- calculatePodiumPercentages(sims_data, VT_medal_cutoffs_w)
-write.csv(percs, 'App-1/data/07_24_2024_sims/w_VT_medalpercentages.csv', row.names=FALSE)
+sims_data <- read_csv("App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv")
+percs <- calculatePodiumPercentages(sims_data, allroudwomen_cutoffs)
+write.csv(percs, 'App-1/data/07_24_2024_sims/w_AA.csv', row.names=FALSE)
+```
+
+```{r medal-counts-f}
+f_FX <- read_csv("App-1/data/07_24_2024_sims/w_FX_medalpercentages.csv")
+f_BB <- read_csv("App-1/data/07_24_2024_sims/w_BB_medalpercentages.csv")
+f_VT <- read_csv("App-1/data/07_24_2024_sims/w_VT_medalpercentages.csv")
+f_UB <- read_csv("App-1/data/07_24_2024_sims/w_UB_medalpercentages.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 1)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+f_BB <- normalize_and_rename(f_BB, "BB")
+f_FX <- normalize_and_rename(f_FX, "FX")
+f_UB <- normalize_and_rename(f_UB, "UB")
+f_VT <- normalize_and_rename(f_VT, "VT")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(f_BB, f_FX, f_UB, f_VT), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+#write.csv(combined_df, 'App-1/data/07_24_2024_sims/f.csv', row.names=FALSE)
+```
+
+```{r medal-counts-m}
+m_FX <- read_csv("App-1/data/07_24_2024_sims/m_FX_medalpercentages.csv")
+m_SR <- read_csv("App-1/data/07_24_2024_sims/m_SR_medalpercentages.csv")
+m_VT <- read_csv("App-1/data/07_24_2024_sims/m_VT_medalpercentages.csv")
+m_PB <- read_csv("App-1/data/07_24_2024_sims/m_PB_medalpercentages.csv")
+m_PH <- read_csv("App-1/data/07_24_2024_sims/m_PH_medalpercentages.csv")
+m_HB <- read_csv("App-1/data/07_24_2024_sims/m_HB_medalpercentages.csv")
+
+# Function to normalize and rename percentage columns
+normalize_and_rename <- function(df, suffix) {
+  df |>
+    mutate(across(contains("percentage"), ~ . / 1)) |>
+    rename_with(~ paste0(., "_", suffix), contains("percentage"))
+}
+
+# Apply the function to each dataframe with a unique suffix
+m_SR <- normalize_and_rename(m_SR, "SR")
+m_FX <- normalize_and_rename(m_FX, "FX")
+m_PB <- normalize_and_rename(m_PB, "PB")
+m_VT <- normalize_and_rename(m_VT, "VT")
+m_PH <- normalize_and_rename(m_PH, "PH")
+m_HB <- normalize_and_rename(m_HB, "HB")
+
+# Combine the dataframes using full join
+combined_df <- reduce(list(m_SR, m_FX, m_PB, m_VT, m_PH, m_HB), full_join, by = c("FirstName", "LastName"))
+
+# Replace NA with 0
+combined_df[is.na(combined_df)] <- 0
+
+#write.csv(combined_df, 'App-1/data/07_24_2024_sims/m.csv', row.names=FALSE)
+```
+
+```{r all-around-sims womens}
+BB_sims <- read_csv("App-1/data/07_24_2024_sims/BB_usa_womens_sims.csv")
+FX_sims <- read_csv("App-1/data/07_24_2024_sims/FX_usa_womens_sims.csv")
+UB_sims <- read_csv("App-1/data/07_24_2024_sims/UB_usa_womens_sims.csv")
+VT_sims <- read_csv("App-1/data/07_24_2024_sims/VT_usa_womens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+BB_sims_prepared <- prepare_df(BB_sims)
+FX_sims_prepared <- prepare_df(FX_sims)
+UB_sims_prepared <- prepare_df(UB_sims)
+VT_sims_prepared <- prepare_df(VT_sims)
+
+# Use left joins to combine the dataframes
+combined_AA_df <- BB_sims_prepared %>%
+  left_join(FX_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(UB_sims_prepared, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared, by = c("FirstName", "LastName"))
+```
+
+
+
+```{r sum-across-events-women}
+# Assuming your dataframe is called 'your_dataframe'
+# Assuming you have 4004 columns and 38 rows
+
+# Create a vector of column indices to sum
+original_data <- combined_AA_df[, -(1:2)]
+names <- combined_AA_df[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(names), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i, i + 1000,i+2000,i+3000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA <- cbind(names,condensed_data)
+
+write.csv(combinedfinalAA, "App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv", row.names = FALSE)
+```
+
+
+```{r all-around-sims men}
+HB_sims_m <- read_csv("App-1/data/07_24_2024_sims/HB_usa_mens_sims.csv")
+FX_sims_m <- read_csv("App-1/data/07_24_2024_sims/FX_usa_mens_sims.csv")
+PB_sims_m <- read_csv("App-1/data/07_24_2024_sims/PB_usa_mens_sims.csv")
+VT_sims_m <- read_csv("App-1/data/07_24_2024_sims/VT_usa_mens_sims.csv")
+PH_sims_m <- read_csv("App-1/data/07_24_2024_sims/PH_usa_mens_sims.csv")
+SR_sims_m <- read_csv("App-1/data/07_24_2024_sims/SR_usa_mens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+HB_sims_prepared_m <- prepare_df(HB_sims_m)
+FX_sims_prepared_m <- prepare_df(FX_sims_m)
+PB_sims_prepared_m <- prepare_df(PB_sims_m)
+VT_sims_prepared_m <- prepare_df(VT_sims_m)
+PH_sims_prepared_m <- prepare_df(PH_sims_m)
+SR_sims_prepared_m <- prepare_df(SR_sims_m)
+
+# Use left joins to combine the dataframes
+combined_AA_df_m <- HB_sims_prepared_m %>%
+  left_join(FX_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(PB_sims_prepared_m, by = c("FirstName", "LastName")) %>%
+  left_join(VT_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(PH_sims_prepared_m, by = c("FirstName", "LastName")) %>% 
+  left_join(SR_sims_prepared_m, by = c("FirstName", "LastName")) 
+```
+
+```{r sum-across-events-men}
+# Create a vector of column indices to sum
+original_data <- combined_AA_df_m[, -(1:2)]
+names <- combined_AA_df_m[, (1:2)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(original_data), ncol = 1000))
+
+# Loop through each group of 1000 columns
+for (i in 1:1001) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i + 1000,i+2000,i+3000,i+4000,i+5000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA_m <- cbind(names,condensed_data)
+
+#write.csv(combinedfinalAA_m, "App-1/data/07_24_2024_sims/AA_usa_mens_sims.csv", row.names = FALSE)
+```
+
+```{r load-data}
+women <- read_csv("App-1/data/07_24_2024_sims/f.csv")
+men <- read_csv("App-1/data/07_24_2024_sims/m.csv")
+w_AA <- read_csv("App-1/data/event_percentages/w_AA.csv")
+m_AA <- read_csv("App-1/data/event_percentages/m_AA.csv")
+```
+
+```{r sean-df-womens}
+FX_usa_womens_sims <- read_csv("App-1/data/07_24_2024_sims/FX_usa_womens_sims.csv")
+AA_usa_womens_sims <- read_csv("App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv")
+BB_usa_womens_sims <- read_csv("App-1/data/07_24_2024_sims/BB_usa_womens_sims.csv")
+UB_usa_womens_sims <- read_csv("App-1/data/07_24_2024_sims/UB_usa_womens_sims.csv")
+VT_usa_womens_sims <- read_csv("App-1/data/07_24_2024_sims/VT_usa_womens_sims.csv")
+
+#AA_usa_womens_sims <- AA_usa_womens_sims[, 2:1003]
+
+colnames(AA_usa_womens_sims)[ncol(AA_usa_womens_sims)] <- "AverageScore"
+
+# Assuming the datasets are already loaded into the environment
+datasets <- list(AA = AA_usa_womens_sims, BB = BB_usa_womens_sims, VT = VT_usa_womens_sims, UB = UB_usa_womens_sims, FX = FX_usa_womens_sims)
+
+# Function to process each dataset
+process_dataset <- function(df, event_name) {
+  # Create FullName column by concatenating FirstName and capitalized LastName
+  df$FullName <- paste(df$FirstName, sapply(strsplit(tolower(df$LastName), " "), function(x) {
+    # Capitalize each part of a possibly hyphenated or spaced last name
+    paste(sapply(x, function(y) {
+      paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+    }), collapse = " ")
+  }), sep=" ")
+
+  # Select only FullName and AverageScore columns
+  df <- df[, c("FullName", "AverageScore")]
+  
+  # Add the Event column
+  df$Event <- event_name
+  
+  return(df)
+}
+
+# Apply the function to each dataset
+processed_datasets <- lapply(names(datasets), function(name) {
+  process_dataset(datasets[[name]], name)
+})
+
+# Combine all processed datasets into one
+usa_womens_avs <- do.call(rbind, processed_datasets)
+
+
+
+f <- read_csv("App-1/data/07_24_2024_sims/f.csv")
+w_AA <- read_csv("App-1/data/event_percentages/w_AA.csv")
+
+# Correcting the case of the LastName in the f dataset
+f$LastName <- sapply(strsplit(tolower(f$LastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+f$FullName <- paste(f$FirstName, f$LastName, sep=" ")
+
+w_AA$lastName <- sapply(strsplit(tolower(w_AA$lastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+w_AA$FullName <- paste(w_AA$firstName, w_AA$lastName, sep=" ")
+
+# Renaming the percentage columns in w_AA to match the format in f
+colnames(w_AA)[colnames(w_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
+  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
+
+# Joining w_AA with f to add the AA percentages
+f <- merge(f, w_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
+           by = "FullName", all.x = TRUE)
+
+# Define a function to extract percentages based on the event and percentage type
+get_event_percentage <- function(full_name, event, percentage_type) {
+  f_row <- f[f$FullName == full_name, ]
+  if (nrow(f_row) == 0) {
+    return(NA)
+  } else {
+    col_name <- paste(percentage_type, "_percentage_", event, sep = "")
+    return(f_row[[col_name]])
+  }
+}
+
+# Adding the GoldPercentage, SilverPercentage, and BronzePercentage columns to usa_womens_avs
+usa_womens_avs$GoldPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "gold"))
+usa_womens_avs$SilverPercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "silver"))
+usa_womens_avs$BronzePercentage <- mapply(get_event_percentage, usa_womens_avs$FullName, usa_womens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+
+write.csv(usa_womens_avs, "App-1/data/07_24_2024_sims/usa_womens_avs.csv", row.names = FALSE)
+```
+
+```{r sean-df-mens}
+PB_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/PB_usa_mens_sims.csv")
+AA_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/AA_usa_mens_sims.csv")
+PH_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/PH_usa_mens_sims.csv")
+SR_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/SR_usa_mens_sims.csv")
+VT_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/VT_usa_mens_sims.csv")
+HB_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/HB_usa_mens_sims.csv")
+FX_usa_mens_sims <- read_csv("App-1/data/07_24_2024_sims/FX_usa_mens_sims.csv")
+
+AA_usa_mens_sims <- AA_usa_mens_sims[, 2:1004]
+
+colnames(AA_usa_mens_sims)[ncol(AA_usa_mens_sims)] <- "AverageScore"
+
+# Assuming the datasets are already loaded into the environment
+datasets_m <- list(AA = AA_usa_mens_sims, PB = PB_usa_mens_sims, VT = VT_usa_mens_sims, PH = PH_usa_mens_sims, SR = SR_usa_mens_sims, HB = HB_usa_mens_sims, FX = FX_usa_mens_sims)
+
+# Function to process each dataset
+process_dataset <- function(df, event_name) {
+  # Create FullName column by concatenating FirstName and capitalized LastName
+  df$FullName <- paste(df$FirstName, sapply(strsplit(tolower(df$LastName), " "), function(x) {
+    # Capitalize each part of a possibly hyphenated or spaced last name
+    paste(sapply(x, function(y) {
+      paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+    }), collapse = " ")
+  }), sep=" ")
+
+  # Select only FullName and AverageScore columns
+  df <- df[, c("FullName", "AverageScore")]
+  
+  # Add the Event column
+  df$Event <- event_name
+  
+  return(df)
+}
+
+# Apply the function to each dataset
+processed_datasets_m <- lapply(names(datasets_m), function(name) {
+  process_dataset(datasets_m[[name]], name)
+})
+
+# Combine all processed datasets into one
+usa_mens_avs <- do.call(rbind, processed_datasets_m)
+
+
+m <- read_csv("App-1/data/expected_medals/m.csv")
+m_AA <- read_csv("App-1/data/event_percentages/m_AA.csv")
+
+# Correcting the case of the LastName in the f dataset
+m$LastName <- sapply(strsplit(tolower(m$LastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+m$FullName <- paste(m$FirstName, m$LastName, sep=" ")
+
+m_AA$lastName <- sapply(strsplit(tolower(m_AA$lastName), " "), function(x) {
+  paste(sapply(x, function(y) {
+    paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+  }), collapse = " ")
+})
+
+# Create FullName in f dataset
+m_AA$FullName <- paste(m_AA$firstName, m_AA$lastName, sep=" ")
+
+# Renaming the percentage columns in w_AA to match the format in f
+colnames(m_AA)[colnames(m_AA) %in% c("bronze_percentage", "silver_percentage", "gold_percentage")] <- 
+  c("bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")
+
+# Joining w_AA with f to add the AA percentages
+m <- merge(m, m_AA[, c("FullName", "bronze_percentage_AA", "silver_percentage_AA", "gold_percentage_AA")], 
+           by = "FullName", all.x = TRUE)
+
+# Define a function to extract percentages based on the event and percentage type
+get_event_percentage <- function(full_name, event, percentage_type) {
+  m_row <- m[m$FullName == full_name, ]
+  if (nrow(m_row) == 0) {
+    return(NA)
+  } else {
+    col_name <- paste(percentage_type, "_percentage_", event, sep = "")
+    return(m_row[[col_name]])
+  }
+}
+
+# Adding the GoldPercentage, SilverPercentage, and BronzePercentage columns to usa_mens_avs
+usa_mens_avs$GoldPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "gold"))
+usa_mens_avs$SilverPercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "silver"))
+usa_mens_avs$BronzePercentage <- mapply(get_event_percentage, usa_mens_avs$FullName, usa_mens_avs$Event, MoreArgs = list(percentage_type = "bronze"))
+
+write.csv(usa_mens_avs, "App-1/data/07_24_2024_sims/usa_mens_avs.csv")
 ```
 
