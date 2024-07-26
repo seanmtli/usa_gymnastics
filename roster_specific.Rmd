@@ -118,6 +118,7 @@ data_cleaning <- function(data) {
   data$FirstName[data$FirstName == "Fred"] <- "FREDERICK"
   data$FirstName[data$FirstName == "Viktoriia"] <- "Viktoria"
   data$LastName[data$LastName == "D AMATO"] <- "D'AMATO"
+  data$LastName[data$LastName == "VERNAIEV"] <- "VERNIAIEV"
   
   data <- data %>% mutate(LastName = str_to_title(LastName))
   
@@ -169,36 +170,36 @@ cleaned_data <- data_cleaning(rawdata)
 ### Rosters
 
 ```{r mens international}
-CAN_m <- c("Zachary Clay","Rene Cournoyer", "Felix Dolci", "William Emard", "Samuel Zakutney")
-CHN_m <- c("Liu Yang", "Su Weide", "Xiao Ruoteng", "Zhang Boheng", "Zou Jingyuan")
+CAN_m <- c("Zachary Clay","Rene Cournoyer", "Felix Dolci", "William Emard", "Sam Zakutney")
+CHN_m <- c("Yang Liu", "Weide Su", "Ruoteng Xiao", "Boheng Zhang", "Jingyuan Zou")
 GER_m <- c("Pascal Brendel", "Lukas Dauser", "Nils Dunkel", "Timo Eder", "Andreas Toba")
 GBR_m <- c("Joe Fraser", "Harry Hepworth", "Jake Jarman", "Luke Whitehouse", "Max Whitlock")
 ITA_m <- c("Yumin Abbadini", "Nicola Bartolini", "Lorenzo Minh Casali", "Mario Macchiati", "Carlo Macchini")
-JPN_m <- c("Daiki Hasimoto", "Kazuma Kaya", "Shinnosuke Oka", "Takaaki Sugino", "Wataru Tanigawa")
-NED_m <- c("Loran de Munck", "Martijn de Veer", "Jermain Grunberg", "Frank Rijken", "Casimir Schmidt")
-ESP_m <- c("Nestor Abad", "Theirno Diallo", "Nicolau Mir", "Joel Plata", "Rayderley Zapata")
+JPN_m <- c("Daiki Hashimoto", "Kazuma Kaya", "Shinnosuke Oka", "Takaaki Sugino", "Wataru Tanigawa")
+NED_m <- c("Loran De Munck", "Martijn De Veer", "Jermain Gruenberg", "Frank Rijken", "Casimir Schmidt")
+ESP_m <- c("Nestor Abad", "Thierno Diallo", "Nicolau Mir", "Joel Plata", "Rayderley Zapata")
 SUI_m <- c("Luca Giubellini","Matteo Giubellini", "Florian Langenegger", "Noe Seifert", "Taha Serhani")
 TUR_m <- c("Ferhat Arican", "Adem Asil", "Ibrahim Colak", "Emre Dodanli", "Ahmet Onder")
 UKR_m <- c("Nazar Chepurnyi", "Illia Kovtun", "Igor Radivilov", "Radomyr Stelmakh", "Oleg Verniaiev")
 USA_m <- c("Asher Hong", "Paul Juda", "Brody Malone", "Stephen Nedoroscik", "Frederick Richard")
-individual_m <- c("Jesse Moore", "Artur Davtyan", "Vahagn Davtyan", "Glen Cuyle", "Noah Kuavita", "Luka Van Den Keybus", "Arthur Mariano", "Diogo Soares", "Kevin Penev", "Tang Chia-Hung","Angel Barajas", "Aurel Benovic", "Tin Srbic", "Marios Georgiou","Audrys Nin Reyes", "Omar Mohamed", "Samir Ait Said", "Eleftherios Petrounias", "Shek Wai Hung","Krisztofer Meszaros", "Mahdi Olfati", "Rhys McClenaghan", "Artem Dolgopyat", "Ahmad Abu Al Soud", "Milad Karimi", "Nariman Kurbanov", "Robert Tvorogal", "Carlos Yulo", "Andrei Muntean", "Hur Woong", "Lee Junho", "Ryu Sunghyun", "Lais Najjar","Rasuljon Abdurakhimov", "Abdulla Azimov","Khabibullo Ergashev")
+individual_m <- c("Jesse Moore", "Artur Davtyan", "Vahagn Davtyan", "Glen Cuyle", "Noah Kuavita", "Luka Van Den Keybus", "Arthur Mariano", "Diogo Soares", "Kevin Penev", "Chia-Hung Tang","Angel Barajas", "Aurel Benovic", "Tin Srbic", "Marios Georgiou","Audrys Nin Reyes", "Omar Mohamed", "Samir Ait Said", "Eleftherios Petrounias", "Wai Hung Shek ","Krisztofer Meszaros", "Mahdi Olfati", "Rhys Mcclenaghan", "Artem Dolgopyat", "Ahmad Abu Al Soud", "Milad Karimi", "Nariman Kurbanov", "Robert Tvorogal", "Carlos Yulo", "Andrei Muntean", "Woong Hur", "Junho Lee", "Sunghyun Ryu", "Lais Najjar","Rasuljon Abdurakhimov", "Abdulla Azimov","Khabibullo Ergashev")
 ```
 
 ```{r womens rosters}
-AUS_w <- c("Kate McDonald", "Emma Nedov", "Ruby Pass", "Breaana Scott", "Emily Whitehead")
+AUS_w <- c("Kate Mcdonald", "Emma Nedov", "Ruby Pass", "Breanna Scott", "Emily Whitehead")
 BRA_w <- c("Rebeca Andrade", "Jade Barbosa", "Lorrane Oliveira", "Flavia Saraiva","Julia Soares")
 CAN_w <- c("Ellie Black", "Cassie Lee", "Shallon Olsen", "Ava Stewart", "Aurelie Tran")
-CHN_w <- c("Luo Huan", "Ou Yushan", "Qiu Qiyuan", "Zhang Yihan", "Zhou Yaqin")
-FRA_w <- c("Marine Boyer", "Coline Devillard", "Melanie Jesus Santos", "Morgane Osyssek", "Ming van Eijken")
-GBR_w <- c("Becky Downie", "Ruby Evans", "Georgia Mae Fenton", "Alice Kinsella", "Abigail Martin")
-ITA_w <- c("Angela Andreoli", "Alice D Amato", "Manila Esposito", "Elisa Iorio", "Giorgia Villa")
+CHN_w <- c("Huan Luo", "Yushan Ou", "Qiyuan Qiu", "Yihan Zhang", "Yaqin Zhou")
+FRA_w <- c("Marine Boyer", "Coline Devillard", "Melanie Jesus Santos", "Morgane Osyssek-Reimer", "Ming Van Eijken")
+GBR_w <- c("Rebecca Downie", "Ruby Evans", "Georgia Mae Fenton", "Alice Kinsella", "Abigail Martin")
+ITA_w <- c("Angela Andreoli", "Alice D'amato", "Manila Esposito", "Elisa Iorio", "Giorgia Villa")
 JPN_w <- c("Rina Kishi", "Haruka Nakamura", "Mana Okamura", "Kohane Ushioku") ## 5th athelte??? 
 NED_w <- c("Sanna Veerman", "Naomi Visser", "Tisha Volleman", "Lieke Wevers", "Sanne Wevers")
-ROU_w <- c("Ana Barbosu", "Lilia Cosman", "Amalia Ghigoarta", "Andreea Preda", "Sabrina Voinea")
-KOR_w <- c("Eom Dohyun", "Lee Dayeong", "Lee Yunseo", "Shin Solyi", "Yeo Seojeong")
+ROU_w <- c("Ana Barbosu", "Lilia Cosman", "Amalia Ghigoarta", "Andreea Preda", "Sabrina Maneca-Voinea")
+KOR_w <- c("Dohyun Eom", "Dayeong Lee", "Yunseo Lee", "Solyi Shin", "Seojeong Yeo")
 USA_w <- c("Simone Biles", "Jade Carey", "Jordan Chiles", "Sunisa Lee", "Hezly Rivera")
 
-individuals_w <- c("Kaylia Nemour", "Charlize Morz", "Maellyse Brassart", "Nina Derwael", "Valentina Georgieva", "Ting Hua-Tien", "Luisa Blanco", "Sona Artamonova", "Jana Mahmoud", "Helen Kevric", "Pauline Schafer Betz", "Sarah Voss", "Lynnzee Brown", "Csenge Bacskay", "Bettina Lili Czifra", "Zsofia Kovacs", "Rifda Irfanaluthfi","Lihie Raz", "Natalia Escalera", "Alexa Moreno", "Ahtziri Sandoval", "Georgia Rose Brown", "AN Changok", "Hillary Heron", "Aleah Finnegan", "Emma Malabuyo", "Levi Ruivivar", "Filipa Martins", "Lucija Hribar", "Caitlin Rooskrantz", "Laura Casabuena", "Ana Perez", "Alba Petisco", "Lena Bickel", "Anna Lashchevska")
+individuals_w <- c("Kaylia Nemour", "Charlize Moerz", "Maellyse Brassart", "Nina Derwael", "Valentina Georgieva", "Hua-Tien Ting", "Luisa Blanco", "Sona Artamonova", "Jana Mahmoud", "Helen Kevric", "Pauline Schaefer Betz", "Sarah Voss", "Lynnzee Brown", "Csenge Maria Bacskay", "Bettina Lili Czifra", "Zsofia Kovacs", "Rifda Irfanaluthfi","Lihie Raz", "Natalia Escalera", "Alexa Moreno", "Ahtziri Sandoval", "Georgia Rose Brown", "Changok An", "Hillary Heron", "Aleah Finnegan", "Emma Malabuyo", "Levi Ruivivar", "Filipa Martins", "Lucija Hribar", "Caitlin Rooskrantz", "Laura Casabuena", "Ana Perez", "Alba Petisco", "Lena Bickel", "Anna Lashchevska")
 ```
 
 ```{r}
@@ -214,11 +215,11 @@ all_athletes <- c(
 ```{r}
 nfix <- function(dataset) {
     dataset <- as.data.frame(dataset)
-    dataset$LastName <- sapply(strsplit(tolower(dataset$LastName), " "), function(x) {
-      paste(sapply(x, function(y) {
-        paste0(toupper(substring(y, 1, 1)), substring(y, 2))
-      }), collapse = " ")
-    })
+    # dataset$LastName <- sapply(strsplit(tolower(dataset$LastName), " "), function(x) {
+    #   paste(sapply(x, function(y) {
+    #     paste0(toupper(substring(y, 1, 1)), substring(y, 2))
+    #   }), collapse = " ")
+    # })
     
     # Create FullName in f dataset
     dataset$FullName <- paste(dataset$FirstName, dataset$LastName, sep=" ")
@@ -230,6 +231,10 @@ nfix <- function(dataset) {
 fuln <- nfix(cleaned_data)
 olympic_athletes <- fuln %>% 
   filter(FullName %in% all_athletes)
+```
+
+```{r}
+write.csv(olympic_athletes, "App-1/data/rostersims/cleaned_oly.csv",row.names = FALSE)
 ```
 
 
@@ -367,7 +372,7 @@ simulate_gymnastics_event <- function(event_name, gender, nsimulation) {
 women_events <- c("BB", "UB", "FX", "VT")
 
 # Number of simulations
-nsimulation <- 100
+nsimulation <- 400
 
 # Loop over women's events
 for (event_name in women_events) {
@@ -384,10 +389,10 @@ for (event_name in women_events) {
 
 
 ```{r all-around-sims womens}
-BB_sims <- read_csv("App-1/data/07_24_2024_sims/BB_usa_womens_sims.csv")
-FX_sims <- read_csv("App-1/data/07_24_2024_sims/FX_usa_womens_sims.csv")
-UB_sims <- read_csv("App-1/data/07_24_2024_sims/UB_usa_womens_sims.csv")
-VT_sims <- read_csv("App-1/data/07_24_2024_sims/VT_usa_womens_sims.csv")
+BB_sims <- read_csv("App-1/data/rostersims/BB_womens_sims.csv")
+FX_sims <- read_csv("App-1/data/rostersims/FX_womens_sims.csv")
+UB_sims <- read_csv("App-1/data/rostersims/UB_womens_sims.csv")
+VT_sims <- read_csv("App-1/data/rostersims/VT_womens_sims.csv")
 
 # Define a function to replace NA with 0 and drop the average score column
 prepare_df <- function(df) {
@@ -402,9 +407,9 @@ VT_sims_prepared <- prepare_df(VT_sims)
 
 # Use left joins to combine the dataframes
 combined_AA_df <- BB_sims_prepared %>%
-  left_join(FX_sims_prepared, by = c("FirstName", "LastName")) %>%
-  left_join(UB_sims_prepared, by = c("FirstName", "LastName")) %>%
-  left_join(VT_sims_prepared, by = c("FirstName", "LastName"))
+  left_join(FX_sims_prepared, by = c("FirstName", "LastName", "Country")) %>%
+  left_join(UB_sims_prepared, by = c("FirstName", "LastName", "Country")) %>%
+  left_join(VT_sims_prepared, by = c("FirstName", "LastName", "Country"))
 ```
 
 
@@ -414,17 +419,17 @@ combined_AA_df <- BB_sims_prepared %>%
 # Assuming you have 4004 columns and 38 rows
 
 # Create a vector of column indices to sum
-original_data <- combined_AA_df[, -(1:2)]
-names <- combined_AA_df[, (1:2)]
+original_data <- combined_AA_df[, -(1:3)]
+names <- combined_AA_df[, (1:3)]
 
 
 # Sum every 1000th column and store the result in the condensed dataframe
-condensed_data <- data.frame(matrix(NA, nrow = nrow(names), ncol = 1000))
+condensed_data <- data.frame(matrix(NA, nrow = nrow(names), ncol = 401))
 
 # Loop through each group of 1000 columns
-for (i in 1:1001) {
+for (i in 1:401) {
   # Identify the columns in the current group
-  current_group_columns <- c(i, i + 1000,i+2000,i+3000)
+  current_group_columns <- c(i, i + 400,i+800,i+1200)
   #print(current_group_columns)
   # Sum the values across the columns in the current group
   condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
@@ -436,9 +441,13 @@ colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
 # Print or use the condensed dataframe as needed
 combinedfinalAA <- cbind(names,condensed_data)
 
-write.csv(combinedfinalAA, "App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv", row.names = FALSE)
-```
+columns_to_average_women <- combinedfinalAA[, -(1:3)]
 
+# Calculate the row-wise mean for the selected columns
+combinedfinalAA$AverageScore <- rowMeans(columns_to_average_women, na.rm = TRUE)
+
+write.csv(combinedfinalAA, "App-1/data/rostersims/AA_womens_sims.csv", row.names = FALSE)
+```
 
 
 ```{r mens sims}
@@ -446,7 +455,7 @@ write.csv(combinedfinalAA, "App-1/data/07_24_2024_sims/AA_usa_womens_sims.csv", 
 men_events <- c("PB", "HB", "PH", "FX", "SR", "VT")
 
 # Number of simulations
-nsimulation <- 100
+nsimulation <- 400
 
 # Loop over men's events
 for (event_name in men_events) {
@@ -461,10 +470,74 @@ for (event_name in men_events) {
 
 ```
 
+```{r all-around-sims men}
+HB_sims_m <- read_csv("App-1/data/rostersims/HB_mens_sims.csv")
+FX_sims_m <- read_csv("App-1/data/rostersims/FX_mens_sims.csv")
+PB_sims_m <- read_csv("App-1/data/rostersims/PB_mens_sims.csv")
+VT_sims_m <- read_csv("App-1/data/rostersims/VT_mens_sims.csv")
+PH_sims_m <- read_csv("App-1/data/rostersims/PH_mens_sims.csv")
+SR_sims_m <- read_csv("App-1/data/rostersims/SR_mens_sims.csv")
+
+# Define a function to replace NA with 0 and drop the average score column
+prepare_df <- function(df) {
+  df %>% 
+    mutate(across(starts_with("Score"), ~ replace_na(., 0)))
+}
+
+HB_sims_prepared_m <- prepare_df(HB_sims_m)
+FX_sims_prepared_m <- prepare_df(FX_sims_m)
+PB_sims_prepared_m <- prepare_df(PB_sims_m)
+VT_sims_prepared_m <- prepare_df(VT_sims_m)
+PH_sims_prepared_m <- prepare_df(PH_sims_m)
+SR_sims_prepared_m <- prepare_df(SR_sims_m)
+
+# Use left joins to combine the dataframes
+combined_AA_df_m <- HB_sims_prepared_m %>%
+  left_join(FX_sims_prepared_m, by = c("FirstName", "LastName", "Country")) %>%
+  left_join(PB_sims_prepared_m, by = c("FirstName", "LastName", "Country")) %>%
+  left_join(VT_sims_prepared_m, by = c("FirstName", "LastName", "Country")) %>% 
+  left_join(PH_sims_prepared_m, by = c("FirstName", "LastName", "Country")) %>% 
+  left_join(SR_sims_prepared_m, by = c("FirstName", "LastName", "Country")) 
+```
+
+```{r sum-across-events-men}
+# Create a vector of column indices to sum
+original_data <- combined_AA_df_m[, -(1:3)]
+names <- combined_AA_df_m[, (1:3)]
+
+
+# Sum every 1000th column and store the result in the condensed dataframe
+condensed_data <- data.frame(matrix(NA, nrow = nrow(original_data), ncol = 401))
+
+# Loop through each group of 1000 columns
+for (i in 1:401) {
+  # Identify the columns in the current group
+  current_group_columns <- c(i, i + 400,i+800,i+1200,i+1600,i+2000)
+  #print(current_group_columns)
+  # Sum the values across the columns in the current group
+  condensed_data[, i] <- rowSums(original_data[, current_group_columns], na.rm = TRUE)
+}
+
+# Rename the columns of the condensed dataframe
+colnames(condensed_data) <- paste0("Condensed_Column_", 1:ncol(condensed_data))
+
+# Print or use the condensed dataframe as needed
+combinedfinalAA_m <- cbind(names,condensed_data)
+
+columns_to_average <- combinedfinalAA_m[, -(1:3)]
+
+# Calculate the row-wise mean for the selected columns
+combinedfinalAA_m$AverageScore <- rowMeans(columns_to_average, na.rm = TRUE)
+
+write.csv(combinedfinalAA_m, "App-1/data/rostersims/AA_mens_sims.csv", row.names = FALSE)
+```
 
 
 
 
+
+
+### Ranks and Percentages
 
 ```{r average rank}
 
@@ -473,14 +546,14 @@ for (event_name in men_events) {
 
 compute_average_rank <- function(simulations_data) {
   # Select only the columns with simulation scores
-  score_columns <- simulations_data %>% select(starts_with("Score_"))
+  score_columns <- simulations_data %>% select(starts_with(c("Score_","Condensed_Column_")))
   
   # Initialize a dataframe to store the ranks
   rank_data <- simulations_data %>%
-    mutate(across(starts_with("Score_"), ~rank(-.x, ties.method = "min")), na.rm = TRUE)
+    mutate(across(starts_with(c("Score_","Condensed_Column_")), ~rank(-.x, ties.method = "min")), na.rm = TRUE)
   
   # Compute the average rank for each gymnast
-  rank_data$AverageRank <- rowMeans(rank_data %>% select(starts_with("Score_")))
+  rank_data$AverageRank <- rowMeans(rank_data %>% select(starts_with(c("Score_","Condensed_Column_"))))
   
   rankdata2 <- rank_data
   # Compute the number of simulations
@@ -496,19 +569,35 @@ compute_average_rank <- function(simulations_data) {
     )
 
   for (n in 2:num_simulations) {
-    rank_col <- paste0("Score_", n)
+    if (simulations_data$AverageScore[1]>45){rank_col <- paste0("Condensed_Column_", n)}
+    else{
+      rank_col <- paste0("Score_", n)
+    }
+    
     rankdata2 <- rankdata2 %>%
       arrange(!!sym(rank_col)) %>%
       mutate(TempRank = 1:n())
+    
+    
+    # Adjust the top 8 ranks to account for the country restriction
+    top_8_ranks <- rankdata2 %>%
+      group_by(Country) %>%
+      mutate(CountryCount = row_number()) %>%
+      filter(CountryCount <= 2) %>%
+      ungroup() %>%
+      arrange(TempRank) %>%
+      slice(1:8)
 
     # Update the Top10Percentage and medal percentages
     for (i in 1:nrow(simulations_data)) {
       athlete <- simulations_data[i, c("FirstName", "LastName")]
-      athlete_rank <- rankdata2 %>%
+      athlete_rank <- top_8_ranks %>%
         filter(FirstName == athlete$FirstName, LastName == athlete$LastName)
 
+      #return(athlete_rank)
       if (nrow(athlete_rank) > 0) {
         temp_rank <- athlete_rank$TempRank
+        
         if (temp_rank <= 8) simulations_data$QualifyPercentage[i] <- simulations_data$QualifyPercentage[i] + 1 / num_simulations * 100
         if (temp_rank == 1) simulations_data$GoldPercentage[i] <- simulations_data$GoldPercentage[i] + 1 / num_simulations * 100
         if (temp_rank == 2) simulations_data$SilverPercentage[i] <- simulations_data$SilverPercentage[i] + 1 / num_simulations * 100
@@ -521,24 +610,246 @@ compute_average_rank <- function(simulations_data) {
   simulations_data$AverageRank <- rank_data$AverageRank
 
   simulations_data <- simulations_data %>%
-    select(FirstName, LastName, Country, AverageScore, AverageRank, QualifyPercentage, GoldPercentage, SilverPercentage, BronzePercentage)
+    select(FirstName, LastName, Country, AverageScore, AverageRank, QualifyPercentage, GoldPercentage, SilverPercentage, BronzePercentage)%>% mutate(across(where(is.numeric), ~round(., 2)))
   
   return(simulations_data)
 }
-
-# Example usage:
-# simulations_data <- your_dataframe_with_simulation_scores
-
-# Print the resulting dataframe
 
 
 ```
 
 ```{r}
-simulations_data_with_ranks <- compute_average_rank(BB_womens_sims)
+#AA_mens_sims <- read.csv("App-1/data/rostersims/AA_mens_sims.csv")
+#testsss <- compute_average_rank(AA_mens_sims)
+
+
 ```
 
 
 
+```{r women ranks}
+# List of women's events
+women_events <- c("BB", "UB", "FX", "VT", "AA")
+
+
+# Loop over women's events
+for (event_name in women_events) {
+  # Generate dataframe name
+  sims_path <- paste0("App-1/data/rostersims/",event_name, "_womens_sims.csv")
+  dataframe_name <- paste0(event_name, "_womens_predictions")
+  sims_df <- read.csv(sims_path)
+  # Run the function for the specific event and save the results
+  tempsims <- assign(dataframe_name, compute_average_rank(sims_df))
+  path <- paste0("App-1/data/rostersims/",dataframe_name,".csv")
+  write.csv(tempsims, path, row.names = FALSE)
+}
+
+
+```
+
+```{r}
+#something <- compute_average_rank(FX_sims)
+#temp_rank <- something$TempRank
+
+#if (temp_rank<=8){print("ok")}
+```
+
+
+```{r men ranks}
+# List of women's events
+men_events <- c("FX", "HB", "PB", "PH","SR","VT", "AA")
+
+
+# Loop over women's events
+for (event_name in men_events) {
+  # Generate dataframe name
+  sims_path <- paste0("App-1/data/rostersims/",event_name, "_mens_sims.csv")
+  dataframe_name <- paste0(event_name, "_mens_predictions")
+  sims_df <- read.csv(sims_path)
+  # Run the function for the specific event and save the results
+  tempsims <- assign(dataframe_name, compute_average_rank(sims_df))
+  path <- paste0("App-1/data/rostersims/",dataframe_name,".csv")
+  write.csv(tempsims, path, row.names = FALSE)
+}
+
+
+```
+
+## Calculating Team Podium Chances
+
+
+```{r teamsims}
+process_dataset <- function(nm, dataset) {
+    # Step 1: Filter for 5 names
+    #fix_data
+    
+    fixed_data <- nfix(dataset)
+    #return(fixed_data)
+    
+    filtered_dataset <- fixed_data[fixed_data$FullName %in% nm, ]
+    #return(filtered_dataset)
+    # Step 2: Sort by average points
+    sorted_dataset <- filtered_dataset %>% 
+      arrange(desc(AverageScore)) %>% 
+      head(3)
+    
+    #return(sorted_dataset)
+    # Step 3: Aggregate the top 3 scores into one row
+    aggregated_row <- sorted_dataset %>%
+      mutate(across(4:403, ~ sum(.))) %>% 
+      head(1)
+    
+    return(aggregated_row)
+  }
+  
+  teamsims <- function(gymnasts,gender) {
+    HB_sims_m <- read.csv("App-1/data/rostersims/HB_mens_sims.csv")
+    PH_sims_m <- read.csv("App-1/data/rostersims/PH_mens_sims.csv")
+    PB_sims_m <- read.csv("App-1/data/rostersims/PB_mens_sims.csv")
+    FX_sims_m <- read.csv("App-1/data/rostersims/FX_mens_sims.csv")
+    VT_sims_m <- read.csv("App-1/data/rostersims/VT_mens_sims.csv")
+    SR_sims_m <- read.csv("App-1/data/rostersims/SR_mens_sims.csv")
+    
+    BB_sims_w <- read.csv("App-1/data/rostersims/BB_womens_sims.csv")
+    VT_sims_w <- read.csv("App-1/data/rostersims/VT_womens_sims.csv")
+    UB_sims_w <- read.csv("App-1/data/rostersims/UB_womens_sims.csv")
+    FX_sims_w <- read.csv("App-1/data/rostersims/FX_womens_sims.csv")
+    
+    
+    if (gender == "Men") {
+      dataevents <- list(HB_sims_m,PH_sims_m,PB_sims_m,FX_sims_m,VT_sims_m,SR_sims_m) 
+    }
+    else{
+      dataevents <- list(BB_sims_w,VT_sims_w,UB_sims_w,FX_sims_w)
+    }
+    
+    
+    #print(nm)
+    pds <- data.frame()
+    
+    for (event_data in dataevents) {
+      e <- process_dataset(gymnasts, event_data)
+      #return(e)
+      pds <- rbind(pds,e)
+      
+    }
+    
+    # Combine the results into one big dataframe
+    
+    final_result <- pds %>% 
+      mutate(across(4:403, ~ sum(.))) %>% 
+      head(1)
+    
+    return(final_result)
+    
+  }
+```
+
+
+```{r mencompile}
+
+menteams <- list(CAN_m, CHN_m, GER_m, GBR_m, ITA_m, JPN_m, NED_m, ESP_m, SUI_m, TUR_m, UKR_m, USA_m)
+allmen <- data.frame()
+for (mt in menteams){
+  ts <- teamsims(mt,"Men")
+  allmen <- rbind(allmen,ts)
+}
+
+allmen <- allmen %>% 
+  select(-FirstName,-LastName,-FullName)
+
+
+```
+
+```{r womencompile}
+womenteams <- list(AUS_w, BRA_w, CAN_w, CHN_w, FRA_w, GBR_w, ITA_w, JPN_w, NED_w, ROU_w, KOR_w, USA_w)
+allwomen <- data.frame()
+for (wt in womenteams){
+  tsw <- teamsims(wt,"Women")
+  allwomen <- rbind(allwomen,tsw)
+}
+
+allwomen <- allwomen %>% 
+  select(-FirstName,-LastName,-FullName)
+```
+
+
+
+```{r team rank}
+
+# Assuming 'simulations_data' is the dataframe containing the simulation data
+# with columns for name, country, and 100 simulation scores, and an average simulation score
+
+compute_average_rank_team <- function(simulations_data) {
+  # Select only the columns with simulation scores
+  score_columns <- simulations_data %>% select(starts_with(c("Score_","Condensed_Column_")))
+  
+  simulations_data$AverageScore <- rowMeans(simulations_data %>% select(starts_with(c("Score_","Condensed_Column_"))))
+  
+  # Initialize a dataframe to store the ranks
+  rank_data <- simulations_data %>%
+    mutate(across(starts_with(c("Score_","Condensed_Column_")), ~rank(-.x, ties.method = "min")), na.rm = TRUE)
+  
+  # Compute the average rank for each gymnast
+  rank_data$AverageRank <- rowMeans(rank_data %>% select(starts_with(c("Score_","Condensed_Column_"))))
+  
+  rankdata2 <- rank_data
+  # Compute the number of simulations
+  num_simulations <- ncol(score_columns)
+
+
+  simulations_data <- simulations_data %>%
+    mutate(
+      QualifyPercentage = 0,
+      GoldPercentage = 0,
+      SilverPercentage = 0,
+      BronzePercentage = 0
+    )
+
+  for (n in 2:num_simulations) {
+    
+    rank_col <- paste0("Score_", n)
+    
+    
+    rankdata2 <- rankdata2 %>%
+      arrange(!!sym(rank_col)) %>%
+      mutate(TempRank = 1:n())
+
+    # Update the Top10Percentage and medal percentages
+    for (i in 1:nrow(simulations_data)) {
+      athlete <- simulations_data[i, "Country"]
+      #return(athlete)
+      athlete_rank <- rankdata2 %>%
+        filter(Country == athlete)
+
+      #return(athlete_rank)
+      if (nrow(athlete_rank) > 0) {
+        temp_rank <- athlete_rank$TempRank
+        if (length(temp_rank)>1){
+          print(temp_rank)
+          return(athlete_rank)}
+        if (temp_rank <= 8) simulations_data$QualifyPercentage[i] <- simulations_data$QualifyPercentage[i] + 1 / num_simulations * 100
+        if (temp_rank == 1) simulations_data$GoldPercentage[i] <- simulations_data$GoldPercentage[i] + 1 / num_simulations * 100
+        if (temp_rank == 2) simulations_data$SilverPercentage[i] <- simulations_data$SilverPercentage[i] + 1 / num_simulations * 100
+        if (temp_rank == 3) simulations_data$BronzePercentage[i] <- simulations_data$BronzePercentage[i] + 1 / num_simulations * 100
+      }
+    }
+  }
+
+  # Add the AverageRank column to the original dataframe
+  simulations_data$AverageRank <- rank_data$AverageRank
+  simulations_data <- simulations_data %>%
+    select(Country, AverageScore, AverageRank, QualifyPercentage, GoldPercentage, SilverPercentage, BronzePercentage)%>% mutate(across(where(is.numeric), ~round(., 2)))
+  
+  return(simulations_data)
+}
+
+
+```
+
+```{r}
+teamPredMen <- compute_average_rank_team(allmen)
+teamPredWomen <- compute_average_rank_team(allwomen)
+```
 
 
